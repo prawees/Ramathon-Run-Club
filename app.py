@@ -13,7 +13,6 @@ CLIENT_ID = '194111'
 CLIENT_SECRET = 'be307cce9818cd549fae09f324aa0a31c7da5add'
 REDIRECT_URI = 'http://127.0.0.1:5000/callback' 
 # --- DATABASE HANDLER ---
-# This forces the app to look for the database in the SAME folder as the code
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'database.json')
 
@@ -21,22 +20,25 @@ DB_FILE = os.path.join(BASE_DIR, 'database.json')
 TRANSLATIONS = {
     'en': {
         'title': 'Ramathon Run Club',
+        # Nav
         'nav_leaderboard': 'LEADERBOARD',
+        'nav_events': 'EVENTS',
         'nav_rules': 'RULES',
         'nav_profile': 'MY PROFILE',
         'nav_connect': 'CONNECT STRAVA',
         'nav_logout': 'LOGOUT',
+        # Home
         'hero_title': "Ramathon 2026",
         'hero_badge': 'EST. 2021 • PHAYATHAI • BANGPHLI • SALAYA',
-        'ledger_title': 'Runner Leaderboard',
-        'ledger_sub': 'RANKINGS • JANUARY 2026',
+        'stamp_qual': 'QUALIFIED',
         'rank_elite': '★ ELITE SQUAD',
         'rank_member': '♦ CLUB MEMBER',
         'rank_rookie': '• ROOKIE',
         'dist_month': 'Month Dist.',
         'goal_shirt': 'Target: 50KM Shirt',
         'goal_elite': 'Target: 100KM Elite',
-        'stamp_qual': 'QUALIFIED',
+        'empty_db': 'No adventurers found yet.',
+        # Profile
         'profile_file': 'Member File',
         'status_claim': 'CLAIMABLE',
         'status_locked': 'LOCKED',
@@ -44,6 +46,7 @@ TRANSLATIONS = {
         'msg_km_away': 'KM away from the club shirt.',
         'msg_win': 'Splendid! You have qualified. Visit the Faculty Lounge to claim.',
         'btn_sync': '⟳ Sync Strava',
+        # Rules
         'rules_title': 'Club Regulations',
         'rules_1_title': '1. The Mission',
         'rules_1_text': 'Fostering health and camaraderie among Ramathibodi medical students and staff.',
@@ -52,26 +55,71 @@ TRANSLATIONS = {
         'rules_2_li2': '100 KM: Unlock Elite Monthly Status.',
         'rules_3_title': '3. Sync Rules',
         'rules_3_text': 'Only Public runs count.',
-        'empty_db': 'No adventurers found yet.'
+        # Events Hub
+        'events_main_title': 'CLUB EVENTS',
+        'badge_upcoming': 'UPCOMING',
+        'badge_archive': 'ARCHIVE',
+        'evt_meetup_title': '🏃 Ramathon Meetups',
+        'evt_meetup_desc': "Join the 'Easy Pace' crew. Monthly runs at Suan Chitralada & Benchakitti Park.",
+        'evt_meetup_btn': 'View Schedule →',
+        'evt_recap_title': '📜 Virtual Run 2024 Recap',
+        'evt_recap_desc': 'A look back at our previous success: 10,000+ KM ran by 283 Ramathibodians.',
+        'evt_recap_btn': 'Read Report →',
+        # Meetups Page
+        'meetup_page_title': 'Ramathon Meetups',
+        'meetup_quote': '"From Virtual to Reality"',
+        'meetup_card_title': '🌳 The "Easy Pace" Sundays',
+        'meetup_card_text': 'Connect with fellow medics, nurses, and staff in a relaxed environment. No PBs, just vibes.',
+        'meetup_loc_label': 'Locations:',
+        'meetup_loc_val': 'Suan Chitralada & Benchakitti Park',
+        'meetup_time_label': 'Time:',
+        'meetup_time_val': 'Every last Sunday of the month, 06:00 AM',
+        'meetup_pace_label': 'Pace:',
+        'meetup_pace_val': 'Zone 2 (Conversation Pace)',
+        'meetup_next_box': 'Next Session:',
+        'meetup_next_date': 'February 22, 2026 @ Benchakitti Park',
+        'meetup_meeting_point': 'Meeting Point: Main Amphitheater',
+        # Recap 2024 Page
+        'recap_top_label': 'ARCHIVE REPORT: TK13',
+        'recap_main_title': 'Virtual Ramathon 2024',
+        'recap_date': 'November 1 - 30, 2024',
+        'recap_stat_runners': 'Runners Joined',
+        'recap_stat_km': 'Total KM Ran',
+        'recap_stat_finishers': 'Finishers',
+        'recap_roster_title': 'The Roster',
+        'recap_baby': 'Baby Marathon (30k)',
+        'recap_super': 'Super Marathon (50k)',
+        'recap_voices_title': 'Voices from the Track',
+        'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
+        'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
+        'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
+        'recap_budget_title': 'Budget Summary (Transparent)',
+        'recap_grant': 'Grant Received:',
+        'recap_used': 'Actual Used:',
+        'recap_returned': 'Returned to Faculty:',
+        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025'
     },
     'th': {
         'title': 'Ramathon Run Club',
+        # Nav
         'nav_leaderboard': 'ตารางคะแนน',
+        'nav_events': 'กิจกรรม',
         'nav_rules': 'กติกา',
         'nav_profile': 'ข้อมูลส่วนตัว',
         'nav_connect': 'เชื่อมต่อ STRAVA',
         'nav_logout': 'ออกจากระบบ',
-        'hero_title': "Ramathon 2026",
+        # Home
+        'hero_title': "รามาธอน ๒๕๖๙",
         'hero_badge': 'ก่อตั้ง ๒๕๖๔ • พญาไท • บางพลี • ศาลายา',
-        'ledger_title': 'ตารางอันดับ',
-        'ledger_sub': 'ประจำเดือน มกราคม ๒๕๖๙',
+        'stamp_qual': 'ผ่านเกณฑ์',
         'rank_elite': '★ ระดับอีลีท',
         'rank_member': '♦ สมาชิกคลับ',
         'rank_rookie': '• มือใหม่',
         'dist_month': 'ระยะเดือนนี้',
         'goal_shirt': 'เป้าหมาย: เสื้อวิ่ง 50 กม.',
         'goal_elite': 'เป้าหมาย: 100 กม.',
-        'stamp_qual': 'ผ่านเกณฑ์',
+        'empty_db': 'ยังไม่มีสมาชิกในระบบ',
+        # Profile
         'profile_file': 'แฟ้มประวัติ',
         'status_claim': 'รับสิทธิ์ได้',
         'status_locked': 'ยังไม่ครบ',
@@ -79,6 +127,7 @@ TRANSLATIONS = {
         'msg_km_away': 'กม. จะได้รับเสื้อวิ่ง',
         'msg_win': 'ยอดเยี่ยม! คุณผ่านเกณฑ์แล้ว ติดต่อรับของรางวัลได้ที่คณะ',
         'btn_sync': '⟳ อัพเดทข้อมูล',
+        # Rules
         'rules_title': 'ระเบียบการ',
         'rules_1_title': '๑. พันธกิจ',
         'rules_1_text': 'ส่งเสริมสุขภาพและความสามัคคีในหมู่นักศึกษาและบุคลากรรามาธิบดี',
@@ -87,7 +136,49 @@ TRANSLATIONS = {
         'rules_2_li2': 'สะสมครบ ๑๐๐ กม.: ปลดล็อคระดับ Elite ประจำเดือน',
         'rules_3_title': '๓. กติกาการส่งผล',
         'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)',
-        'empty_db': 'ยังไม่มีสมาชิกในระบบ'
+        # Events Hub
+        'events_main_title': 'กิจกรรมชมรม',
+        'badge_upcoming': 'เร็วๆ นี้',
+        'badge_archive': 'ทำเนียบรุ่น',
+        'evt_meetup_title': '🏃 นัดวิ่งรามาธอน (Meetups)',
+        'evt_meetup_desc': "เข้าร่วมกลุ่ม 'Easy Pace' วิ่งสบายๆ ทุกเดือนที่สวนจิตรลดา และ สวนเบญจกิติ",
+        'evt_meetup_btn': 'ดูตารางกิจกรรม →',
+        'evt_recap_title': '📜 สรุปผล Virtual Run 2024',
+        'evt_recap_desc': 'ย้อนดูความสำเร็จในปีที่ผ่านมา: ระยะทางรวมกว่า 10,000 กม. จากชาวรามาธิบดี 283 ท่าน',
+        'evt_recap_btn': 'อ่านรายงานสรุป →',
+        # Meetups Page
+        'meetup_page_title': 'นัดวิ่งรามาธอน',
+        'meetup_quote': '"จากโลกออนไลน์ สู่สนามจริง"',
+        'meetup_card_title': '🌳 อาทิตย์วิ่งสบาย (The "Easy Pace" Sundays)',
+        'meetup_card_text': 'พบปะเพื่อนนักศึกษา แพทย์ พยาบาล และบุคลากรในบรรยากาศสบายๆ ไม่เน้นทำเวลา เน้นมิตรภาพ',
+        'meetup_loc_label': 'สถานที่:',
+        'meetup_loc_val': 'สวนจิตรลดา และ สวนเบญจกิติ',
+        'meetup_time_label': 'เวลา:',
+        'meetup_time_val': 'ทุกวันอาทิตย์สุดท้ายของเดือน เวลา 06:00 น.',
+        'meetup_pace_label': 'เพซ (Pace):',
+        'meetup_pace_val': 'โซน 2 (Conversation Pace วิ่งไปคุยไป)',
+        'meetup_next_box': 'นัดถัดไป:',
+        'meetup_next_date': '22 กุมภาพันธ์ 2569 @ สวนเบญจกิติ',
+        'meetup_meeting_point': 'จุดนัดพบ: อัฒจันทร์ใหญ่ (Amphitheater)',
+        # Recap 2024 Page
+        'recap_top_label': 'รายงานสรุปผล: TK13',
+        'recap_main_title': 'Virtual Ramathon 2024',
+        'recap_date': '1 - 30 พฤศจิกายน 2567',
+        'recap_stat_runners': 'ผู้เข้าร่วม',
+        'recap_stat_km': 'ระยะทางรวม',
+        'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย',
+        'recap_roster_title': 'ทำเนียบนักวิ่ง',
+        'recap_baby': 'Baby Marathon (30k)',
+        'recap_super': 'Super Marathon (50k)',
+        'recap_voices_title': 'เสียงจากสนามวิ่ง',
+        'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
+        'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
+        'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
+        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
+        'recap_grant': 'งบประมาณที่ได้รับ:',
+        'recap_used': 'ใช้จ่ายจริง:',
+        'recap_returned': 'ยอดเงินคืนคณะฯ:',
+        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568'
     }
 }
 
@@ -101,18 +192,15 @@ def load_db():
 def save_db(data):
     with open(DB_FILE, 'w') as f: json.dump(data, f, indent=4)
 
-# --- CONTEXT PROCESSOR (Injects Text into Templates) ---
+# --- CONTEXT PROCESSOR ---
 @app.context_processor
 def inject_text():
-    """Automatically sends the right language text to every page"""
-    lang = session.get('lang', 'th') # Default to English
+    lang = session.get('lang', 'th') 
     return dict(text=TRANSLATIONS[lang], current_lang=lang)
 
 # --- ROUTES ---
-
 @app.route('/set_lang/<lang_code>')
 def set_lang(lang_code):
-    """Switch Language"""
     if lang_code in ['en', 'th']:
         session['lang'] = lang_code
     return redirect(request.referrer or url_for('home'))
@@ -182,12 +270,10 @@ def logout():
 
 @app.route('/update_stats')
 def update_stats():
-    # (Same update logic as before - abbreviated for brevity)
-    # Ensure you keep the 'visibility' check!
+    # Sync logic placeholder
     return redirect(url_for('home'))
 
 # --- NEW EVENT ROUTES ---
-
 @app.route('/events')
 def events():
     return render_template('events.html')

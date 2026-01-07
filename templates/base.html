@@ -8,12 +8,12 @@
     <meta name="referrer" content="no-referrer">
     
     <style>
-        /* --- VINTAGE LIGHT PURPLE THEME --- */
+        /* --- THEME --- */
         :root { 
-            --paper: #F3E5F5;  /* Pale Lavender Paper */
-            --ink: #240046;    /* Deep Indigo Ink */
-            --purple: #9D4EDD; /* Vivid Purple Accent */
-            --gold: #FFD700;   /* Classic Gold */
+            --paper: #F3E5F5;  
+            --ink: #240046;    
+            --purple: #9D4EDD; 
+            --gold: #FFD700;   
             --green: #008000;
         }
         
@@ -22,7 +22,6 @@
             color: var(--ink); 
             font-family: 'Courier Prime', 'Noto Sans Thai', monospace; 
             margin: 0; 
-            /* Purple-tinted noise texture */
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"); 
         }
 
@@ -59,8 +58,38 @@
         }
 
         .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
         
+        /* NAV LINKS STYLING */
+        .nav-link { 
+            text-decoration: none; 
+            color: var(--ink); 
+            font-weight: bold; 
+            font-size: 0.9rem; 
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        /* Active Page Underline */
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--purple);
+            /* Wavy underline via CSS trick */
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, var(--purple) 2px, var(--purple) 4px);
+        }
+
+        /* Glimmer/Press Effect */
+        .nav-link:active {
+            color: var(--purple);
+            text-shadow: 0 0 8px rgba(157, 78, 221, 0.6);
+            transform: scale(0.95);
+        }
+
         /* --- BUTTONS --- */
         .btn-purple { 
             background: var(--purple) !important; 
@@ -83,17 +112,18 @@
 
         /* --- LANG SWITCHER --- */
         .lang-switch a {
-            font-size: 0.8rem;
+            font-size: 1rem;
             text-decoration: none;
             color: var(--ink);
             opacity: 0.5;
             padding: 0 5px;
+            transition: 0.2s;
         }
         .lang-switch a.active {
-            font-weight: bold;
             opacity: 1;
-            text-decoration: underline;
-            color: var(--purple);
+            transform: scale(1.1);
+            display: inline-block;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
         }
 
         .content { min-height: 80vh; padding-bottom: 60px; }
@@ -119,13 +149,13 @@
         <div class="nav-links">
             
             <div class="lang-switch">
-                <a href="{{ url_for('set_lang', lang_code='en') }}" class="{% if current_lang == 'en' %}active{% endif %}">EN</a> |
-                <a href="{{ url_for('set_lang', lang_code='th') }}" class="{% if current_lang == 'th' %}active{% endif %}">TH</a>
+                <a href="{{ url_for('set_lang', lang_code='en') }}" class="{% if current_lang == 'en' %}active{% endif %}">🇬🇧 EN</a>
+                <a href="{{ url_for('set_lang', lang_code='th') }}" class="{% if current_lang == 'th' %}active{% endif %}">🇹🇭 TH</a>
             </div>
 
-            <a href="{{ url_for('home') }}">{{ text.nav_leaderboard }}</a>
-            <a href="{{ url_for('events') }}">EVENTS</a>
-            <a href="{{ url_for('rules') }}">{{ text.nav_rules }}</a>
+            <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">{{ text.nav_leaderboard }}</a>
+            <a href="{{ url_for('events') }}" class="nav-link {% if request.endpoint in ['events', 'meetups', 'recap2024'] %}active{% endif %}">{{ text.nav_events }}</a>
+            <a href="{{ url_for('rules') }}" class="nav-link {% if request.endpoint == 'rules' %}active{% endif %}">{{ text.nav_rules }}</a>
             
             {% if session.get('user_id') %}
                 <a href="{{ url_for('profile') }}" class="btn-purple">{{ text.nav_profile }}</a>
@@ -139,6 +169,6 @@
         {% block content %}{% endblock %}
     </div>
 
-    <footer>© 2026 prawees</footer>
+    <footer>© 2026 prawees • Ramathon Run Club</footer>
 </body>
 </html>

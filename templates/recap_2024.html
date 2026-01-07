@@ -5,77 +5,77 @@
 <div style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
 
     <div style="text-align: center; margin-bottom: 50px;">
-        <div style="font-family: 'Courier Prime'; font-weight: bold; color: var(--purple);">ARCHIVE REPORT: TK13</div>
-        <h1 style="font-family: 'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin: 10px 0;">Virtual Ramathon 2024</h1>
-        <p style="font-weight: bold;">November 1 - 30, 2024</p>
+        <div style="font-family: 'Courier Prime'; font-weight: bold; color: var(--purple);">{{ text.recap_top_label }}</div>
+        <h1 style="font-family: 'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin: 10px 0;">{{ text.recap_main_title }}</h1>
+        <p style="font-weight: bold;">{{ text.recap_date }}</p>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
         <div class="card" style="text-align: center; background: var(--purple); color: white;">
             <div style="font-size: 3rem; font-family: 'Limelight';">283</div>
-            <div style="font-weight: bold;">Runners Joined</div>
+            <div style="font-weight: bold; font-family: 'Noto Sans Thai';">{{ text.recap_stat_runners }}</div>
         </div>
         <div class="card" style="text-align: center; background: var(--gold); color: var(--ink);">
             <div style="font-size: 3rem; font-family: 'Limelight';">10,259</div>
-            <div style="font-weight: bold;">Total KM Ran</div>
+            <div style="font-weight: bold; font-family: 'Noto Sans Thai';">{{ text.recap_stat_km }}</div>
         </div>
         <div class="card" style="text-align: center; background: var(--green); color: white;">
             <div style="font-size: 3rem; font-family: 'Limelight';">177</div>
-            <div style="font-weight: bold;">Finishers</div>
+            <div style="font-weight: bold; font-family: 'Noto Sans Thai';">{{ text.recap_stat_finishers }}</div>
         </div>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
         
         <div class="card">
-            <h2 style="font-family: 'Limelight'; border-bottom: 2px dashed var(--ink); padding-bottom: 10px;">The Roster</h2>
+            <h2 style="font-family: 'Limelight', 'Noto Sans Thai'; border-bottom: 2px dashed var(--ink); padding-bottom: 10px;">{{ text.recap_roster_title }}</h2>
             <div style="display: flex; gap: 20px; justify-content: space-around; margin-top: 20px; align-items: center; height: 100%;">
                 <div style="text-align: center;">
                     <div style="font-size: 2rem; font-weight: bold;">183</div>
-                    <div>Baby Marathon (30k)</div>
+                    <div style="font-family: 'Noto Sans Thai';">{{ text.recap_baby }}</div>
                 </div>
                 <div style="text-align: center;">
                     <div style="font-size: 2rem; font-weight: bold; color: var(--gold);">100</div>
-                    <div>Super Marathon (50k)</div>
+                    <div style="font-family: 'Noto Sans Thai';">{{ text.recap_super }}</div>
                 </div>
             </div>
         </div>
 
         <div>
-            <h3 style="font-family: 'Limelight'; color: var(--purple);">Voices from the Track</h3>
-            <div class="card" style="margin-bottom: 10px; font-style: italic; font-size: 0.85rem; padding: 15px;">
-                "Helped me lose 3-4 kg with quality! Gave me so much confidence."
+            <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple);">{{ text.recap_voices_title }}</h3>
+            <div class="card" style="margin-bottom: 10px; font-style: italic; font-size: 0.85rem; padding: 15px; font-family: 'Noto Sans Thai';">
+                {{ text.recap_q1 }}
             </div>
-            <div class="card" style="margin-bottom: 10px; font-style: italic; font-size: 0.85rem; padding: 15px;">
-                "Better mental health. Body feels stronger and I have more energy."
+            <div class="card" style="margin-bottom: 10px; font-style: italic; font-size: 0.85rem; padding: 15px; font-family: 'Noto Sans Thai';">
+                {{ text.recap_q2 }}
             </div>
-            <div class="card" style="font-style: italic; font-size: 0.85rem; padding: 15px;">
-                "A reason to get out of bed and put on running shoes even on lazy days."
+            <div class="card" style="font-style: italic; font-size: 0.85rem; padding: 15px; font-family: 'Noto Sans Thai';">
+                {{ text.recap_q3 }}
             </div>
         </div>
     </div>
 
     <div class="card" style="background: #fffcf0; max-width: 600px; margin: 0 auto;">
-        <h3 style="font-family: 'Limelight'; text-align: center;">Budget Summary (Transparent)</h3>
-        <ul style="list-style: none; padding: 0; margin-top: 20px; font-family: 'Courier Prime';">
+        <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; text-align: center;">{{ text.recap_budget_title }}</h3>
+        <ul style="list-style: none; padding: 0; margin-top: 20px; font-family: 'Courier Prime', 'Noto Sans Thai';">
             <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span>Grant Received:</span>
+                <span>{{ text.recap_grant }}</span>
                 <strong>44,850 THB</strong>
             </li>
             <li style="display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--red);">
-                <span>Actual Used:</span>
+                <span>{{ text.recap_used }}</span>
                 <strong>-28,294 THB</strong>
             </li>
             <li style="border-top: 2px solid var(--ink); margin: 10px 0;"></li>
             <li style="display: flex; justify-content: space-between; color: var(--green); font-weight: bold; font-size: 1.2rem;">
-                <span>Returned to Faculty:</span>
+                <span>{{ text.recap_returned }}</span>
                 <span>16,556 THB</span>
             </li>
         </ul>
     </div>
 
-    <div style="text-align: center; opacity: 0.6; font-size: 0.7rem; margin-top: 40px;">
-        Data sourced from Official Report: TK13 / 9 Jan 2025
+    <div style="text-align: center; opacity: 0.6; font-size: 0.7rem; margin-top: 40px; font-family: 'Noto Sans Thai';">
+        {{ text.recap_footer }}
     </div>
 
 </div>

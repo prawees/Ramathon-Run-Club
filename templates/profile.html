@@ -16,56 +16,139 @@
             {{ user.firstname }} {{ user.lastname }}
         </h2>
         
-        <p style="font-weight:bold; color: {% if user.total_distance >= 100 %}var(--gold){% elif user.total_distance >= 50 %}var(--green){% else %}var(--purple){% endif %};">
+        <div style="margin-top: 5px; font-weight: bold; font-family: 'Noto Sans Thai'; color: var(--ink);">
+            {% if user.team %}
+                <span style="background: var(--paper); border: 1px solid var(--ink); padding: 2px 8px; border-radius: 4px;">{{ user.team }}</span>
+            {% endif %}
+            {% if user.year %}
+                <span style="background: var(--ink); color: white; padding: 2px 8px; border-radius: 4px; margin-left: 5px;">{{ user.year }}</span>
+            {% endif %}
+        </div>
+        
+        <p style="font-weight:bold; color: {% if user.total_distance >= 100 %}var(--gold){% elif user.total_distance >= 50 %}var(--green){% else %}var(--purple){% endif %}; margin-top: 5px;">
             {% if user.total_distance >= 100 %}{{ text.rank_elite }}
             {% elif user.total_distance >= 50 %}{{ text.rank_member }}
             {% else %}{{ text.rank_rookie }}{% endif %}
         </p>
         
-        <hr style="border:none; border-top:2px dashed var(--ink); margin:20px 0;">
-        
-        <div style="text-align: left; margin-bottom: 20px;">
-            <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 5px;">PROGRESS</div>
+        <div style="text-align: left; margin: 20px 0;">
             <div style="width: 100%; height: 24px; border: 2px solid var(--ink); background: #eee; border-radius: 12px; overflow: hidden; position: relative;">
-                
                 <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 5;">
                     {% if user.total_distance < 50 %}👕{% else %}👑{% endif %}
                 </div>
-
                 {% if user.total_distance < 50 %}
                     <div style="height: 100%; background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); border-right: 2px solid var(--ink); width: {{ (user.total_distance / 50) * 100 }}%"></div>
                 {% else %}
                     <div style="height: 100%; background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); border-right: 2px solid var(--ink); width: {{ ((user.total_distance - 50) / 50) * 100 if user.total_distance < 100 else 100 }}%"></div>
                 {% endif %}
             </div>
+            <div style="display:flex; justify-content:space-between; margin-top: 5px; font-weight: bold;">
+                <span>{{ text.dist_month }}: {{ user.total_distance }} KM</span>
+                <span style="color: {% if user.total_distance >= 50 %}var(--green){% else %}var(--purple){% endif %}; font-family: 'Noto Sans Thai';">
+                    {% if user.total_distance >= 50 %}{{ text.status_claim }}{% else %}{{ text.status_locked }}{% endif %}
+                </span>
+            </div>
         </div>
 
-        <div style="display:flex; justify-content:space-around; margin-bottom:20px;">
-            <div>
-                <small style="display:block; letter-spacing:1px;">{{ text.dist_month }}</small>
-                <div style="font-size:1.8rem; font-weight:bold;">{{ user.total_distance }} KM</div>
-            </div>
-            <div>
-                <small style="display:block; letter-spacing:1px;">STATUS</small>
-                <div style="font-size:1.8rem; font-weight:bold; color: {% if user.total_distance >= 50 %}var(--green){% else %}var(--purple){% endif %}; font-family: 'Noto Sans Thai';">
-                    {% if user.total_distance >= 50 %}{{ text.status_claim }}{% else %}{{ text.status_locked }}{% endif %}
-                </div>
-            </div>
-        </div>
-        
-        {% if user.total_distance < 50 %}
-            <p style="font-size:0.9rem; font-style:italic; background: rgba(157, 78, 221, 0.1); padding: 15px; border-radius: 8px;">
-                "{{ text.msg_close }} <strong>{{ (50 - user.total_distance)|round(1) }}</strong> {{ text.msg_km_away }}"
-            </p>
-        {% else %}
-            <p style="font-size:0.9rem; font-style:italic; background: rgba(46, 125, 50, 0.1); padding: 15px; border-radius: 8px;">
-                "{{ text.msg_win }}"
-            </p>
-        {% endif %}
-        
-        <a href="{{ url_for('update_stats') }}" style="display:inline-block; margin-top:20px; color:var(--ink); font-size:0.8rem;">
+        <a href="{{ url_for('update_stats') }}" style="display:inline-block; margin-bottom:20px; color:var(--ink); font-size:0.8rem;">
             {{ text.btn_sync }}
         </a>
     </div>
+
+    <div class="card" style="margin-top: 20px; background: #fffcf0;">
+        <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple); text-align: center; margin-top: 0;">EDIT PROFILE</h3>
+        
+        <form action="{{ url_for('update_profile') }}" method="POST">
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
+                <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white;">
+                    <option value="" disabled {% if not user.team %}selected{% endif %}>-- Select Team --</option>
+                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>{{ text.opt_md }}</option>
+                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>{{ text.opt_nr }}</option>
+                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>{{ text.opt_er }}</option>
+                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>{{ text.opt_cd }}</option>
+                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>{{ text.opt_staff }}</option>
+                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>{{ text.opt_other }}</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
+                
+                <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
+                    <option value="1" {% if user.year == '1' %}selected{% endif %}>Year 1</option>
+                    <option value="2" {% if user.year == '2' %}selected{% endif %}>Year 2</option>
+                    <option value="3" {% if user.year == '3' %}selected{% endif %}>Year 3</option>
+                    <option value="4" {% if user.year == '4' %}selected{% endif %}>Year 4</option>
+                    <option value="5" {% if user.year == '5' %}selected{% endif %}>Year 5</option>
+                    <option value="6" {% if user.year == '6' %}selected{% endif %}>Year 6</option>
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                </select>
+
+                <select id="yearStd" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
+                    <option value="1" {% if user.year == '1' %}selected{% endif %}>Year 1</option>
+                    <option value="2" {% if user.year == '2' %}selected{% endif %}>Year 2</option>
+                    <option value="3" {% if user.year == '3' %}selected{% endif %}>Year 3</option>
+                    <option value="4" {% if user.year == '4' %}selected{% endif %}>Year 4</option>
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                </select>
+
+                <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Admin, lecturer, etc." style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_status }}</label>
+                <input type="text" name="status" maxlength="40" value="{{ user.status }}" placeholder="Feeling fast? Injured? Hungry?" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai';">
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_motto }}</label>
+                    <input type="text" name="motto" maxlength="20" value="{{ user.motto }}" placeholder="#RunForFun" style="width: 85%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai';">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_shoe }}</label>
+                    <input type="text" name="shoe" maxlength="20" value="{{ user.shoe }}" placeholder="Nike Pegasus" style="width: 85%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai';">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-purple" style="width: 100%; margin-top: 20px; font-size: 1.2rem; cursor: pointer;">{{ text.btn_save }}</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    function updateYearOptions() {
+        const team = document.getElementById('teamSelect').value;
+        const yearMD = document.getElementById('yearMD');
+        const yearStd = document.getElementById('yearStd');
+        const yearText = document.getElementById('yearText');
+
+        // Reset display
+        yearMD.style.display = 'none';
+        yearStd.style.display = 'none';
+        yearText.style.display = 'none';
+        
+        // Disable all first to prevent submission of hidden fields
+        yearMD.disabled = true;
+        yearStd.disabled = true;
+        yearText.disabled = true;
+
+        if (team === 'MD') {
+            yearMD.style.display = 'block';
+            yearMD.disabled = false;
+        } else if (['NR', 'ER', 'CD'].includes(team)) {
+            yearStd.style.display = 'block';
+            yearStd.disabled = false;
+        } else {
+            // Staff or Other
+            yearText.style.display = 'block';
+            yearText.disabled = false;
+        }
+    }
+
+    // Run on load to set correct state
+    window.onload = updateYearOptions;
+</script>
 {% endblock %}

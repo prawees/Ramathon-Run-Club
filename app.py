@@ -46,6 +46,20 @@ TRANSLATIONS = {
         'msg_km_away': 'KM away from the club shirt.',
         'msg_win': 'Splendid! You have qualified. Visit the Faculty Lounge to claim.',
         'btn_sync': '⟳ Sync Strava',
+        'btn_save': 'Save Profile',
+        # Profile Form
+        'lbl_team': 'Team / Affiliation',
+        'lbl_year': 'Year / Role',
+        'lbl_status': 'Status Message',
+        'lbl_motto': 'Running Motto',
+        'lbl_shoe': 'Battle Shoe',
+        'opt_md': 'MD (Medicine)',
+        'opt_nr': 'NR (Nursing)',
+        'opt_er': 'ER (Paramedic)',
+        'opt_cd': 'CD (Comm. Disorders)',
+        'opt_staff': 'Staff / Faculty',
+        'opt_other': 'Other',
+        'opt_grad': 'Alumni / Grad',
         # Rules
         'rules_title': 'Club Regulations',
         'rules_1_title': '1. The Mission',
@@ -126,7 +140,21 @@ TRANSLATIONS = {
         'msg_close': 'อีกนิดเดียว! คุณขาดอีกเพียง',
         'msg_km_away': 'กม. จะได้รับเสื้อวิ่ง',
         'msg_win': 'ยอดเยี่ยม! คุณผ่านเกณฑ์แล้ว ติดต่อรับของรางวัลได้ที่คณะ',
-        'btn_sync': '⟳ อัพเดทข้อมูล',
+        'btn_sync': '⟳ อัพเดทข้อมูล Strava',
+        'btn_save': 'บันทึกข้อมูล',
+        # Profile Form
+        'lbl_team': 'สังกัด / ทีม',
+        'lbl_year': 'ชั้นปี / ตำแหน่ง',
+        'lbl_status': 'สเตตัสวันนี้',
+        'lbl_motto': 'คติประจำใจนักวิ่ง',
+        'lbl_shoe': 'รองเท้าคู่ใจ',
+        'opt_md': 'MD (แพทยศาสตร์)',
+        'opt_nr': 'NR (พยาบาลศาสตร์)',
+        'opt_er': 'ER (ฉุกเฉินการแพทย์)',
+        'opt_cd': 'CD (สื่อสารความหมายฯ)',
+        'opt_staff': 'Staff (อาจารย์/บุคลากร)',
+        'opt_other': 'Other (อื่นๆ)',
+        'opt_grad': 'ศิษย์เก่า (Alumni)',
         # Rules
         'rules_title': 'ระเบียบการ',
         'rules_1_title': '๑. พันธกิจ',
@@ -225,6 +253,30 @@ def profile():
     if not user_data: return redirect(url_for('logout'))
     return render_template('profile.html', user=user_data)
 
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    user_id = session.get('user_id')
+    if not user_id: return redirect(url_for('login'))
+    
+    db = load_db()
+    if user_id in db:
+        db[user_id]['team'] = request.form.get('team')
+        # Year might come from the dropdown OR the text input, depending on logic
+        # But we made sure in HTML to name them differently or we can just grab both and see which is meaningful
+        # For simplicity, let's assume the frontend sends the active one as 'year' or we check logic
+        
+        # In this implementation, we will use a unified 'year' name in the form, 
+        # but rely on JS to disable the irrelevant one so only one is sent.
+        db[user_id]['year'] = request.form.get('year') 
+        
+        db[user_id]['status'] = request.form.get('status')
+        db[user_id]['motto'] = request.form.get('motto')
+        db[user_id]['shoe'] = request.form.get('shoe')
+        
+        save_db(db)
+        
+    return redirect(url_for('profile'))
+
 @app.route('/login')
 def login():
     scope = "activity:read_all"
@@ -247,7 +299,15 @@ def callback():
     athlete = data['athlete']
     uid = str(athlete['id'])
     db = load_db()
-    current_dist = db.get(uid, {}).get('total_distance', 0)
+    
+    # Preserve existing stats if re-logging in
+    existing_user = db.get(uid, {})
+    current_dist = existing_user.get('total_distance', 0)
+    current_team = existing_user.get('team', '')
+    current_year = existing_user.get('year', '')
+    current_status = existing_user.get('status', '')
+    current_motto = existing_user.get('motto', '')
+    current_shoe = existing_user.get('shoe', '')
     
     db[uid] = {
         'strava_id': uid,
@@ -257,7 +317,12 @@ def callback():
         'access_token': data['access_token'],
         'refresh_token': data['refresh_token'],
         'expires_at': data['expires_at'],
-        'total_distance': current_dist
+        'total_distance': current_dist,
+        'team': current_team,
+        'year': current_year,
+        'status': current_status,
+        'motto': current_motto,
+        'shoe': current_shoe
     }
     save_db(db)
     session['user_id'] = uid

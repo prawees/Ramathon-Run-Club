@@ -7,10 +7,9 @@
 /* templates/base.html */
     .grid { 
         display: grid; 
-        /* Change 320px to 280px to fit mobile screens better */
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
         gap: 20px; 
-        padding: 0 15px; /* Add padding so cards don't touch edge */
+        padding: 0 15px; 
         max-width: 1200px; 
         margin: 0 auto; 
     }
@@ -19,13 +18,13 @@
     /* PROGRESS BAR & ICONS */
     .progress-container { 
         width: 100%; 
-        height: 24px; /* Made slightly taller for the icon */
+        height: 24px; 
         border: 2px solid var(--ink); 
         background: #eee; 
         border-radius: 12px; 
         overflow: hidden; 
         margin: 10px 0; 
-        position: relative; /* Needed for icon positioning */
+        position: relative; 
     }
     
     .progress-fill { 
@@ -36,7 +35,6 @@
     }
     .progress-fill.gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
     
-    /* THE GOAL ICON (Shirt/Crown) */
     .goal-icon {
         position: absolute;
         right: 8px;
@@ -49,6 +47,28 @@
     }
     
     .stamp { position: absolute; top: 10px; right: 10px; border: 3px solid var(--green); color: var(--green); padding: 5px; font-weight: bold; transform: rotate(-15deg); font-size: 0.8rem; background: white; z-index: 10; font-family: 'Noto Sans Thai', sans-serif;}
+
+    /* NEW BADGES */
+    .team-badge {
+        font-size: 0.6rem;
+        font-weight: bold;
+        background: var(--ink);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .year-badge {
+        font-size: 0.6rem;
+        font-weight: bold;
+        background: white;
+        border: 1px solid var(--ink);
+        color: var(--ink);
+        padding: 1px 5px;
+        border-radius: 4px;
+        display: inline-block;
+    }
 </style>
 {% endblock %}
 
@@ -65,15 +85,29 @@
     <div class="card">
         {% if member.total_distance >= 50 %}<div class="stamp">{{ text.stamp_qual }}</div>{% endif %}
         
-        <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:2px dashed #eee; padding-bottom:15px;">
+        <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px; padding-bottom:10px;">
             <img src="{{ member.profile }}" class="avatar" loading="lazy">
             <div>
-                <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.4rem; line-height:1;">{{ member.firstname }}</div>
+                <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
+                
+                {% if member.team %}
+                    <div style="margin-bottom: 3px;">
+                        <span class="team-badge">{{ member.team }}</span>
+                        {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
+                    </div>
+                {% endif %}
+
                 <div style="font-size:0.7rem; font-weight:bold; letter-spacing:1px; color: {% if member.total_distance >= 100 %}var(--gold){% elif member.total_distance >= 50 %}var(--green){% else %}#888{% endif %};">
                     {% if member.total_distance >= 100 %}{{ text.rank_elite }}{% elif member.total_distance >= 50 %}{{ text.rank_member }}{% else %}{{ text.rank_rookie }}{% endif %}
                 </div>
             </div>
         </div>
+
+        {% if member.status or member.motto %}
+        <div style="background: #f9f9f9; padding: 8px; border-left: 3px solid var(--purple); font-size: 0.75rem; font-style: italic; margin-bottom: 15px; color: var(--ink);">
+            "{{ member.status if member.status else member.motto }}"
+        </div>
+        {% endif %}
 
         <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:0.9rem;">
             <span>{{ text.dist_month }}</span>
@@ -92,8 +126,15 @@
             {% endif %}
         </div>
         
-        <div style="text-align:center; font-size:0.6rem; opacity:0.6; text-transform:uppercase;">
-            {% if member.total_distance < 50 %}{{ text.goal_shirt }}{% else %}{{ text.goal_elite }}{% endif %}
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="font-size:0.6rem; opacity:0.6; text-transform:uppercase;">
+                {% if member.total_distance < 50 %}{{ text.goal_shirt }}{% else %}{{ text.goal_elite }}{% endif %}
+            </div>
+            {% if member.shoe %}
+                <div style="font-size: 0.6rem; background: var(--paper); border: 1px solid var(--ink); padding: 2px 4px; border-radius: 4px;">
+                    👟 {{ member.shoe }}
+                </div>
+            {% endif %}
         </div>
     </div>
     {% else %}

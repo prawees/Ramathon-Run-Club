@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}2024 Recap - Ramathon{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+
+    <div style="text-align: center; margin-bottom: 50px;">
+        <div style="font-family: 'Courier Prime'; font-weight: bold; color: var(--purple);">ARCHIVE REPORT: TK13</div>
+        <h1 style="font-family: 'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin: 10px 0;">Virtual Ramathon 2024</h1>
+        <p style="font-weight: bold;">November 1 - 30, 2024</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
+        <div class="card" style="text-align: center; background: var(--purple); color: white;">
+            <div style="font-size: 3rem; font-family: 'Limelight';">283</div>
+            <div style="font-weight: bold;">Runners Joined</div>
+        </div>
+        <div class="card" style="text-align: center; background: var(--gold); color: var(--ink);">
+            <div style="font-size: 3rem; font-family: 'Limelight';">10,259</div>
+            <div style="font-weight: bold;">Total KM Ran</div>
+        </div>
+        <div class="card" style="text-align: center; background: var(--green); color: white;">
+            <div style="font-size: 3rem; font-family: 'Limelight';">177</div>
+            <div style="font-weight: bold;">Finishers</div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
+        
+        <div class="card">
+            <h2 style="font-family: 'Limelight'; border-bottom: 2px dashed var(--ink); padding-bottom: 10px;">The Roster</h2>
+            <div style="display: flex; gap: 20px; justify-content: space-around; margin-top: 20px; align-items: center; height: 100%;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold;">183</div>
+                    <div>Baby Marathon (30k)</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--gold);">100</div>
+                    <div>Super Marathon (50k)</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 style="font-family: 'Limelight'; color: var(--purple);">Voices from the Track</h3>
+            <div class="card" style="margin-bottom: 10px; font-style: italic; font-size: 0.85rem; padding: 15px;">
+                "Helped me lose 3-4 kg with quality! Gave me so much confidence."
+            </div>
+            <div class="card" style="margin-bottom: 10px; font-style: italic; font-size: 0.85rem; padding: 15px;">
+                "Better mental health. Body feels stronger and I have more energy."
+            </div>
+            <div class="card" style="font-style: italic; font-size: 0.85rem; padding: 15px;">
+                "A reason to get out of bed and put on running shoes even on lazy days."
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="background: #fffcf0; max-width: 600px; margin: 0 auto;">
+        <h3 style="font-family: 'Limelight'; text-align: center;">Budget Summary (Transparent)</h3>
+        <ul style="list-style: none; padding: 0; margin-top: 20px; font-family: 'Courier Prime';">
+            <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>Grant Received:</span>
+                <strong>44,850 THB</strong>
+            </li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--red);">
+                <span>Actual Used:</span>
+                <strong>-28,294 THB</strong>
+            </li>
+            <li style="border-top: 2px solid var(--ink); margin: 10px 0;"></li>
+            <li style="display: flex; justify-content: space-between; color: var(--green); font-weight: bold; font-size: 1.2rem;">
+                <span>Returned to Faculty:</span>
+                <span>16,556 THB</span>
+            </li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; opacity: 0.6; font-size: 0.7rem; margin-top: 40px;">
+        Data sourced from Official Report: TK13 / 9 Jan 2025
+    </div>
+
+</div>
+{% endblock %}

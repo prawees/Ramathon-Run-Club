@@ -117,12 +117,14 @@
         </a>
         
         <div class="nav-links">
+            
             <div class="lang-switch">
                 <a href="{{ url_for('set_lang', lang_code='en') }}" class="{% if current_lang == 'en' %}active{% endif %}">EN</a> |
                 <a href="{{ url_for('set_lang', lang_code='th') }}" class="{% if current_lang == 'th' %}active{% endif %}">TH</a>
             </div>
 
             <a href="{{ url_for('home') }}">{{ text.nav_leaderboard }}</a>
+            <a href="{{ url_for('events') }}">EVENTS</a>
             <a href="{{ url_for('rules') }}">{{ text.nav_rules }}</a>
             
             {% if session.get('user_id') %}

@@ -186,5 +186,19 @@ def update_stats():
     # Ensure you keep the 'visibility' check!
     return redirect(url_for('home'))
 
+# --- NEW EVENT ROUTES ---
+
+@app.route('/events')
+def events():
+    return render_template('events.html')
+
+@app.route('/events/meetups')
+def meetups():
+    return render_template('meetups.html')
+
+@app.route('/events/recap2024')
+def recap2024():
+    return render_template('recap_2024.html')
+    
 if __name__ == '__main__':
     app.run(debug=False)

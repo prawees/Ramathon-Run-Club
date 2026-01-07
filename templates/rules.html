@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ text.nav_rules }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
+    
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-family: 'Limelight', 'Noto Sans Thai'; font-size: 3rem; color: var(--purple);">{{ text.rules_title }}</h1>
+        <div style="border-bottom: 2px dashed var(--ink); width: 100px; margin: 20px auto;"></div>
+    </div>
+
+    <div class="card" style="margin-bottom: 30px;">
+        <h2 style="font-family: 'Limelight', 'Noto Sans Thai'; margin-top: 0;">{{ text.rules_1_title }}</h2>
+        <p>{{ text.rules_1_text }}</p>
+    </div>
+
+    <div class="card" style="margin-bottom: 30px; background: #fffcf0;">
+        <h2 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple);">{{ text.rules_2_title }}</h2>
+        <ul style="line-height: 1.8;">
+            <li>{{ text.rules_2_li1 }}</li>
+            <li>{{ text.rules_2_li2 }}</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2 style="font-family: 'Limelight', 'Noto Sans Thai';">{{ text.rules_3_title }}</h2>
+        <p>{{ text.rules_3_text }}</p>
+    </div>
+
+</div>
+{% endblock %}

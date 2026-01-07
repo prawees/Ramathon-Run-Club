@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ramathon{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Courier+Prime:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="referrer" content="no-referrer">
+    
+    <style>
+        /* --- VINTAGE LIGHT PURPLE THEME --- */
+        :root { 
+            --paper: #F3E5F5;  /* Pale Lavender Paper */
+            --ink: #240046;    /* Deep Indigo Ink */
+            --purple: #9D4EDD; /* Vivid Purple Accent */
+            --gold: #FFD700;   /* Classic Gold */
+            --green: #008000;
+        }
+        
+        body { 
+            background-color: var(--paper); 
+            color: var(--ink); 
+            font-family: 'Courier Prime', 'Noto Sans Thai', monospace; 
+            margin: 0; 
+            /* Purple-tinted noise texture */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"); 
+        }
+
+        /* --- NAV BAR --- */
+        nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 30px; 
+            border-bottom: 3px double var(--ink); 
+            background: rgba(243, 229, 245, 0.95); 
+            position: sticky; top: 0; z-index: 1000; 
+        }
+        
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0px var(--ink);
+        }
+
+        .brand-text { 
+            font-family: 'Limelight', cursive; 
+            font-size: 1.5rem; 
+            color: var(--ink); 
+            text-transform: uppercase;
+        }
+
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
+        
+        /* --- BUTTONS --- */
+        .btn-purple { 
+            background: var(--purple) !important; 
+            color: white !important;
+            padding: 8px 16px; 
+            font-family: 'Limelight', 'Noto Sans Thai', cursive;
+            border: 2px solid var(--ink);
+            box-shadow: 4px 4px 0px var(--ink);
+            transition: all 0.2s;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-purple:hover { 
+            background: var(--paper) !important; 
+            color: var(--purple) !important; 
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--ink);
+        }
+
+        /* --- LANG SWITCHER --- */
+        .lang-switch a {
+            font-size: 0.8rem;
+            text-decoration: none;
+            color: var(--ink);
+            opacity: 0.5;
+            padding: 0 5px;
+        }
+        .lang-switch a.active {
+            font-weight: bold;
+            opacity: 1;
+            text-decoration: underline;
+            color: var(--purple);
+        }
+
+        .content { min-height: 80vh; padding-bottom: 60px; }
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--ink); opacity: 0.6; font-size: 0.8rem; }
+        
+        .card { 
+            background: #fff; 
+            border: 3px solid var(--ink); 
+            padding: 20px; 
+            box-shadow: 8px 8px 0px rgba(44, 0, 62, 0.2); 
+            position: relative;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('home') }}" class="brand-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo-img" alt="Logo">
+            <span class="brand-text">{{ text.title }}</span>
+        </a>
+        
+        <div class="nav-links">
+            <div class="lang-switch">
+                <a href="{{ url_for('set_lang', lang_code='en') }}" class="{% if current_lang == 'en' %}active{% endif %}">EN</a> |
+                <a href="{{ url_for('set_lang', lang_code='th') }}" class="{% if current_lang == 'th' %}active{% endif %}">TH</a>
+            </div>
+
+            <a href="{{ url_for('home') }}">{{ text.nav_leaderboard }}</a>
+            <a href="{{ url_for('rules') }}">{{ text.nav_rules }}</a>
+            
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('profile') }}" class="btn-purple">{{ text.nav_profile }}</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn-purple">{{ text.nav_connect }}</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>Ramathibodi Medical Running Society • Est. 2026</footer>
+</body>
+</html>

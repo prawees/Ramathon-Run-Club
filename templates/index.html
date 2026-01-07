@@ -4,7 +4,16 @@
 {% block head %}
 <style>
     .hero { text-align: center; padding: 60px 20px; border-bottom: 2px dashed var(--ink); margin-bottom: 40px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 0 20px; max-width: 1200px; margin: 0 auto; }
+/* templates/base.html */
+    .grid { 
+        display: grid; 
+        /* Change 320px to 280px to fit mobile screens better */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+        gap: 20px; 
+        padding: 0 15px; /* Add padding so cards don't touch edge */
+        max-width: 1200px; 
+        margin: 0 auto; 
+    }
     .avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--ink); object-fit: cover; filter: sepia(0.2); }
     
     /* PROGRESS BAR & ICONS */

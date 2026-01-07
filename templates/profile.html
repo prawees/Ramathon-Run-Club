@@ -59,7 +59,6 @@
         <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple); text-align: center; margin-top: 0;">EDIT PROFILE</h3>
         
         <form action="{{ url_for('update_profile') }}" method="POST">
-            
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
                 <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white;">
@@ -75,7 +74,6 @@
 
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
-                
                 <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
                     <option value="1" {% if user.year == '1' %}selected{% endif %}>Year 1</option>
                     <option value="2" {% if user.year == '2' %}selected{% endif %}>Year 2</option>
@@ -125,12 +123,10 @@
         const yearStd = document.getElementById('yearStd');
         const yearText = document.getElementById('yearText');
 
-        // Reset display
         yearMD.style.display = 'none';
         yearStd.style.display = 'none';
         yearText.style.display = 'none';
         
-        // Disable all first to prevent submission of hidden fields
         yearMD.disabled = true;
         yearStd.disabled = true;
         yearText.disabled = true;
@@ -142,13 +138,10 @@
             yearStd.style.display = 'block';
             yearStd.disabled = false;
         } else {
-            // Staff or Other
             yearText.style.display = 'block';
             yearText.disabled = false;
         }
     }
-
-    // Run on load to set correct state
     window.onload = updateYearOptions;
 </script>
 {% endblock %}

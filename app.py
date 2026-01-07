@@ -107,7 +107,7 @@ TRANSLATIONS = {
         'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
         'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
         'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
-        'recap_budget_title': 'Budget Summary (Transparent)',
+        'recap_budget_title': 'Budget Summary :D',
         'recap_grant': 'Grant Received:',
         'recap_used': 'Actual Used:',
         'recap_returned': 'Returned to Faculty:',
@@ -202,7 +202,7 @@ TRANSLATIONS = {
         'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
         'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
         'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
-        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
+        'recap_budget_title': 'สรุปงบประมาณอย่างโปร่งใส :D',
         'recap_grant': 'งบประมาณที่ได้รับ:',
         'recap_used': 'ใช้จ่ายจริง:',
         'recap_returned': 'ยอดเงินคืนคณะฯ:',
@@ -261,14 +261,7 @@ def update_profile():
     db = load_db()
     if user_id in db:
         db[user_id]['team'] = request.form.get('team')
-        # Year might come from the dropdown OR the text input, depending on logic
-        # But we made sure in HTML to name them differently or we can just grab both and see which is meaningful
-        # For simplicity, let's assume the frontend sends the active one as 'year' or we check logic
-        
-        # In this implementation, we will use a unified 'year' name in the form, 
-        # but rely on JS to disable the irrelevant one so only one is sent.
         db[user_id]['year'] = request.form.get('year') 
-        
         db[user_id]['status'] = request.form.get('status')
         db[user_id]['motto'] = request.form.get('motto')
         db[user_id]['shoe'] = request.form.get('shoe')

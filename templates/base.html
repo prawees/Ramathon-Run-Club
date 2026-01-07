@@ -70,7 +70,6 @@
             transition: color 0.2s;
         }
 
-        /* Active Page Underline */
         .nav-link.active::after {
             content: '';
             position: absolute;
@@ -79,11 +78,9 @@
             bottom: -5px;
             left: 0;
             background-color: var(--purple);
-            /* Wavy underline via CSS trick */
             background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, var(--purple) 2px, var(--purple) 4px);
         }
 
-        /* Glimmer/Press Effect */
         .nav-link:active {
             color: var(--purple);
             text-shadow: 0 0 8px rgba(157, 78, 221, 0.6);
@@ -135,6 +132,39 @@
             padding: 20px; 
             box-shadow: 8px 8px 0px rgba(44, 0, 62, 0.2); 
             position: relative;
+        }
+
+        /* --- MOBILE RESPONSIVENESS FIX --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px 10px;
+                gap: 15px;
+            }
+            
+            .brand-container {
+                margin-bottom: 5px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap; /* Allows buttons to wrap to next line if needed */
+                gap: 15px;
+            }
+            
+            .brand-text {
+                font-size: 1.2rem;
+            }
+            
+            .nav-link {
+                font-size: 0.8rem;
+            }
+            
+            .btn-purple {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
         }
     </style>
     {% block head %}{% endblock %}

@@ -2,6 +2,10 @@
 {% block title %}2024 Recap - Ramathon{% endblock %}
 
 {% block content %}
+<div style="width: 100%; height: 200px; overflow: hidden; border-bottom: 3px solid var(--ink); margin-bottom: 40px; background: var(--ink);">
+    <img src="{{ url_for('static', filename='poster_2024.png') }}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;" alt="Ramathon Poster 2024">
+</div>
+
 <div style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
 
     <div style="text-align: center; margin-bottom: 50px;">
@@ -29,12 +33,13 @@
         
         <div class="card">
             <h2 style="font-family: 'Limelight', 'Noto Sans Thai'; border-bottom: 2px dashed var(--ink); padding-bottom: 10px;">{{ text.recap_roster_title }}</h2>
-            <div style="display: flex; gap: 20px; justify-content: space-around; margin-top: 20px; align-items: center; height: 100%;">
-                <div style="text-align: center;">
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around; margin-top: 20px; align-items: center; padding-bottom: 10px;">
+                <div style="text-align: center; min-width: 100px;">
                     <div style="font-size: 2rem; font-weight: bold;">183</div>
                     <div style="font-family: 'Noto Sans Thai';">{{ text.recap_baby }}</div>
                 </div>
-                <div style="text-align: center;">
+                <div style="text-align: center; min-width: 100px;">
                     <div style="font-size: 2rem; font-weight: bold; color: var(--gold);">100</div>
                     <div style="font-family: 'Noto Sans Thai';">{{ text.recap_super }}</div>
                 </div>

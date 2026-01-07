@@ -11,7 +11,10 @@ app.secret_key = 'RAMATHON_PURPLE_KEY'
 # --- CONFIGURATION ---
 CLIENT_ID = '194111'
 CLIENT_SECRET = 'be307cce9818cd549fae09f324aa0a31c7da5add'
-REDIRECT_URI = 'http://127.0.0.1:5000/callback' 
+
+# We remove the hardcoded REDIRECT_URI here and generate it dynamically in the routes
+# to ensure it matches exactly where the server is running (localhost vs 127.0.0.1).
+
 # --- DATABASE HANDLER ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'database.json')
@@ -96,22 +99,22 @@ TRANSLATIONS = {
         # Recap 2024 Page
         'recap_top_label': 'ARCHIVE REPORT: TK13',
         'recap_main_title': 'Virtual Ramathon 2024',
-        'recap_date': 'November 1 - 30, 2024',
-        'recap_stat_runners': 'Runners Joined',
-        'recap_stat_km': 'Total KM Ran',
-        'recap_stat_finishers': 'Finishers',
-        'recap_roster_title': 'The Roster',
+        'recap_date': '1 - 30 พฤศจิกายน 2567',
+        'recap_stat_runners': 'ผู้เข้าร่วม',
+        'recap_stat_km': 'ระยะทางรวม',
+        'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย',
+        'recap_roster_title': 'ทำเนียบนักวิ่ง',
         'recap_baby': 'Baby Marathon (30k)',
         'recap_super': 'Super Marathon (50k)',
-        'recap_voices_title': 'Voices from the Track',
-        'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
-        'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
-        'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
-        'recap_budget_title': 'Budget Summary :D',
-        'recap_grant': 'Grant Received:',
-        'recap_used': 'Actual Used:',
-        'recap_returned': 'Returned to Faculty:',
-        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025'
+        'recap_voices_title': 'เสียงจากสนามวิ่ง',
+        'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
+        'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
+        'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
+        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
+        'recap_grant': 'งบประมาณที่ได้รับ:',
+        'recap_used': 'ใช้จ่ายจริง:',
+        'recap_returned': 'ยอดเงินคืนคณะฯ:',
+        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568'
     },
     'th': {
         'title': 'Ramathon Run Club',
@@ -202,7 +205,7 @@ TRANSLATIONS = {
         'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
         'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
         'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
-        'recap_budget_title': 'สรุปงบประมาณอย่างโปร่งใส :D',
+        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
         'recap_grant': 'งบประมาณที่ได้รับ:',
         'recap_used': 'ใช้จ่ายจริง:',
         'recap_returned': 'ยอดเงินคืนคณะฯ:',
@@ -218,7 +221,10 @@ def load_db():
     except: return {}
 
 def save_db(data):
-    with open(DB_FILE, 'w') as f: json.dump(data, f, indent=4)
+    try:
+        with open(DB_FILE, 'w') as f: json.dump(data, f, indent=4)
+    except Exception as e:
+        print(f"Error saving DB: {e}")
 
 # --- CONTEXT PROCESSOR ---
 @app.context_processor
@@ -272,54 +278,80 @@ def update_profile():
 
 @app.route('/login')
 def login():
+    # Dynamically generate the redirect URI to match the current server address
+    # This prevents the 127.0.0.1 vs localhost mismatch
+    redirect_uri = url_for('callback', _external=True)
+    
     scope = "activity:read_all"
     strava_url = (f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}"
-                  f"&response_type=code&redirect_uri={REDIRECT_URI}&approval_prompt=auto&scope={scope}")
+                  f"&response_type=code&redirect_uri={redirect_uri}&approval_prompt=auto&scope={scope}")
     return redirect(strava_url)
 
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
-    if not code: return "No code received"
+    error = request.args.get('error')
     
+    if error:
+        return f"<h1>Error from Strava</h1><p>{error}</p><a href='/'>Go Home</a>"
+    if not code: 
+        return "<h1>Error</h1><p>No code received from Strava.</p><a href='/'>Go Home</a>"
+    
+    # Dynamically match the Redirect URI used in login
+    redirect_uri = url_for('callback', _external=True)
+
     token_url = 'https://www.strava.com/oauth/token'
-    payload = {'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET, 'code': code, 'grant_type': 'authorization_code'}
-    r = requests.post(token_url, data=payload)
-    data = r.json()
-    
-    if 'access_token' not in data: return "Token Error"
-    
-    athlete = data['athlete']
-    uid = str(athlete['id'])
-    db = load_db()
-    
-    # Preserve existing stats if re-logging in
-    existing_user = db.get(uid, {})
-    current_dist = existing_user.get('total_distance', 0)
-    current_team = existing_user.get('team', '')
-    current_year = existing_user.get('year', '')
-    current_status = existing_user.get('status', '')
-    current_motto = existing_user.get('motto', '')
-    current_shoe = existing_user.get('shoe', '')
-    
-    db[uid] = {
-        'strava_id': uid,
-        'firstname': athlete['firstname'],
-        'lastname': athlete['lastname'],
-        'profile': athlete['profile'],
-        'access_token': data['access_token'],
-        'refresh_token': data['refresh_token'],
-        'expires_at': data['expires_at'],
-        'total_distance': current_dist,
-        'team': current_team,
-        'year': current_year,
-        'status': current_status,
-        'motto': current_motto,
-        'shoe': current_shoe
+    payload = {
+        'client_id': CLIENT_ID, 
+        'client_secret': CLIENT_SECRET, 
+        'code': code, 
+        'grant_type': 'authorization_code'
     }
-    save_db(db)
-    session['user_id'] = uid
-    return redirect(url_for('profile'))
+    
+    try:
+        r = requests.post(token_url, data=payload)
+        r.raise_for_status() # Check for HTTP errors
+        data = r.json()
+    except Exception as e:
+        return f"<h1>Connection Error</h1><p>{str(e)}</p><p>Response: {r.text if 'r' in locals() else 'None'}</p>"
+    
+    if 'access_token' not in data: 
+        return f"<h1>Token Error</h1><p>Strava did not return a token.</p><p>Debug info: {data}</p>"
+    
+    try:
+        athlete = data['athlete']
+        uid = str(athlete['id'])
+        db = load_db()
+        
+        # Preserve existing stats if re-logging in
+        existing_user = db.get(uid, {})
+        current_dist = existing_user.get('total_distance', 0)
+        current_team = existing_user.get('team', '')
+        current_year = existing_user.get('year', '')
+        current_status = existing_user.get('status', '')
+        current_motto = existing_user.get('motto', '')
+        current_shoe = existing_user.get('shoe', '')
+        
+        db[uid] = {
+            'strava_id': uid,
+            'firstname': athlete['firstname'],
+            'lastname': athlete['lastname'],
+            'profile': athlete['profile'],
+            'access_token': data['access_token'],
+            'refresh_token': data['refresh_token'],
+            'expires_at': data['expires_at'],
+            'total_distance': current_dist,
+            'team': current_team,
+            'year': current_year,
+            'status': current_status,
+            'motto': current_motto,
+            'shoe': current_shoe
+        }
+        save_db(db)
+        session['user_id'] = uid
+        return redirect(url_for('profile'))
+    except Exception as e:
+        return f"<h1>Processing Error</h1><p>Failed to save user data.</p><p>{str(e)}</p>"
 
 @app.route('/logout')
 def logout():
@@ -345,4 +377,5 @@ def recap2024():
     return render_template('recap_2024.html')
     
 if __name__ == '__main__':
-    app.run(debug=False)
+    # ENABLE DEBUG MODE to see errors in browser
+    app.run(debug=True)

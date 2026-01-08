@@ -15,6 +15,8 @@
             --purple: #9D4EDD; 
             --gold: #FFD700;   
             --green: #008000;
+            --blue: #2196F3;
+            --red: #F44336;
             --strava: #FC4C02;
             --insta-bg: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
         }
@@ -24,194 +26,90 @@
             color: var(--ink); 
             font-family: 'Courier Prime', 'Noto Sans Thai', monospace; 
             margin: 0; 
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            display: flex; flex-direction: column; min-height: 100vh;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"); 
         }
 
         /* --- NAV BAR --- */
         nav { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px 30px; 
-            border-bottom: 3px double var(--ink); 
-            background: rgba(243, 229, 245, 0.95); 
-            position: sticky; top: 0; z-index: 1000; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px 30px; border-bottom: 3px double var(--ink); 
+            background: rgba(243, 229, 245, 0.95); position: sticky; top: 0; z-index: 1000; 
         }
         
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-        }
-
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0px var(--ink);
-        }
-
-        .brand-text { 
-            font-family: 'Limelight', cursive; 
-            font-size: 1.5rem; 
-            color: var(--ink); 
-            text-transform: uppercase;
-        }
-
+        .brand-container { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .logo-img { width: 50px; height: 50px; border: 2px solid var(--ink); box-shadow: 2px 2px 0px var(--ink); }
+        .brand-text { font-family: 'Limelight', cursive; font-size: 1.5rem; color: var(--ink); text-transform: uppercase; }
         .nav-links { display: flex; gap: 20px; align-items: center; }
         
-        /* NAV LINKS STYLING */
         .nav-link { 
-            text-decoration: none; 
-            color: var(--ink); 
-            font-weight: bold; 
-            font-size: 0.9rem; 
-            text-transform: uppercase;
-            position: relative;
-            transition: color 0.2s;
+            text-decoration: none; color: var(--ink); font-weight: bold; 
+            font-size: 0.9rem; text-transform: uppercase; position: relative; transition: color 0.2s; 
         }
-
         .nav-link.active::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 3px;
-            bottom: -5px;
-            left: 0;
+            content: ''; position: absolute; width: 100%; height: 3px; bottom: -5px; left: 0;
             background-color: var(--purple);
             background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, var(--purple) 2px, var(--purple) 4px);
         }
+        .nav-link:active { color: var(--purple); text-shadow: 0 0 8px rgba(157, 78, 221, 0.6); transform: scale(0.95); }
 
-        .nav-link:active {
-            color: var(--purple);
-            text-shadow: 0 0 8px rgba(157, 78, 221, 0.6);
-            transform: scale(0.95);
-        }
-
-        /* --- BUTTONS --- */
         .btn-purple { 
-            background: var(--purple) !important; 
-            color: white !important;
-            padding: 8px 16px; 
-            font-family: 'Limelight', 'Noto Sans Thai', cursive;
-            border: 2px solid var(--ink);
-            box-shadow: 4px 4px 0px var(--ink);
-            transition: all 0.2s;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
+            background: var(--purple) !important; color: white !important;
+            padding: 8px 16px; font-family: 'Limelight', 'Noto Sans Thai', cursive;
+            border: 2px solid var(--ink); box-shadow: 4px 4px 0px var(--ink);
+            transition: all 0.2s; border-radius: 4px; text-decoration: none; display: inline-block;
         }
         .btn-purple:hover { 
-            background: var(--paper) !important; 
-            color: var(--purple) !important; 
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--ink);
+            background: var(--paper) !important; color: var(--purple) !important; 
+            transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--ink);
         }
 
-        /* --- LANG SWITCHER --- */
-        .lang-switch a {
-            font-size: 1rem;
-            text-decoration: none;
-            color: var(--ink);
-            opacity: 0.5;
-            padding: 0 5px;
-            transition: 0.2s;
-        }
-        .lang-switch a.active {
-            opacity: 1;
-            transform: scale(1.1);
-            display: inline-block;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
-        }
+        .lang-switch a { font-size: 1rem; text-decoration: none; color: var(--ink); opacity: 0.5; padding: 0 5px; }
+        .lang-switch a.active { opacity: 1; transform: scale(1.1); display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
 
         .content { flex: 1; padding-bottom: 60px; }
         
-        /* --- FOOTER & SOCIALS --- */
-        footer { 
-            text-align: center; 
-            padding: 40px 20px; 
-            border-top: 2px dashed var(--ink); 
-            background: rgba(255, 255, 255, 0.5);
-            margin-top: auto;
-        }
+        footer { text-align: center; padding: 40px 20px; border-top: 2px dashed var(--ink); background: rgba(255, 255, 255, 0.5); margin-top: auto; }
 
-        .social-container {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
+        .social-container { display: flex; justify-content: center; gap: 25px; margin-bottom: 25px; }
         .social-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            background: white;
-            border: 2px solid var(--ink);
-            box-shadow: 4px 4px 0px rgba(36, 0, 70, 0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: bold;
-            font-family: 'Noto Sans Thai';
-            color: var(--ink);
-            font-size: 0.9rem;
+            display: flex; align-items: center; gap: 10px; text-decoration: none;
+            padding: 10px 20px; border-radius: 50px; background: white;
+            border: 2px solid var(--ink); box-shadow: 4px 4px 0px rgba(36, 0, 70, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s; font-weight: bold; font-family: 'Noto Sans Thai'; color: var(--ink); font-size: 0.9rem;
         }
-
-        .social-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 6px 6px 0px rgba(36, 0, 70, 0.2);
-        }
-
-        .social-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-
+        .social-btn:hover { transform: translateY(-3px); box-shadow: 6px 6px 0px rgba(36, 0, 70, 0.2); }
+        .social-btn svg { width: 24px; height: 24px; }
         .strava-icon { fill: var(--strava); }
         .insta-icon { fill: url(#instaGradient); }
+        .footer-text { opacity: 0.6; font-size: 0.8rem; }
+
+        .card { background: #fff; border: 3px solid var(--ink); padding: 20px; box-shadow: 8px 8px 0px rgba(44, 0, 62, 0.2); position: relative; }
+
+        /* --- RPG PROGRESS BARS --- */
+        .progress-track {
+            width: 100%; height: 20px; background: #eee; border: 2px solid var(--ink);
+            border-radius: 10px; overflow: hidden; position: relative; margin: 5px 0 15px 0;
+        }
+        .progress-bar { height: 100%; border-right: 2px solid var(--ink); transition: width 1s; }
         
-        .footer-text {
-            opacity: 0.6; 
-            font-size: 0.8rem;
+        /* Bar Colors */
+        .bar-purple { background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); }
+        .bar-gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
+        .bar-blue { background: repeating-linear-gradient(45deg, var(--blue), var(--blue) 10px, #1976D2 10px, #1976D2 20px); }
+        
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; font-family: 'Noto Sans Thai'; }
+        
+        .lvl-badge {
+            background: var(--ink); color: white; padding: 5px 10px; border-radius: 4px;
+            font-family: 'Limelight'; display: inline-block; border: 1px solid white;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
         }
 
-        .card { 
-            background: #fff; 
-            border: 3px solid var(--ink); 
-            padding: 20px; 
-            box-shadow: 8px 8px 0px rgba(44, 0, 62, 0.2); 
-            position: relative;
-        }
-
-        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                padding: 15px 10px;
-                gap: 15px;
-            }
-            
-            .brand-container {
-                margin-bottom: 5px;
-            }
-
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-            
-            .brand-text { font-size: 1.2rem; }
-            .nav-link { font-size: 0.8rem; }
-            .btn-purple { font-size: 0.8rem; padding: 6px 12px; }
-            
+            nav { flex-direction: column; padding: 15px 10px; gap: 15px; }
+            .brand-container { margin-bottom: 5px; }
+            .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
             .social-container { flex-direction: column; align-items: center; gap: 15px; }
             .social-btn { width: 220px; justify-content: center; }
         }
@@ -231,18 +129,14 @@
             <img src="{{ url_for('static', filename='logo.png') }}" class="logo-img" alt="Logo">
             <span class="brand-text">{{ text.title }}</span>
         </a>
-        
         <div class="nav-links">
-            
             <div class="lang-switch">
                 <a href="{{ url_for('set_lang', lang_code='en') }}" class="{% if current_lang == 'en' %}active{% endif %}">🇬🇧 EN</a>
                 <a href="{{ url_for('set_lang', lang_code='th') }}" class="{% if current_lang == 'th' %}active{% endif %}">🇹🇭 TH</a>
             </div>
-
             <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">{{ text.nav_leaderboard }}</a>
             <a href="{{ url_for('events') }}" class="nav-link {% if request.endpoint in ['events', 'meetups', 'recap2024'] %}active{% endif %}">{{ text.nav_events }}</a>
             <a href="{{ url_for('rules') }}" class="nav-link {% if request.endpoint == 'rules' %}active{% endif %}">{{ text.nav_rules }}</a>
-            
             {% if session.get('user_id') %}
                 <a href="{{ url_for('profile') }}" class="btn-purple">{{ text.nav_profile }}</a>
             {% else %}
@@ -251,27 +145,19 @@
         </div>
     </nav>
 
-    <div class="content">
-        {% block content %}{% endblock %}
-    </div>
+    <div class="content">{% block content %}{% endblock %}</div>
 
     <footer>
         <div class="social-container">
             <a href="https://www.strava.com/clubs/ramathonrun" target="_blank" class="social-btn">
-                <svg viewBox="0 0 24 24" class="strava-icon">
-                    <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.477 0 4.53 11.244h4.169"/>
-                </svg>
+                <svg viewBox="0 0 24 24" class="strava-icon"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.477 0 4.53 11.244h4.169"/></svg>
                 <span>Join Club on Strava</span>
             </a>
-
             <a href="https://www.instagram.com/ramathon.run/" target="_blank" class="social-btn">
-                <svg viewBox="0 0 24 24" class="insta-icon">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" class="insta-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 <span>Follow @ramathon.run</span>
             </a>
         </div>
-        
         <div class="footer-text">© 2026 prawees • Ramathon Run Club</div>
     </footer>
 </body>

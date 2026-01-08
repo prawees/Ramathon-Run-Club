@@ -5,67 +5,15 @@
 <style>
     .hero { text-align: center; padding: 60px 20px; border-bottom: 2px dashed var(--ink); margin-bottom: 40px; }
     .grid { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-        gap: 20px; 
-        padding: 0 15px; 
-        max-width: 1200px; 
-        margin: 0 auto; 
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+        gap: 20px; padding: 0 15px; max-width: 1200px; margin: 0 auto; 
     }
-    .avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--ink); object-fit: cover; filter: sepia(0.2); }
+    .avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--ink); object-fit: cover; filter: sepia(0.2); transition: 0.2s; }
+    .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+    .card:hover { transform: translateY(-5px); box-shadow: 10px 10px 0 var(--purple); cursor: pointer; }
     
-    .progress-container { 
-        width: 100%; 
-        height: 24px; 
-        border: 2px solid var(--ink); 
-        background: #eee; 
-        border-radius: 12px; 
-        overflow: hidden; 
-        margin: 10px 0; 
-        position: relative; 
-    }
-    
-    .progress-fill { 
-        height: 100%; 
-        background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); 
-        transition: width 1s; 
-        border-right: 2px solid var(--ink);
-    }
-    .progress-fill.gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
-    
-    .goal-icon {
-        position: absolute;
-        right: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1rem;
-        z-index: 5;
-        opacity: 0.8;
-        filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.2));
-    }
-    
-    .stamp { position: absolute; top: 10px; right: 10px; border: 3px solid var(--green); color: var(--green); padding: 5px; font-weight: bold; transform: rotate(-15deg); font-size: 0.8rem; background: white; z-index: 10; font-family: 'Noto Sans Thai', sans-serif;}
-
-    .team-badge {
-        font-size: 0.6rem;
-        font-weight: bold;
-        background: var(--ink);
-        color: white;
-        padding: 2px 6px;
-        border-radius: 4px;
-        display: inline-block;
-        margin-right: 5px;
-    }
-    .year-badge {
-        font-size: 0.6rem;
-        font-weight: bold;
-        background: white;
-        border: 1px solid var(--ink);
-        color: var(--ink);
-        padding: 1px 5px;
-        border-radius: 4px;
-        display: inline-block;
-    }
+    .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; padding: 2px 6px; border-radius: 4px; }
+    .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 </style>
 {% endblock %}
 
@@ -79,61 +27,34 @@
 
 <div class="grid">
     {% for member in members %}
-    <div class="card">
-        {% if member.total_distance >= 50 %}<div class="stamp">{{ text.stamp_qual }}</div>{% endif %}
-        
-        <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px; padding-bottom:10px;">
-            <img src="{{ member.profile }}" class="avatar" loading="lazy">
-            <div>
-                <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
-                
-                {% if member.team %}
+    {% set level = get_level(member.get('dist_year', 0)) %}
+    <a href="{{ url_for('public_profile', user_id=member.strava_id) }}" class="card-link">
+        <div class="card">
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px; padding-bottom:10px; border-bottom: 1px dashed #eee;">
+                <img src="{{ member.profile }}" class="avatar" loading="lazy">
+                <div>
+                    <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
+                    
                     <div style="margin-bottom: 3px;">
-                        <span class="team-badge">{{ member.team }}</span>
-                        {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
+                        {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
+                        <span class="rank-badge-small" style="background: {{ level.color }}; color: white; border:none;">{{ level.icon }} {{ level.id }}</span>
                     </div>
-                {% endif %}
-
-                <div style="font-size:0.7rem; font-weight:bold; letter-spacing:1px; color: {% if member.total_distance >= 100 %}var(--gold){% elif member.total_distance >= 50 %}var(--green){% else %}#888{% endif %};">
-                    {% if member.total_distance >= 100 %}{{ text.rank_elite }}{% elif member.total_distance >= 50 %}{{ text.rank_member }}{% else %}{{ text.rank_rookie }}{% endif %}
                 </div>
             </div>
-        </div>
 
-        {% if member.status or member.motto %}
-        <div style="background: #f9f9f9; padding: 8px; border-left: 3px solid var(--purple); font-size: 0.75rem; font-style: italic; margin-bottom: 15px; color: var(--ink);">
-            "{{ member.status if member.status else member.motto }}"
-        </div>
-        {% endif %}
-
-        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:0.9rem;">
-            <span>{{ text.dist_month }}</span>
-            <span>{{ member.total_distance }} KM</span>
-        </div>
-
-        <div class="progress-container">
-            <div class="goal-icon">
-                {% if member.total_distance < 50 %}👕{% else %}👑{% endif %}
+            <div style="font-size:0.8rem; font-weight:bold; margin-bottom: 5px;">{{ text.stats_month }}</div>
+            <div class="progress-track" style="margin-bottom: 5px; height: 15px;">
+                <div class="progress-bar bar-purple" style="width: {{ (member.get('dist_month', 0) / 50 * 100)|round|int }}%"></div>
             </div>
+            <div style="text-align: right; font-size: 0.9rem; font-weight: bold;">{{ member.get('dist_month', 0) }} KM</div>
 
-            {% if member.total_distance < 50 %}
-                <div class="progress-fill" style="width: {{ (member.total_distance / 50) * 100 }}%"></div>
-            {% else %}
-                <div class="progress-fill gold" style="width: {{ ((member.total_distance - 50) / 50) * 100 if member.total_distance < 100 else 100 }}%"></div>
+            {% if member.status %}
+            <div style="margin-top: 10px; font-size: 0.75rem; font-style: italic; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                "{{ member.status }}"
+            </div>
             {% endif %}
         </div>
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="font-size:0.6rem; opacity:0.6; text-transform:uppercase;">
-                {% if member.total_distance < 50 %}{{ text.goal_shirt }}{% else %}{{ text.goal_elite }}{% endif %}
-            </div>
-            {% if member.shoe %}
-                <div style="font-size: 0.6rem; background: var(--paper); border: 1px solid var(--ink); padding: 2px 4px; border-radius: 4px;">
-                    👟 {{ member.shoe }}
-                </div>
-            {% endif %}
-        </div>
-    </div>
+    </a>
     {% else %}
     <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
         <p>{{ text.empty_db }}</p>

@@ -1,58 +1,87 @@
 {% extends "base.html" %}
-{% block title %}{{ text.profile_file }}{% endblock %}
+{% block title %}Profile - Ramathon{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
-    <h1 style="font-family: 'Limelight', 'Noto Sans Thai'; text-align: center; font-size: 2.5rem; color: var(--purple);">{{ text.profile_file }}</h1>
-    
-    <div class="card" style="text-align: center; position: relative; margin-top: 20px;">
-        {% if user.total_distance >= 50 %}
-            <div style="position: absolute; top: 10px; right: 10px; border: 3px solid var(--green); color: var(--green); padding: 5px; font-weight: bold; transform: rotate(-15deg); font-family: 'Noto Sans Thai';">{{ text.stamp_qual }}</div>
-        {% endif %}
+{% set level = get_level(user.get('dist_year', 0)) %}
 
-        <img src="{{ user.profile }}" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--ink); margin-bottom:15px; filter: sepia(0.3);">
+<div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
+    
+    <div class="card" style="text-align: center; position: relative;">
+        <div style="position: absolute; top: 10px; right: 10px; transform: rotate(5deg);">
+            <div class="lvl-badge" style="background: {{ level.color }};">
+                {{ level.icon }} {{ level.name }}
+            </div>
+        </div>
+
+        <img src="{{ user.profile }}" style="width:120px; height:120px; border-radius:50%; border:4px solid {{ level.color }}; margin-bottom:15px; padding: 2px;">
         
-        <h2 style="font-family:'Limelight', 'Noto Sans Thai'; margin:0; text-transform: uppercase;">
+        <h1 style="font-family:'Limelight', 'Noto Sans Thai'; margin:0; text-transform: uppercase; font-size: 2rem;">
             {{ user.firstname }} {{ user.lastname }}
-        </h2>
+        </h1>
         
-        <div style="margin-top: 5px; font-weight: bold; font-family: 'Noto Sans Thai'; color: var(--ink);">
+        <div style="margin-top: 10px; font-weight: bold; font-family: 'Noto Sans Thai'; color: var(--ink);">
             {% if user.team %}
-                <span style="background: var(--paper); border: 1px solid var(--ink); padding: 2px 8px; border-radius: 4px;">{{ user.team }}</span>
+                <span style="background: var(--paper); border: 1px solid var(--ink); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ user.team }}</span>
             {% endif %}
             {% if user.year %}
-                <span style="background: var(--ink); color: white; padding: 2px 8px; border-radius: 4px; margin-left: 5px;">{{ user.year }}</span>
+                <span style="background: var(--ink); color: white; padding: 2px 8px; border-radius: 4px; margin-left: 5px; font-size: 0.8rem;">{{ user.year }}</span>
             {% endif %}
         </div>
         
-        <p style="font-weight:bold; color: {% if user.total_distance >= 100 %}var(--gold){% elif user.total_distance >= 50 %}var(--green){% else %}var(--purple){% endif %}; margin-top: 5px;">
-            {% if user.total_distance >= 100 %}{{ text.rank_elite }}
-            {% elif user.total_distance >= 50 %}{{ text.rank_member }}
-            {% else %}{{ text.rank_rookie }}{% endif %}
-        </p>
-        
-        <div style="text-align: left; margin: 20px 0;">
-            <div style="width: 100%; height: 24px; border: 2px solid var(--ink); background: #eee; border-radius: 12px; overflow: hidden; position: relative;">
-                <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 5;">
-                    {% if user.total_distance < 50 %}👕{% else %}👑{% endif %}
-                </div>
-                {% if user.total_distance < 50 %}
-                    <div style="height: 100%; background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); border-right: 2px solid var(--ink); width: {{ (user.total_distance / 50) * 100 }}%"></div>
-                {% else %}
-                    <div style="height: 100%; background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); border-right: 2px solid var(--ink); width: {{ ((user.total_distance - 50) / 50) * 100 if user.total_distance < 100 else 100 }}%"></div>
-                {% endif %}
+        {% if user.status or user.motto %}
+        <p style="font-style: italic; color: #666; margin: 15px 0 5px 0;">"{{ user.status if user.status else user.motto }}"</p>
+        {% endif %}
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <h3 style="font-family: 'Limelight'; margin-top: 0; border-bottom: 2px dashed #eee; padding-bottom: 10px;">
+            RUNNER STATS (2026)
+        </h3>
+
+        <div style="margin-bottom: 20px;">
+            <div class="progress-label">
+                <span>{{ text.stats_month }}</span>
+                <span>{{ user.get('dist_month', 0) }} / 50 KM</span>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-top: 5px; font-weight: bold;">
-                <span>{{ text.dist_month }}: {{ user.total_distance }} KM</span>
-                <span style="color: {% if user.total_distance >= 50 %}var(--green){% else %}var(--purple){% endif %}; font-family: 'Noto Sans Thai';">
-                    {% if user.total_distance >= 50 %}{{ text.status_claim }}{% else %}{{ text.status_locked }}{% endif %}
-                </span>
+            <div class="progress-track">
+                <div class="progress-bar bar-purple" style="width: {{ (user.get('dist_month', 0) / 50 * 100)|round|int }}%; max-width: 100%;"></div>
             </div>
         </div>
 
-        <a href="{{ url_for('update_stats') }}" style="display:inline-block; margin-bottom:20px; color:var(--ink); font-size:0.8rem;">
-            {{ text.btn_sync }}
-        </a>
+        <div style="margin-bottom: 20px;">
+            <div class="progress-label" style="color: {% if user.get('dist_quarter', 0) >= 100 %}var(--gold){% else %}inherit{% endif %};">
+                <span>{{ text.stats_quarter }} (Shirt Hunt)</span>
+                <span>{{ user.get('dist_quarter', 0) }} / 100 KM</span>
+            </div>
+            <div class="progress-track" style="border-color: var(--gold);">
+                <div style="position: absolute; right: 5px; top: 0; font-size: 0.8rem; line-height: 18px;">👕</div>
+                <div class="progress-bar bar-gold" style="width: {{ (user.get('dist_quarter', 0) / 100 * 100)|round|int }}%; max-width: 100%;"></div>
+            </div>
+            {% if user.get('dist_quarter', 0) >= 100 %}
+                <div style="text-align: center; font-weight: bold; font-size: 0.8rem; background: #FFF9C4; padding: 5px; border-radius: 4px; color: #F57F17;">
+                    {% if user.get('has_received_shirt') %}
+                        {{ text.badge_shirt_wait }} - {{ text.msg_shirt_next }}
+                    {% else %}
+                        🎉 {{ text.badge_shirt_qual }} - {{ text.msg_shirt_win }}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <div class="progress-label" style="color: var(--blue);">
+                <span>{{ text.stats_total }} ({{ level.name }})</span>
+                <span>{{ user.get('dist_year', 0) }} / {{ level.max }} KM</span>
+            </div>
+            <div class="progress-track" style="border-color: var(--blue);">
+                <div class="progress-bar bar-blue" style="width: {{ (user.get('dist_year', 0) / level.max * 100)|round|int }}%; max-width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    {% if not readonly %}
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="{{ url_for('update_stats') }}" class="btn-purple" style="font-size: 0.8rem;">{{ text.btn_sync }}</a>
     </div>
 
     <div class="card" style="margin-top: 20px; background: #fffcf0;">
@@ -63,85 +92,63 @@
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
                 <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white;">
                     <option value="" disabled {% if not user.team %}selected{% endif %}>-- Select Team --</option>
-                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>{{ text.opt_md }}</option>
-                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>{{ text.opt_nr }}</option>
-                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>{{ text.opt_er }}</option>
-                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>{{ text.opt_cd }}</option>
-                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>{{ text.opt_staff }}</option>
-                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>{{ text.opt_other }}</option>
+                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>MD (Medicine)</option>
+                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>NR (Nursing)</option>
+                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>ER (Paramedic)</option>
+                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>CD (Comm. Disorders)</option>
+                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>Staff</option>
+                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
                 <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
-                    <option value="1" {% if user.year == '1' %}selected{% endif %}>Year 1</option>
-                    <option value="2" {% if user.year == '2' %}selected{% endif %}>Year 2</option>
-                    <option value="3" {% if user.year == '3' %}selected{% endif %}>Year 3</option>
-                    <option value="4" {% if user.year == '4' %}selected{% endif %}>Year 4</option>
-                    <option value="5" {% if user.year == '5' %}selected{% endif %}>Year 5</option>
-                    <option value="6" {% if user.year == '6' %}selected{% endif %}>Year 6</option>
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                    {% for i in range(1, 7) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
                 </select>
-
                 <select id="yearStd" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
-                    <option value="1" {% if user.year == '1' %}selected{% endif %}>Year 1</option>
-                    <option value="2" {% if user.year == '2' %}selected{% endif %}>Year 2</option>
-                    <option value="3" {% if user.year == '3' %}selected{% endif %}>Year 3</option>
-                    <option value="4" {% if user.year == '4' %}selected{% endif %}>Year 4</option>
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                    {% for i in range(1, 5) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
                 </select>
-
-                <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Admin, lecturer, etc." style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
+                <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Lecturer" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
             </div>
 
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_status }}</label>
-                <input type="text" name="status" maxlength="40" value="{{ user.status }}" placeholder="Feeling fast? Injured? Hungry?" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai';">
+                <input type="text" name="status" maxlength="40" value="{{ user.status }}" style="width: 93%; padding: 10px; border: 2px solid var(--ink);">
             </div>
 
             <div style="display: flex; gap: 15px;">
                 <div style="flex: 1;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_motto }}</label>
-                    <input type="text" name="motto" maxlength="20" value="{{ user.motto }}" placeholder="#RunForFun" style="width: 85%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai';">
+                    <input type="text" name="motto" maxlength="20" value="{{ user.motto }}" style="width: 85%; padding: 10px; border: 2px solid var(--ink);">
                 </div>
                 <div style="flex: 1;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_shoe }}</label>
-                    <input type="text" name="shoe" maxlength="20" value="{{ user.shoe }}" placeholder="Nike Pegasus" style="width: 85%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai';">
+                    <input type="text" name="shoe" maxlength="20" value="{{ user.shoe }}" style="width: 85%; padding: 10px; border: 2px solid var(--ink);">
                 </div>
             </div>
 
-            <button type="submit" class="btn-purple" style="width: 100%; margin-top: 20px; font-size: 1.2rem; cursor: pointer;">{{ text.btn_save }}</button>
+            <button type="submit" class="btn-purple" style="width: 100%; margin-top: 20px;">{{ text.btn_save }}</button>
         </form>
     </div>
-</div>
 
-<script>
-    function updateYearOptions() {
-        const team = document.getElementById('teamSelect').value;
-        const yearMD = document.getElementById('yearMD');
-        const yearStd = document.getElementById('yearStd');
-        const yearText = document.getElementById('yearText');
+    <script>
+        function updateYearOptions() {
+            const team = document.getElementById('teamSelect').value;
+            const yearMD = document.getElementById('yearMD');
+            const yearStd = document.getElementById('yearStd');
+            const yearText = document.getElementById('yearText');
+            
+            [yearMD, yearStd, yearText].forEach(el => { el.style.display = 'none'; el.disabled = true; });
 
-        yearMD.style.display = 'none';
-        yearStd.style.display = 'none';
-        yearText.style.display = 'none';
-        
-        yearMD.disabled = true;
-        yearStd.disabled = true;
-        yearText.disabled = true;
-
-        if (team === 'MD') {
-            yearMD.style.display = 'block';
-            yearMD.disabled = false;
-        } else if (['NR', 'ER', 'CD'].includes(team)) {
-            yearStd.style.display = 'block';
-            yearStd.disabled = false;
-        } else {
-            yearText.style.display = 'block';
-            yearText.disabled = false;
+            if (team === 'MD') { yearMD.style.display = 'block'; yearMD.disabled = false; }
+            else if (['NR', 'ER', 'CD'].includes(team)) { yearStd.style.display = 'block'; yearStd.disabled = false; }
+            else { yearText.style.display = 'block'; yearText.disabled = false; }
         }
-    }
-    window.onload = updateYearOptions;
-</script>
+        window.onload = updateYearOptions;
+    </script>
+    {% endif %}
+</div>
 {% endblock %}

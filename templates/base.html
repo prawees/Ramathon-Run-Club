@@ -24,7 +24,17 @@
         /* --- NAV --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 30px; border-bottom: 3px double var(--ink); background: rgba(243, 229, 245, 0.95); position: sticky; top: 0; z-index: 1000; }
         .brand-container { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .logo-img { width: 50px; height: 50px; border: 2px solid var(--ink); box-shadow: 2px 2px 0px var(--ink); }
+        
+        /* SLEEK LOGO UPDATE */
+        .logo-img { 
+            width: 50px; height: 50px; 
+            border-radius: 50%; /* Circular */
+            object-fit: cover;
+            border: 2px solid var(--ink); /* Kept border but circular */
+            transition: transform 0.3s;
+        }
+        .logo-img:hover { transform: rotate(10deg) scale(1.1); }
+
         .brand-text { font-family: 'Limelight', cursive; font-size: 1.5rem; color: var(--ink); text-transform: uppercase; }
         .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-link { text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; position: relative; transition: color 0.2s; }
@@ -50,7 +60,6 @@
 
         .card { background: #fff; border: 3px solid var(--ink); padding: 20px; box-shadow: 8px 8px 0px rgba(44, 0, 62, 0.2); position: relative; }
 
-        /* RPG Bars */
         .progress-track { width: 100%; height: 20px; background: #eee; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; position: relative; margin: 5px 0 15px 0; }
         .progress-bar { height: 100%; border-right: 2px solid var(--ink); transition: width 1s; }
         .bar-purple { background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); }
@@ -60,7 +69,6 @@
         
         .lvl-badge { background: var(--ink); color: white; padding: 5px 10px; border-radius: 4px; font-family: 'Limelight'; display: inline-block; border: 1px solid white; box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
 
-        /* New Components */
         .speech-bubble {
             position: relative; background: #f0f0f0; border-radius: 10px; padding: 8px 12px; font-size: 0.75rem; color: var(--ink); font-style: italic; border: 2px solid var(--ink); margin-bottom: 10px; display: inline-block; max-width: 90%;
         }
@@ -74,7 +82,8 @@
         .filter-bar {
             display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.8); border: 2px dashed var(--ink); border-radius: 8px;
         }
-        .filter-input { padding: 8px; border: 2px solid var(--ink); border-radius: 4px; font-family: 'Noto Sans Thai'; }
+        .filter-input { padding: 8px; border: 2px solid var(--ink); border-radius: 4px; font-family: 'Noto Sans Thai'; transition: box-shadow 0.2s; }
+        .filter-input:focus { outline: none; box-shadow: 0 0 5px var(--purple); }
 
         @media (max-width: 768px) {
             nav { flex-direction: column; padding: 15px 10px; gap: 15px; }

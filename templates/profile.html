@@ -52,7 +52,7 @@
         </div>
         
         {% if user.status or user.motto %}
-        <div style="position: relative; margin: 15px auto; padding-left: 20px; text-align: left; display: inline-block;">
+        <div style="position: relative; margin: 20px auto 10px auto; display: inline-block;">
             <div class="speech-bubble" style="font-size: 0.9rem; padding: 10px 15px;">
                 "{{ user.status if user.status else user.motto }}"
             </div>
@@ -142,7 +142,6 @@
     <div class="card" style="margin-top: 20px; background: #fffcf0;">
         <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple); text-align: center; margin-top: 0;">EDIT PROFILE</h3>
         <form action="{{ url_for('update_profile') }}" method="POST">
-            
             <div style="display:flex; gap:10px; margin-bottom: 15px;">
                 <div style="flex:1;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>

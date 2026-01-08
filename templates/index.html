@@ -24,7 +24,7 @@
     <br><br>
     
     <div style="text-align: center; margin-bottom: 10px; font-family: 'Noto Sans Thai';">
-        <img src="{{ url_for('static', filename='logo.png') }}" style="width: 80px; height: 80px; margin-bottom: 10px; border-radius: 50%; border: 3px solid var(--ink);">
+        <img src="{{ url_for('static', filename='logo.png') }}" style="width: 80px; height: 80px; margin-bottom: 10px; border-radius: 50%; border: 3px solid var(--ink); box-shadow: 2px 2px 0px var(--ink);">
         
         <h3 style="margin: 0; color: var(--purple); font-size: 1.2rem;">{{ text.countdown_intro }}</h3>
         <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: var(--ink);">{{ text.countdown_sub }}</p>
@@ -37,7 +37,7 @@
 </div>
 
 <div style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
-    <div class="filter-bar">
+    <div class="filter-bar" style="border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;">
         <input type="text" id="searchInput" class="filter-input" placeholder="{{ text.filter_search }}" onkeyup="filterLeaderboard()">
         <select id="teamFilter" class="filter-input" onchange="filterLeaderboard()">
             <option value="">{{ text.filter_all_teams }}</option>
@@ -71,8 +71,10 @@
        
         <div class="card">
             {% if member.status or member.motto %}
-            <div style="position: relative; margin-bottom: 20px; padding-left: 20px;">
-                <div class="speech-bubble">"{{ member.status if member.status else member.motto }}"</div>
+            <div style="position: relative; margin-bottom: 20px; padding-left: 10px;">
+                <div class="speech-bubble" style="font-size: 0.8rem; padding: 6px 10px;">
+                    "{{ member.status if member.status else member.motto }}"
+                </div>
             </div>
             {% endif %}
 

@@ -25,12 +25,10 @@
         nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 30px; border-bottom: 3px double var(--ink); background: rgba(243, 229, 245, 0.95); position: sticky; top: 0; z-index: 1000; }
         .brand-container { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         
-        /* SLEEK LOGO UPDATE */
         .logo-img { 
             width: 50px; height: 50px; 
-            border-radius: 50%; /* Circular */
-            object-fit: cover;
-            border: 2px solid var(--ink); /* Kept border but circular */
+            border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--ink); 
             transition: transform 0.3s;
         }
         .logo-img:hover { transform: rotate(10deg) scale(1.1); }
@@ -84,6 +82,17 @@
         }
         .filter-input { padding: 8px; border: 2px solid var(--ink); border-radius: 4px; font-family: 'Noto Sans Thai'; transition: box-shadow 0.2s; }
         .filter-input:focus { outline: none; box-shadow: 0 0 5px var(--purple); }
+
+        /* FIXED: Alignment for Leaderboard Badges */
+        .team-badge, .year-badge, .rank-badge-small {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 18px; /* Fixed height for consistency */
+            line-height: 0; /* Remove font-leading issues */
+            vertical-align: middle;
+            padding: 0 6px;
+        }
 
         @media (max-width: 768px) {
             nav { flex-direction: column; padding: 15px 10px; gap: 15px; }

@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <img src="{{ user.profile }}" style="width:120px; height:120px; border-radius:50%; border:4px solid {{ level.color }}; margin-bottom:15px; padding: 2px;">
+        <img src="{{ user.profile if user.profile else url_for('static', filename='orange.png') }}" style="width:120px; height:120px; border-radius:50%; border:4px solid {{ level.color }}; margin-bottom:15px; padding: 2px;">
         
         <h1 style="font-family:'Limelight', 'Noto Sans Thai'; margin:0; text-transform: uppercase; font-size: 2rem;">
             {{ user.firstname }} {{ user.lastname }}
@@ -51,11 +51,17 @@
             {% endif %}
         </div>
         
-        {% if user.status or user.motto %}
+        {% if user.status %}
         <div style="position: relative; margin: 20px auto 10px auto; display: inline-block;">
             <div class="speech-bubble" style="font-size: 0.9rem; padding: 10px 15px;">
-                "{{ user.status if user.status else user.motto }}"
+                "{{ user.status }}"
             </div>
+        </div>
+        {% endif %}
+
+        {% if user.motto %}
+        <div style="margin-top: 10px; font-family: 'Limelight', 'Courier Prime'; color: var(--purple); font-size: 1.1rem; letter-spacing: 1px; font-style: italic;">
+            ✨ "{{ user.motto }}" ✨
         </div>
         {% endif %}
         
@@ -142,6 +148,7 @@
     <div class="card" style="margin-top: 20px; background: #fffcf0;">
         <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple); text-align: center; margin-top: 0;">EDIT PROFILE</h3>
         <form action="{{ url_for('update_profile') }}" method="POST">
+            
             <div style="display:flex; gap:10px; margin-bottom: 15px;">
                 <div style="flex:1;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>

@@ -8,17 +8,22 @@
     .avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--ink); object-fit: cover; filter: sepia(0.2); transition: 0.2s; }
     .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
     .card:hover { transform: translateY(-5px); box-shadow: 10px 10px 0 var(--purple); cursor: pointer; }
-    .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; padding: 2px 6px; border-radius: 4px; }
-    .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); padding: 1px 5px; border-radius: 4px; margin-left: 2px;}
-    .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+    
+    /* BADGE ALIGNMENT FIX */
+    .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; border-radius: 4px; }
+    .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); border-radius: 4px; margin-left: 2px;}
+    .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); border-radius: 4px; margin-left: 5px; }
+    
     .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="hero">
+    <div style="font-size: 5rem; line-height: 1; margin-bottom: 10px;">🦖💨</div>
+
     <h1 style="font-family:'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin:0; color: var(--purple);">{{ text.hero_title }}</h1>
-    <div style="font-weight:bold; display:inline-block; padding:5px 20px; margin-top:10px;">
+    <div style="font-weight:bold; border-top:2px solid var(--ink); border-bottom:2px solid var(--ink); display:inline-block; padding:5px 20px; margin-top:10px;">
         {{ text.hero_badge }}
     </div>
     <br><br>
@@ -68,16 +73,16 @@
        data-campus="{{ member.campus }}">
        
         <div class="card">
-            {% if member.status or member.motto %}
+            {% if member.status %}
             <div style="position: relative; margin-bottom: 20px; padding-left: 10px;">
                 <div class="speech-bubble" style="font-size: 0.8rem; padding: 6px 10px;">
-                    "{{ member.status if member.status else member.motto }}"
+                    "{{ member.status }}"
                 </div>
             </div>
             {% endif %}
 
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px; padding-bottom:10px; border-bottom: 1px dashed #eee;">
-                <img src="{{ member.profile }}" class="avatar" loading="lazy">
+                <img src="{{ member.profile if member.profile else url_for('static', filename='orange.png') }}" class="avatar" loading="lazy">
                 <div>
                     <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
                     

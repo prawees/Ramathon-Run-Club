@@ -5,7 +5,6 @@ import os
 import time
 import datetime
 from datetime import timezone
-import calendar
 
 app = Flask(__name__)
 app.secret_key = 'RAMATHON_PURPLE_KEY'
@@ -17,7 +16,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'database.json')
 
 # --- CAMPAIGN STATUS ---
-# Set to True when Q2 2026 starts to unlock the Shirt Quest
 SHIRT_CAMPAIGN_ACTIVE = False 
 
 # --- RPG GAMIFICATION CONFIG ---
@@ -49,83 +47,30 @@ TRANSLATIONS = {
         'level_prefix': 'RANK',
         'xp_to_next': 'KM to level up to',
         'xp_max': 'MAX LEVEL REACHED',
+        'xp_desc': '(Yearly XP - Resets Jan 1st)',
         'locked_q2': 'UNLOCKS Q2 2026',
         'badge_section': 'MONTHLY BADGES',
-        'badge_locked': 'Locked',
-        'badge_shirt_qual': 'SHIRT UNLOCKED',
-        'badge_shirt_wait': 'ALREADY CLAIMED',
-        'msg_shirt_win': 'You have qualified for the Quarterly Shirt! Contact staff to claim.',
-        'msg_shirt_next': 'Great job! You have already claimed a shirt this year.',
+        'countdown_label': 'SEASON STARTS IN:',
         # Profile Form
         'lbl_team': 'Team / Affiliation',
         'lbl_year': 'Year / Role',
+        'lbl_campus': 'Campus',
         'lbl_status': 'Status Message',
         'lbl_motto': 'Running Motto',
         'lbl_shoe': 'Battle Shoe',
-        # Rules Page
-        'rules_title': 'Club Regulations',
-        'rpg_title': '2. The RPG System',
-        'rpg_monthly_title': 'Monthly Mission',
-        'rpg_monthly_desc': 'Goal: 50 KM. Resets every month. Collect badges!',
-        'rpg_quarterly_title': 'Quarterly Quest',
-        'rpg_quarterly_desc': 'Goal: 100 KM within the current quarter. Unlocks Shirt (1/Year).',
-        'rpg_quarterly_note': '(Distance resets every quarter: Jan-Mar, Apr-Jun, etc.)',
-        'rpg_annual_title': 'Annual Career Ranks',
-        'rpg_annual_desc': 'Accumulate distance all year to rank up!',
-        'rpg_special_title': 'Year-End Rewards',
-        'rpg_special_a': 'Class A Finishers: Lucky draw for 5x Running Gear Sets.',
-        'rpg_special_s': 'Class S Finishers: Lucky draw for Shokz OpenRun Pro 2.',
-        'rules_1_title': '1. The Mission',
-        'rules_1_text': 'Fostering health and camaraderie among Ramathibodi medical students and staff.',
-        'rules_2_title': '2. The Rewards',
-        'rules_2_li1': '50 KM: Qualify for the Club Monthly Shirt.',
-        'rules_2_li2': '100 KM: Unlock Elite Monthly Status.',
-        'rules_3_title': '3. Sync Rules',
-        'rules_3_text': 'Only Public runs count.',
-        # Events Hub
-        'events_main_title': 'CLUB EVENTS',
-        'badge_upcoming': 'UPCOMING',
-        'badge_archive': 'ARCHIVE',
-        'evt_meetup_title': '🏃 Ramathon Meetups',
-        'evt_meetup_desc': "Join the 'Easy Pace' crew. Monthly runs at Suan Chitralada & Benchakitti Park.",
-        'evt_meetup_btn': 'View Schedule →',
-        'evt_recap_title': '📜 Virtual Run 2024 Recap',
-        'evt_recap_desc': 'A look back at our previous success: 10,000+ KM ran by 283 Ramathibodians.',
-        'evt_recap_btn': 'Read Report →',
-        # Meetups Page
-        'meetup_page_title': 'Ramathon Meetups',
-        'meetup_quote': '"From Virtual to Reality"',
-        'meetup_card_title': '🌳 The "Easy Pace" Sundays',
-        'meetup_card_text': 'Connect with fellow medics, nurses, and staff in a relaxed environment. No PBs, just vibes.',
-        'meetup_loc_label': 'Locations:',
-        'meetup_loc_val': 'Suan Chitralada & Benchakitti Park',
-        'meetup_time_label': 'Time:',
-        'meetup_time_val': 'Every last Sunday of the month, 06:00 AM',
-        'meetup_pace_label': 'Pace:',
-        'meetup_pace_val': 'Zone 2 (Conversation Pace)',
-        'meetup_next_box': 'Next Session:',
-        'meetup_next_date': 'February 22, 2026 @ Benchakitti Park',
-        'meetup_meeting_point': 'Meeting Point: Main Amphitheater',
-        # Recap 2024 Page
-        'recap_top_label': 'ARCHIVE REPORT: TK13',
-        'recap_main_title': 'Virtual Ramathon 2024',
-        'recap_date': 'November 1 - 30, 2024',
-        'recap_stat_runners': 'Runners Joined',
-        'recap_stat_km': 'Total KM Ran',
-        'recap_stat_finishers': 'Finishers',
-        'recap_roster_title': 'The Roster',
-        'recap_baby': 'Baby Marathon (30k)',
-        'recap_super': 'Super Marathon (50k)',
-        'recap_voices_title': 'Voices from the Track',
-        'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
-        'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
-        'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
-        'recap_budget_title': 'Budget Summary (Transparent)',
-        'recap_grant': 'Grant Received:',
-        'recap_used': 'Actual Used:',
-        'recap_returned': 'Returned to Faculty:',
-        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025',
-        'countdown_label': 'SEASON STARTS IN:',
+        'lbl_route': 'Fav. Running Route',
+        'lbl_social': 'Social Connect',
+        'lbl_ig': 'Instagram Handle (no @)',
+        'lbl_show_strava': 'Show Strava Link on Profile',
+        # Filter
+        'filter_search': 'Search Name...',
+        'filter_all_teams': 'All Teams',
+        'filter_all_years': 'All Years',
+        'filter_all_campus': 'All Campuses',
+        # Options
+        'opt_pyt': 'PYT (Phayathai)',
+        'opt_cnmi': 'CNMI (Chakri)',
+        'opt_salaya': 'Salaya',
         'empty_db': 'No adventurers found yet.'
     },
     'th': {
@@ -147,83 +92,30 @@ TRANSLATIONS = {
         'level_prefix': 'ระดับ',
         'xp_to_next': 'กม. สู่ระดับ',
         'xp_max': 'ระดับสูงสุด',
+        'xp_desc': '(สะสมรายปี - รีเซ็ต 1 ม.ค.)',
         'locked_q2': 'เปิดระบบ Q2 2569',
         'badge_section': 'เหรียญตราประจำเดือน',
-        'badge_locked': 'ยังไม่ปลดล็อค',
-        'badge_shirt_qual': 'รับเสื้อได้',
-        'badge_shirt_wait': 'รับสิทธิ์แล้ว',
-        'msg_shirt_win': 'ยินดีด้วย! คุณผ่านเกณฑ์รับเสื้อประจำไตรมาสนี้ ติดต่อรับได้ที่คณะ',
-        'msg_shirt_next': 'ยอดเยี่ยม! (คุณได้รับสิทธิ์เสื้อของปีนี้ไปแล้ว)',
+        'countdown_label': 'เปิดซีซั่นในอีก:',
         # Profile Form
         'lbl_team': 'สังกัด / ทีม',
         'lbl_year': 'ชั้นปี / ตำแหน่ง',
+        'lbl_campus': 'วิทยาเขตหลัก',
         'lbl_status': 'สเตตัสวันนี้',
         'lbl_motto': 'คติประจำใจนักวิ่ง',
         'lbl_shoe': 'รองเท้าคู่ใจ',
-        # Rules Page
-        'rules_title': 'ระเบียบการ',
-        'rpg_title': '๒. ระบบเลเวลและภารกิจ',
-        'rpg_monthly_title': 'ภารกิจรายเดือน',
-        'rpg_monthly_desc': 'เป้าหมาย: 50 กม. รีเซ็ตทุกเดือน สะสมเหรียญเดือน!',
-        'rpg_quarterly_title': 'ภารกิจพิชิตเสื้อ (ไตรมาส)',
-        'rpg_quarterly_desc': 'เป้าหมาย: 100 กม. ภายในไตรมาสเพื่อรับเสื้อ (จำกัด 1 ตัว/ปี)',
-        'rpg_quarterly_note': '(ระยะสะสมนับใหม่ทุกไตรมาส: ม.ค.-มี.ค., เม.ย.-มิ.ย. เป็นต้น)',
-        'rpg_annual_title': 'ระดับนักวิ่งประจำปี',
-        'rpg_annual_desc': 'สะสมระยะวิ่งทั้งปีเพื่อเลื่อนยศ!',
-        'rpg_special_title': 'รางวัลพิเศษปลายปี',
-        'rpg_special_a': 'ผู้จบ Class A: ลุ้นรับรางวัลอุปกรณ์วิ่ง 5 รางวัล',
-        'rpg_special_s': 'ผู้จบ Class S: ลุ้นรับหูฟัง Shokz OpenRun Pro 2',
-        'rules_1_title': '๑. พันธกิจ',
-        'rules_1_text': 'ส่งเสริมสุขภาพและความสามัคคีในหมู่นักศึกษาและบุคลากรรามาธิบดี',
-        'rules_2_title': '๒. รางวัล',
-        'rules_2_li1': 'สะสมครบ ๕๐ กม.: รับเสื้อวิ่งประจำเดือน (Club Monthly Shirt)',
-        'rules_2_li2': 'สะสมครบ ๑๐๐ กม.: ปลดล็อคระดับ Elite ประจำเดือน',
-        'rules_3_title': '๓. กติกาการส่งผล',
-        'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)',
-        # Events Hub
-        'events_main_title': 'กิจกรรมชมรม',
-        'badge_upcoming': 'เร็วๆ นี้',
-        'badge_archive': 'ทำเนียบรุ่น',
-        'evt_meetup_title': '🏃 นัดวิ่งรามาธอน (Meetups)',
-        'evt_meetup_desc': "เข้าร่วมกลุ่ม 'Easy Pace' วิ่งสบายๆ ทุกเดือนที่สวนจิตรลดา และ สวนเบญจกิติ",
-        'evt_meetup_btn': 'ดูตารางกิจกรรม →',
-        'evt_recap_title': '📜 สรุปผล Virtual Run 2024',
-        'evt_recap_desc': 'ย้อนดูความสำเร็จในปีที่ผ่านมา: ระยะทางรวมกว่า 10,000 กม. จากชาวรามาธิบดี 283 ท่าน',
-        'evt_recap_btn': 'อ่านรายงานสรุป →',
-        # Meetups Page
-        'meetup_page_title': 'นัดวิ่งรามาธอน',
-        'meetup_quote': '"จากโลกออนไลน์ สู่สนามจริง"',
-        'meetup_card_title': '🌳 อาทิตย์วิ่งสบาย (The "Easy Pace" Sundays)',
-        'meetup_card_text': 'พบปะเพื่อนนักศึกษา แพทย์ พยาบาล และบุคลากรในบรรยากาศสบายๆ ไม่เน้นทำเวลา เน้นมิตรภาพ',
-        'meetup_loc_label': 'สถานที่:',
-        'meetup_loc_val': 'สวนจิตรลดา และ สวนเบญจกิติ',
-        'meetup_time_label': 'เวลา:',
-        'meetup_time_val': 'ทุกวันอาทิตย์สุดท้ายของเดือน เวลา 06:00 น.',
-        'meetup_pace_label': 'เพซ (Pace):',
-        'meetup_pace_val': 'โซน 2 (Conversation Pace วิ่งไปคุยไป)',
-        'meetup_next_box': 'นัดถัดไป:',
-        'meetup_next_date': '22 กุมภาพันธ์ 2569 @ สวนเบญจกิติ',
-        'meetup_meeting_point': 'จุดนัดพบ: อัฒจันทร์ใหญ่ (Amphitheater)',
-        # Recap 2024 Page
-        'recap_top_label': 'รายงานสรุปผล: TK13',
-        'recap_main_title': 'Virtual Ramathon 2024',
-        'recap_date': '1 - 30 พฤศจิกายน 2567',
-        'recap_stat_runners': 'ผู้เข้าร่วม',
-        'recap_stat_km': 'ระยะทางรวม',
-        'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย',
-        'recap_roster_title': 'ทำเนียบนักวิ่ง',
-        'recap_baby': 'Baby Marathon (30k)',
-        'recap_super': 'Super Marathon (50k)',
-        'recap_voices_title': 'เสียงจากสนามวิ่ง',
-        'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
-        'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
-        'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
-        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
-        'recap_grant': 'งบประมาณที่ได้รับ:',
-        'recap_used': 'ใช้จ่ายจริง:',
-        'recap_returned': 'ยอดเงินคืนคณะฯ:',
-        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568',
-        'countdown_label': 'เปิดซีซั่นในอีก:',
+        'lbl_route': 'เส้นทางวิ่งโปรด',
+        'lbl_social': 'ช่องทางติดต่อ',
+        'lbl_ig': 'Instagram ID (ไม่ต้องใส่ @)',
+        'lbl_show_strava': 'แสดงปุ่ม Strava บนหน้าโปรไฟล์',
+        # Filter
+        'filter_search': 'ค้นหาชื่อ...',
+        'filter_all_teams': 'ทุกทีม',
+        'filter_all_years': 'ทุกชั้นปี',
+        'filter_all_campus': 'ทุกวิทยาเขต',
+        # Options
+        'opt_pyt': 'พญาไท',
+        'opt_cnmi': 'จักรีนฤบดินทร์',
+        'opt_salaya': 'ศาลายา',
         'empty_db': 'ยังไม่มีสมาชิกในระบบ'
     }
 }
@@ -248,8 +140,7 @@ def get_next_level(km):
         if km < lvl['max']:
             idx = LEVELS.index(lvl)
             if idx + 1 < len(LEVELS):
-                next_lvl = LEVELS[idx + 1]
-                return next_lvl, round(lvl['max'] - km, 2)
+                return LEVELS[idx + 1], round(lvl['max'] - km, 2)
     return None, 0
 
 def get_valid_token(user_id):
@@ -273,19 +164,12 @@ def get_valid_token(user_id):
     except: pass
     return None
 
-def get_current_season_stats():
-    """Calculates boundaries for the CURRENT time."""
+def get_season_stats():
     now = datetime.datetime.now()
-    # Year Start (Jan 1)
     year_start = datetime.datetime(now.year, 1, 1).replace(tzinfo=timezone.utc).timestamp()
-    
-    # Current Month Start
     month_start = datetime.datetime(now.year, now.month, 1).replace(tzinfo=timezone.utc).timestamp()
-    
-    # Current Quarter Start
     q_month = (now.month - 1) // 3 * 3 + 1
     quarter_start = datetime.datetime(now.year, q_month, 1).replace(tzinfo=timezone.utc).timestamp()
-    
     return int(month_start), int(quarter_start), int(year_start)
 
 # --- ROUTES ---
@@ -337,65 +221,42 @@ def update_stats():
     token = get_valid_token(user_id)
     if not token: return redirect(url_for('login'))
 
-    ts_month_start, ts_quarter_start, ts_year_start = get_current_season_stats()
-    
-    # We fetch ALL activities from the start of the CURRENT YEAR to calculate:
-    # 1. Total Yearly Distance
-    # 2. Monthly Badges (re-calculate retrospectively for the year)
+    ts_month, ts_quarter, ts_year = get_season_stats()
     headers = {'Authorization': f"Bearer {token}"}
-    params = {'after': ts_year_start, 'per_page': 200, 'page': 1}
+    params = {'after': ts_year, 'per_page': 200, 'page': 1}
     
     try:
         r = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
         activities = r.json()
-        
         if isinstance(activities, list):
             d_month, d_quarter, d_year = 0, 0, 0
-            
-            # Dictionary to track distance per month key (e.g. "2026-01")
-            monthly_totals = {} 
+            monthly_totals = {}
             
             for act in activities:
                 if act.get('type') == 'Run' and act.get('visibility') == 'everyone':
-                    # Parse activity time
                     act_dt = datetime.datetime.strptime(act['start_date'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
                     act_ts = int(act_dt.timestamp())
                     dist_km = act.get('distance', 0) / 1000
                     
-                    # Accumulate Year (Since we fetched from Jan 1st)
                     d_year += dist_km
+                    if act_ts >= ts_quarter: d_quarter += dist_km
+                    if act_ts >= ts_month: d_month += dist_km
                     
-                    # Accumulate Quarter (If within current quarter bounds)
-                    if act_ts >= ts_quarter_start:
-                        d_quarter += dist_km
-                        
-                    # Accumulate Current Month (If within current month bounds)
-                    if act_ts >= ts_month_start:
-                        d_month += dist_km
-                        
-                    # Track monthly totals for badges (YYYY-MM format)
-                    month_key = act_dt.strftime("%Y-%m") # e.g., "2026-02"
+                    month_key = act_dt.strftime("%Y-%m")
                     monthly_totals[month_key] = monthly_totals.get(month_key, 0) + dist_km
-
-            # Process Badges
-            earned_badges = []
-            for m_key, dist in monthly_totals.items():
-                if dist >= 50: # Badge threshold
-                    earned_badges.append(m_key)
+            
+            earned_badges = [k for k, v in monthly_totals.items() if v >= 50]
             
             db = load_db()
             if user_id in db:
-                db[user_id]['dist_month'] = round(d_month, 2)
-                db[user_id]['dist_quarter'] = round(d_quarter, 2)
-                db[user_id]['dist_year'] = round(d_year, 2)
-                db[user_id]['badges'] = earned_badges # Save list of earned month keys
-                
-                if 'has_received_shirt' not in db[user_id]: db[user_id]['has_received_shirt'] = False
+                db[user_id].update({
+                    'dist_month': round(d_month, 2),
+                    'dist_quarter': round(d_quarter, 2),
+                    'dist_year': round(d_year, 2),
+                    'badges': earned_badges
+                })
                 save_db(db)
-                
-    except Exception as e:
-        print(f"Sync Error: {e}")
-
+    except Exception as e: print(f"Sync Error: {e}")
     return redirect(url_for('profile'))
 
 @app.route('/update_profile', methods=['POST'])
@@ -404,12 +265,17 @@ def update_profile():
     if not user_id: return redirect(url_for('login'))
     db = load_db()
     if user_id in db:
+        show_strava = 'on' if request.form.get('show_strava') else 'off'
         db[user_id].update({
             'team': request.form.get('team'),
             'year': request.form.get('year'),
+            'campus': request.form.get('campus'),
             'status': request.form.get('status'),
             'motto': request.form.get('motto'),
-            'shoe': request.form.get('shoe')
+            'shoe': request.form.get('shoe'),
+            'fav_route': request.form.get('fav_route'),
+            'instagram': request.form.get('instagram'),
+            'show_strava': show_strava
         })
         save_db(db)
     return redirect(url_for('profile'))
@@ -436,7 +302,8 @@ def callback():
         if uid not in db:
             db[uid] = {
                 'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 'badges': [],
-                'has_received_shirt': False, 'team': '', 'year': '', 'status': '', 'motto': '', 'shoe': ''
+                'team': '', 'year': '', 'campus': '', 'status': '', 
+                'motto': '', 'shoe': '', 'fav_route': '', 'instagram': '', 'show_strava': 'off'
             }
         db[uid].update({
             'strava_id': uid,

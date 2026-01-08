@@ -20,17 +20,41 @@
             {{ user.firstname }} {{ user.lastname }}
         </h1>
         
-        <div style="margin-top: 10px; font-weight: bold; font-family: 'Noto Sans Thai'; color: var(--ink);">
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+            {% if user.show_strava == 'on' %}
+            <a href="https://www.strava.com/athletes/{{ user.strava_id }}" target="_blank" style="text-decoration: none;">
+                <div style="background: #FC4C02; color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 5px;">
+                    <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:white;"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.477 0 4.53 11.244h4.169"/></svg>
+                    Strava
+                </div>
+            </a>
+            {% endif %}
+            {% if user.instagram %}
+            <a href="https://instagram.com/{{ user.instagram }}" target="_blank" style="text-decoration: none;">
+                <div style="background: #E1306C; color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 5px;">
+                    <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:white;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Instagram
+                </div>
+            </a>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 15px; font-weight: bold; font-family: 'Noto Sans Thai'; color: var(--ink);">
             {% if user.team %}
                 <span style="background: var(--paper); border: 1px solid var(--ink); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ user.team }}</span>
             {% endif %}
             {% if user.year %}
                 <span style="background: var(--ink); color: white; padding: 2px 8px; border-radius: 4px; margin-left: 5px; font-size: 0.8rem;">{{ user.year }}</span>
             {% endif %}
+            {% if user.campus %}
+                <span style="border: 1px dashed var(--ink); padding: 2px 8px; border-radius: 4px; margin-left: 5px; font-size: 0.8rem;">📍 {{ user.campus }}</span>
+            {% endif %}
         </div>
         
-        {% if user.status or user.motto %}
-        <p style="font-style: italic; color: #666; margin: 15px 0 5px 0;">"{{ user.status if user.status else user.motto }}"</p>
+        {% if user.fav_route %}
+        <div style="margin-top: 10px; font-size: 0.8rem; color: #555;">
+            <strong>{{ text.lbl_route }}:</strong> {{ user.fav_route }}
+        </div>
         {% endif %}
     </div>
 
@@ -50,28 +74,21 @@
         </div>
 
         <div style="margin-bottom: 25px;">
-            <div class="progress-label" style="margin-bottom: 10px;">
-                <span>{{ text.badge_section }}</span>
-            </div>
+            <div class="progress-label" style="margin-bottom: 10px;"><span>{{ text.badge_section }}</span></div>
             <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
                 {% for m in range(1, 13) %}
                     {% set m_str = "%02d"|format(m) %}
                     {% set badge_key = (now_year|string) + "-" + m_str %}
                     {% set has_badge = badge_key in user.get('badges', []) %}
-                    
                     <div style="min-width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; 
                         {% if has_badge %}background: var(--purple); color: white; border: 2px solid var(--ink); box-shadow: 2px 2px 0 rgba(0,0,0,0.2);{% else %}background: #eee; color: #aaa; border: 2px dashed #ccc;{% endif %}">
-                        {% if has_badge %}
-                            {{ ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][m-1] }}
-                        {% else %}
-                            🔒
-                        {% endif %}
+                        {% if has_badge %}{{ ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][m-1] }}{% else %}🔒{% endif %}
                     </div>
                 {% endfor %}
             </div>
         </div>
 
-        <div style="margin-bottom: 20px; position: relative;">
+        <div style="margin-bottom: 20px;">
             {% if shirt_active %}
                 <div class="progress-label" style="color: {% if user.get('dist_quarter', 0) >= 100 %}var(--gold){% else %}inherit{% endif %};">
                     <span>{{ text.stats_quarter }}</span>
@@ -83,18 +100,11 @@
                 </div>
                 {% if user.get('dist_quarter', 0) >= 100 %}
                     <div style="text-align: center; font-weight: bold; font-size: 0.8rem; background: #FFF9C4; padding: 5px; border-radius: 4px; color: #F57F17;">
-                        {% if user.get('has_received_shirt') %}
-                            {{ text.badge_shirt_wait }} - {{ text.msg_shirt_next }}
-                        {% else %}
-                            🎉 {{ text.badge_shirt_qual }} - {{ text.msg_shirt_win }}
-                        {% endif %}
+                        {% if user.get('has_received_shirt') %}{{ text.badge_shirt_wait }} - {{ text.msg_shirt_next }}{% else %}🎉 {{ text.badge_shirt_qual }} - {{ text.msg_shirt_win }}{% endif %}
                     </div>
                 {% endif %}
             {% else %}
-                <div class="progress-label" style="opacity: 0.5;">
-                    <span>{{ text.stats_quarter }}</span>
-                    <span>🔒 {{ text.locked_q2 }}</span>
-                </div>
+                <div class="progress-label" style="opacity: 0.5;"><span>{{ text.stats_quarter }}</span><span>🔒 {{ text.locked_q2 }}</span></div>
                 <div class="progress-track" style="border-color: #ccc; background: #ddd; position: relative;">
                      <div style="position: absolute; width: 100%; text-align: center; top: 0; font-size: 0.7rem; color: #666; line-height: 18px; font-weight: bold; letter-spacing: 1px;">COMING Q2 2026</div>
                 </div>
@@ -103,7 +113,7 @@
 
         <div style="border-top: 2px dashed #eee; padding-top: 15px;">
             <div class="progress-label" style="color: var(--blue); font-size: 0.9rem;">
-                <span>{{ text.stats_total }} ({{ level.name }})</span>
+                <span>{{ text.stats_total }} <small style="color:#666; font-weight:normal;">{{ text.xp_desc }}</small></span>
                 {% if next_level %}
                     <span>{{ xp_needed }} {{ text.xp_to_next }} {{ next_level.name }} {{ next_level.icon }}</span>
                 {% else %}
@@ -124,35 +134,54 @@
     <div class="card" style="margin-top: 20px; background: #fffcf0;">
         <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple); text-align: center; margin-top: 0;">EDIT PROFILE</h3>
         <form action="{{ url_for('update_profile') }}" method="POST">
+            
+            <div style="display:flex; gap:10px; margin-bottom: 15px;">
+                <div style="flex:1;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
+                    <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink);">
+                        <option value="" disabled {% if not user.team %}selected{% endif %}>-- Select --</option>
+                        <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>{{ text.opt_md }}</option>
+                        <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>{{ text.opt_nr }}</option>
+                        <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>{{ text.opt_er }}</option>
+                        <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>{{ text.opt_cd }}</option>
+                        <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>{{ text.opt_staff }}</option>
+                        <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>{{ text.opt_other }}</option>
+                    </select>
+                </div>
+                <div style="flex:1;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
+                    <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); display: none;">
+                        {% for i in range(1, 7) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
+                        <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                    </select>
+                    <select id="yearStd" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); display: none;">
+                        {% for i in range(1, 5) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
+                        <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                    </select>
+                    <input type="text" id="yearText" name="year" value="{{ user.year }}" style="width: 85%; padding: 10px; border: 2px solid var(--ink); display: none;">
+                </div>
+            </div>
+
             <div style="margin-bottom: 15px;">
-                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
-                <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white;">
-                    <option value="" disabled {% if not user.team %}selected{% endif %}>-- Select Team --</option>
-                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>MD</option>
-                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>NR</option>
-                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>ER</option>
-                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>CD</option>
-                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>Staff</option>
-                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>Other</option>
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_campus }}</label>
+                <select name="campus" style="width: 100%; padding: 10px; border: 2px solid var(--ink);">
+                    <option value="" disabled {% if not user.campus %}selected{% endif %}>-- Select Campus --</option>
+                    <option value="PYT" {% if user.campus == 'PYT' %}selected{% endif %}>{{ text.opt_pyt }}</option>
+                    <option value="CNMI" {% if user.campus == 'CNMI' %}selected{% endif %}>{{ text.opt_cnmi }}</option>
+                    <option value="Salaya" {% if user.campus == 'Salaya' %}selected{% endif %}>{{ text.opt_salaya }}</option>
                 </select>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
-                <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
-                    {% for i in range(1, 7) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
-                </select>
-                <select id="yearStd" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
-                    {% for i in range(1, 5) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
-                </select>
-                <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Lecturer" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
-            </div>
+
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_status }}</label>
                 <input type="text" name="status" maxlength="40" value="{{ user.status }}" style="width: 93%; padding: 10px; border: 2px solid var(--ink);">
             </div>
-            <div style="display: flex; gap: 15px;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_route }}</label>
+                <input type="text" name="fav_route" maxlength="50" value="{{ user.fav_route }}" style="width: 93%; padding: 10px; border: 2px solid var(--ink);">
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
                 <div style="flex: 1;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_motto }}</label>
                     <input type="text" name="motto" maxlength="20" value="{{ user.motto }}" style="width: 85%; padding: 10px; border: 2px solid var(--ink);">
@@ -162,6 +191,23 @@
                     <input type="text" name="shoe" maxlength="20" value="{{ user.shoe }}" style="width: 85%; padding: 10px; border: 2px solid var(--ink);">
                 </div>
             </div>
+
+            <div style="border-top: 1px dashed #ccc; padding-top: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 10px; color: var(--purple);">{{ text.lbl_social }}</label>
+                
+                <div style="margin-bottom: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem;">
+                        <input type="checkbox" name="show_strava" {% if user.show_strava == 'on' %}checked{% endif %}>
+                        {{ text.lbl_show_strava }}
+                    </label>
+                </div>
+                
+                <div>
+                    <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">{{ text.lbl_ig }}</label>
+                    <input type="text" name="instagram" value="{{ user.instagram }}" placeholder="e.g. ramathon.run" style="width: 93%; padding: 10px; border: 2px solid var(--ink);">
+                </div>
+            </div>
+
             <button type="submit" class="btn-purple" style="width: 100%; margin-top: 20px;">{{ text.btn_save }}</button>
         </form>
     </div>

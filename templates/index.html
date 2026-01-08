@@ -9,8 +9,8 @@
     .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
     .card:hover { transform: translateY(-5px); box-shadow: 10px 10px 0 var(--purple); cursor: pointer; }
     .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; padding: 2px 6px; border-radius: 4px; }
-    .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
     .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); padding: 1px 5px; border-radius: 4px; margin-left: 2px;}
+    .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
     .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
 </style>
 {% endblock %}
@@ -24,20 +24,59 @@
     <br>
     <div class="countdown-box">
         <div style="font-size: 0.8rem; font-family: 'Noto Sans Thai';">{{ text.countdown_label }} Q2 2026</div>
-        <div id="countdown" style="font-family: 'Courier Prime'; font-size: 1.5rem; font-weight: bold;">00d 00h 00m</div>
+        <div id="countdown" style="font-family: 'Courier Prime'; font-size: 1.5rem; font-weight: bold;">00d 00h 00m 00s</div>
     </div>
 </div>
 
-<div class="grid">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+    <div class="filter-bar">
+        <input type="text" id="searchInput" class="filter-input" placeholder="{{ text.filter_search }}" onkeyup="filterLeaderboard()">
+        
+        <select id="teamFilter" class="filter-input" onchange="filterLeaderboard()">
+            <option value="">{{ text.filter_all_teams }}</option>
+            <option value="MD">MD</option><option value="NR">NR</option><option value="ER">ER</option>
+            <option value="CD">CD</option><option value="Staff">Staff</option><option value="Other">Other</option>
+        </select>
+        
+        <select id="yearFilter" class="filter-input" onchange="filterLeaderboard()">
+            <option value="">{{ text.filter_all_years }}</option>
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+            <option value="Grad">Grad</option>
+        </select>
+
+        <select id="campusFilter" class="filter-input" onchange="filterLeaderboard()">
+            <option value="">{{ text.filter_all_campus }}</option>
+            <option value="PYT">{{ text.opt_pyt }}</option>
+            <option value="CNMI">{{ text.opt_cnmi }}</option>
+            <option value="Salaya">{{ text.opt_salaya }}</option>
+        </select>
+    </div>
+</div>
+
+<div class="grid" id="leaderboardGrid">
     {% for member in members %}
     {% set level = get_level(member.get('dist_year', 0)) %}
-    <a href="{{ url_for('public_profile', user_id=member.strava_id) }}" class="card-link">
+    
+    <a href="{{ url_for('public_profile', user_id=member.strava_id) }}" class="card-link leader-card" 
+       data-name="{{ member.firstname }} {{ member.lastname }}"
+       data-team="{{ member.team }}"
+       data-year="{{ member.year }}"
+       data-campus="{{ member.campus }}">
+       
         <div class="card">
+            {% if member.status or member.motto %}
+            <div style="position: relative; margin-bottom: 20px; padding-left: 20px;">
+                <div class="speech-bubble">
+                    "{{ member.status if member.status else member.motto }}"
+                </div>
+            </div>
+            {% endif %}
+
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px; padding-bottom:10px; border-bottom: 1px dashed #eee;">
                 <img src="{{ member.profile }}" class="avatar" loading="lazy">
                 <div>
                     <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
-                    
                     <div style="margin-bottom: 3px;">
                         {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
                         {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
@@ -59,12 +98,6 @@
                     </div>
                 {% endif %}
             </div>
-
-            {% if member.status %}
-            <div style="margin-top: 10px; font-size: 0.75rem; font-style: italic; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                "{{ member.status }}"
-            </div>
-            {% endif %}
         </div>
     </a>
     {% else %}
@@ -75,19 +108,40 @@
 </div>
 
 <script>
-    // Set the date we're counting down to (April 1, 2026)
+    // Countdown
     var countDownDate = new Date("Apr 1, 2026 00:00:00").getTime();
-    var x = setInterval(function() {
+    setInterval(function() {
         var now = new Date().getTime();
         var distance = countDownDate - now;
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m ";
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("countdown").innerHTML = "SEASON STARTED!";
-        }
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
     }, 1000);
+
+    // Filtering
+    function filterLeaderboard() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const team = document.getElementById('teamFilter').value;
+        const year = document.getElementById('yearFilter').value;
+        const campus = document.getElementById('campusFilter').value;
+        const cards = document.querySelectorAll('.leader-card');
+
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            const cTeam = card.getAttribute('data-team') || "";
+            const cYear = card.getAttribute('data-year') || "";
+            const cCampus = card.getAttribute('data-campus') || "";
+
+            let visible = true;
+            if (search && !name.includes(search)) visible = false;
+            if (team && cTeam !== team) visible = false;
+            if (year && cYear !== year) visible = false;
+            if (campus && cCampus !== campus) visible = false;
+
+            card.style.display = visible ? "block" : "none";
+        });
+    }
 </script>
 {% endblock %}

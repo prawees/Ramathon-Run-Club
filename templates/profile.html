@@ -92,12 +92,12 @@
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
                 <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white;">
                     <option value="" disabled {% if not user.team %}selected{% endif %}>-- Select Team --</option>
-                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>MD (Medicine)</option>
-                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>NR (Nursing)</option>
-                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>ER (Paramedic)</option>
-                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>CD (Comm. Disorders)</option>
-                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>Staff</option>
-                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>Other</option>
+                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>{{ text.opt_md }}</option>
+                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>{{ text.opt_nr }}</option>
+                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>{{ text.opt_er }}</option>
+                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>{{ text.opt_cd }}</option>
+                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>{{ text.opt_staff }}</option>
+                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>{{ text.opt_other }}</option>
                 </select>
             </div>
 
@@ -105,11 +105,11 @@
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
                 <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
                     {% for i in range(1, 7) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
                 </select>
                 <select id="yearStd" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
                     {% for i in range(1, 5) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
                 </select>
                 <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Lecturer" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
             </div>

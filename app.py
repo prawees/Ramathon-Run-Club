@@ -5,6 +5,7 @@ import os
 import time
 import datetime
 from datetime import timezone
+import calendar
 
 app = Flask(__name__)
 app.secret_key = 'RAMATHON_PURPLE_KEY'
@@ -31,32 +32,12 @@ LEVELS = [
 TRANSLATIONS = {
     'en': {
         'title': 'Ramathon Run Club',
-        # Nav
         'nav_leaderboard': 'LEADERBOARD',
         'nav_events': 'EVENTS',
         'nav_rules': 'RULES',
         'nav_profile': 'MY PROFILE',
         'nav_connect': 'CONNECT STRAVA',
         'nav_logout': 'LOGOUT',
-        # Home
-        'hero_title': "Ramathon 2026",
-        'hero_badge': 'EST. 2021 • PHAYATHAI • BANGPHLI • SALAYA',
-        'stamp_qual': 'QUALIFIED',
-        'rank_elite': '★ ELITE SQUAD',
-        'rank_member': '♦ CLUB MEMBER',
-        'rank_rookie': '• ROOKIE',
-        'dist_month': 'Month Dist.',
-        'goal_shirt': 'Target: 50KM Shirt',
-        'goal_elite': 'Target: 100KM Elite',
-        'empty_db': 'No adventurers found yet.',
-        'countdown_label': 'SEASON STARTS IN:',
-        # Profile & RPG
-        'profile_file': 'Member File',
-        'status_claim': 'CLAIMABLE',
-        'status_locked': 'LOCKED',
-        'msg_close': 'Keep going! You are only',
-        'msg_km_away': 'KM away from the club shirt.',
-        'msg_win': 'Splendid! You have qualified. Visit the Faculty Lounge to claim.',
         'btn_sync': '⟳ Sync Strava',
         'btn_save': 'Save Profile',
         'view_profile': 'View Public Profile',
@@ -69,6 +50,8 @@ TRANSLATIONS = {
         'xp_to_next': 'KM to level up to',
         'xp_max': 'MAX LEVEL REACHED',
         'locked_q2': 'UNLOCKS Q2 2026',
+        'badge_section': 'MONTHLY BADGES',
+        'badge_locked': 'Locked',
         'badge_shirt_qual': 'SHIRT UNLOCKED',
         'badge_shirt_wait': 'ALREADY CLAIMED',
         'msg_shirt_win': 'You have qualified for the Quarterly Shirt! Contact staff to claim.',
@@ -79,22 +62,19 @@ TRANSLATIONS = {
         'lbl_status': 'Status Message',
         'lbl_motto': 'Running Motto',
         'lbl_shoe': 'Battle Shoe',
-        'opt_md': 'MD (Medicine)',
-        'opt_nr': 'NR (Nursing)',
-        'opt_er': 'ER (Paramedic)',
-        'opt_cd': 'CD (Comm. Disorders)',
-        'opt_staff': 'Staff / Faculty',
-        'opt_other': 'Other',
-        'opt_grad': 'Alumni / Grad',
         # Rules Page
         'rules_title': 'Club Regulations',
         'rpg_title': '2. The RPG System',
         'rpg_monthly_title': 'Monthly Mission',
-        'rpg_monthly_desc': 'Goal: 50 KM. Resets every month.',
+        'rpg_monthly_desc': 'Goal: 50 KM. Resets every month. Collect badges!',
         'rpg_quarterly_title': 'Quarterly Quest',
-        'rpg_quarterly_desc': 'Goal: 100 KM. Unlocks Shirt (1/Year).',
+        'rpg_quarterly_desc': 'Goal: 100 KM within the current quarter. Unlocks Shirt (1/Year).',
+        'rpg_quarterly_note': '(Distance resets every quarter: Jan-Mar, Apr-Jun, etc.)',
         'rpg_annual_title': 'Annual Career Ranks',
         'rpg_annual_desc': 'Accumulate distance all year to rank up!',
+        'rpg_special_title': 'Year-End Rewards',
+        'rpg_special_a': 'Class A Finishers: Lucky draw for 5x Running Gear Sets.',
+        'rpg_special_s': 'Class S Finishers: Lucky draw for Shokz OpenRun Pro 2.',
         'rules_1_title': '1. The Mission',
         'rules_1_text': 'Fostering health and camaraderie among Ramathibodi medical students and staff.',
         'rules_2_title': '2. The Rewards',
@@ -144,36 +124,18 @@ TRANSLATIONS = {
         'recap_grant': 'Grant Received:',
         'recap_used': 'Actual Used:',
         'recap_returned': 'Returned to Faculty:',
-        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025'
+        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025',
+        'countdown_label': 'SEASON STARTS IN:',
+        'empty_db': 'No adventurers found yet.'
     },
     'th': {
         'title': 'Ramathon Run Club',
-        # Nav
         'nav_leaderboard': 'ตารางคะแนน',
         'nav_events': 'กิจกรรม',
         'nav_rules': 'กติกา',
         'nav_profile': 'ข้อมูลส่วนตัว',
         'nav_connect': 'เชื่อมต่อ STRAVA',
         'nav_logout': 'ออกจากระบบ',
-        # Home
-        'hero_title': "รามาธอน ๒๕๖๙",
-        'hero_badge': 'ก่อตั้ง ๒๕๖๔ • พญาไท • บางพลี • ศาลายา',
-        'stamp_qual': 'ผ่านเกณฑ์',
-        'rank_elite': '★ ระดับอีลีท',
-        'rank_member': '♦ สมาชิกคลับ',
-        'rank_rookie': '• มือใหม่',
-        'dist_month': 'ระยะเดือนนี้',
-        'goal_shirt': 'เป้าหมาย: เสื้อวิ่ง 50 กม.',
-        'goal_elite': 'เป้าหมาย: 100 กม.',
-        'empty_db': 'ยังไม่มีสมาชิกในระบบ',
-        'countdown_label': 'เปิดซีซั่นในอีก:',
-        # Profile & RPG
-        'profile_file': 'แฟ้มประวัติ',
-        'status_claim': 'รับสิทธิ์ได้',
-        'status_locked': 'ยังไม่ครบ',
-        'msg_close': 'อีกนิดเดียว! คุณขาดอีกเพียง',
-        'msg_km_away': 'กม. จะได้รับเสื้อวิ่ง',
-        'msg_win': 'ยอดเยี่ยม! คุณผ่านเกณฑ์แล้ว ติดต่อรับของรางวัลได้ที่คณะ',
         'btn_sync': '⟳ อัพเดทข้อมูล',
         'btn_save': 'บันทึกข้อมูล',
         'view_profile': 'ดูโปรไฟล์',
@@ -186,6 +148,8 @@ TRANSLATIONS = {
         'xp_to_next': 'กม. สู่ระดับ',
         'xp_max': 'ระดับสูงสุด',
         'locked_q2': 'เปิดระบบ Q2 2569',
+        'badge_section': 'เหรียญตราประจำเดือน',
+        'badge_locked': 'ยังไม่ปลดล็อค',
         'badge_shirt_qual': 'รับเสื้อได้',
         'badge_shirt_wait': 'รับสิทธิ์แล้ว',
         'msg_shirt_win': 'ยินดีด้วย! คุณผ่านเกณฑ์รับเสื้อประจำไตรมาสนี้ ติดต่อรับได้ที่คณะ',
@@ -196,22 +160,19 @@ TRANSLATIONS = {
         'lbl_status': 'สเตตัสวันนี้',
         'lbl_motto': 'คติประจำใจนักวิ่ง',
         'lbl_shoe': 'รองเท้าคู่ใจ',
-        'opt_md': 'MD (แพทยศาสตร์)',
-        'opt_nr': 'NR (พยาบาลศาสตร์)',
-        'opt_er': 'ER (ฉุกเฉินการแพทย์)',
-        'opt_cd': 'CD (สื่อสารความหมายฯ)',
-        'opt_staff': 'Staff (อาจารย์/บุคลากร)',
-        'opt_other': 'Other (อื่นๆ)',
-        'opt_grad': 'ศิษย์เก่า (Alumni)',
         # Rules Page
         'rules_title': 'ระเบียบการ',
         'rpg_title': '๒. ระบบเลเวลและภารกิจ',
         'rpg_monthly_title': 'ภารกิจรายเดือน',
-        'rpg_monthly_desc': 'เป้าหมาย: 50 กม. รีเซ็ตทุกเดือน',
+        'rpg_monthly_desc': 'เป้าหมาย: 50 กม. รีเซ็ตทุกเดือน สะสมเหรียญเดือน!',
         'rpg_quarterly_title': 'ภารกิจพิชิตเสื้อ (ไตรมาส)',
-        'rpg_quarterly_desc': 'เป้าหมาย: 100 กม. เพื่อรับเสื้อ (จำกัด 1 ตัว/ปี)',
+        'rpg_quarterly_desc': 'เป้าหมาย: 100 กม. ภายในไตรมาสเพื่อรับเสื้อ (จำกัด 1 ตัว/ปี)',
+        'rpg_quarterly_note': '(ระยะสะสมนับใหม่ทุกไตรมาส: ม.ค.-มี.ค., เม.ย.-มิ.ย. เป็นต้น)',
         'rpg_annual_title': 'ระดับนักวิ่งประจำปี',
         'rpg_annual_desc': 'สะสมระยะวิ่งทั้งปีเพื่อเลื่อนยศ!',
+        'rpg_special_title': 'รางวัลพิเศษปลายปี',
+        'rpg_special_a': 'ผู้จบ Class A: ลุ้นรับรางวัลอุปกรณ์วิ่ง 5 รางวัล',
+        'rpg_special_s': 'ผู้จบ Class S: ลุ้นรับหูฟัง Shokz OpenRun Pro 2',
         'rules_1_title': '๑. พันธกิจ',
         'rules_1_text': 'ส่งเสริมสุขภาพและความสามัคคีในหมู่นักศึกษาและบุคลากรรามาธิบดี',
         'rules_2_title': '๒. รางวัล',
@@ -261,7 +222,9 @@ TRANSLATIONS = {
         'recap_grant': 'งบประมาณที่ได้รับ:',
         'recap_used': 'ใช้จ่ายจริง:',
         'recap_returned': 'ยอดเงินคืนคณะฯ:',
-        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568'
+        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568',
+        'countdown_label': 'เปิดซีซั่นในอีก:',
+        'empty_db': 'ยังไม่มีสมาชิกในระบบ'
     }
 }
 
@@ -281,7 +244,6 @@ def get_level(km):
     return LEVELS[-1]
 
 def get_next_level(km):
-    """Returns (next_level_dict, km_needed) or (None, 0) if maxed."""
     for lvl in LEVELS:
         if km < lvl['max']:
             idx = LEVELS.index(lvl)
@@ -311,12 +273,19 @@ def get_valid_token(user_id):
     except: pass
     return None
 
-def get_time_boundaries():
+def get_current_season_stats():
+    """Calculates boundaries for the CURRENT time."""
     now = datetime.datetime.now()
+    # Year Start (Jan 1)
     year_start = datetime.datetime(now.year, 1, 1).replace(tzinfo=timezone.utc).timestamp()
+    
+    # Current Month Start
     month_start = datetime.datetime(now.year, now.month, 1).replace(tzinfo=timezone.utc).timestamp()
+    
+    # Current Quarter Start
     q_month = (now.month - 1) // 3 * 3 + 1
     quarter_start = datetime.datetime(now.year, q_month, 1).replace(tzinfo=timezone.utc).timestamp()
+    
     return int(month_start), int(quarter_start), int(year_start)
 
 # --- ROUTES ---
@@ -328,7 +297,8 @@ def inject_globals():
         current_lang=lang, 
         get_level=get_level,
         get_next_level=get_next_level,
-        shirt_active=SHIRT_CAMPAIGN_ACTIVE
+        shirt_active=SHIRT_CAMPAIGN_ACTIVE,
+        now_year=datetime.datetime.now().year
     )
 
 @app.route('/set_lang/<lang_code>')
@@ -367,32 +337,65 @@ def update_stats():
     token = get_valid_token(user_id)
     if not token: return redirect(url_for('login'))
 
-    ts_month, ts_quarter, ts_year = get_time_boundaries()
+    ts_month_start, ts_quarter_start, ts_year_start = get_current_season_stats()
+    
+    # We fetch ALL activities from the start of the CURRENT YEAR to calculate:
+    # 1. Total Yearly Distance
+    # 2. Monthly Badges (re-calculate retrospectively for the year)
     headers = {'Authorization': f"Bearer {token}"}
-    params = {'after': ts_year, 'per_page': 200, 'page': 1}
+    params = {'after': ts_year_start, 'per_page': 200, 'page': 1}
     
     try:
         r = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
         activities = r.json()
+        
         if isinstance(activities, list):
             d_month, d_quarter, d_year = 0, 0, 0
+            
+            # Dictionary to track distance per month key (e.g. "2026-01")
+            monthly_totals = {} 
+            
             for act in activities:
                 if act.get('type') == 'Run' and act.get('visibility') == 'everyone':
+                    # Parse activity time
                     act_dt = datetime.datetime.strptime(act['start_date'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
                     act_ts = int(act_dt.timestamp())
                     dist_km = act.get('distance', 0) / 1000
+                    
+                    # Accumulate Year (Since we fetched from Jan 1st)
                     d_year += dist_km
-                    if act_ts >= ts_quarter: d_quarter += dist_km
-                    if act_ts >= ts_month: d_month += dist_km
+                    
+                    # Accumulate Quarter (If within current quarter bounds)
+                    if act_ts >= ts_quarter_start:
+                        d_quarter += dist_km
+                        
+                    # Accumulate Current Month (If within current month bounds)
+                    if act_ts >= ts_month_start:
+                        d_month += dist_km
+                        
+                    # Track monthly totals for badges (YYYY-MM format)
+                    month_key = act_dt.strftime("%Y-%m") # e.g., "2026-02"
+                    monthly_totals[month_key] = monthly_totals.get(month_key, 0) + dist_km
+
+            # Process Badges
+            earned_badges = []
+            for m_key, dist in monthly_totals.items():
+                if dist >= 50: # Badge threshold
+                    earned_badges.append(m_key)
             
             db = load_db()
             if user_id in db:
                 db[user_id]['dist_month'] = round(d_month, 2)
                 db[user_id]['dist_quarter'] = round(d_quarter, 2)
                 db[user_id]['dist_year'] = round(d_year, 2)
+                db[user_id]['badges'] = earned_badges # Save list of earned month keys
+                
                 if 'has_received_shirt' not in db[user_id]: db[user_id]['has_received_shirt'] = False
                 save_db(db)
-    except Exception as e: print(f"Sync Error: {e}")
+                
+    except Exception as e:
+        print(f"Sync Error: {e}")
+
     return redirect(url_for('profile'))
 
 @app.route('/update_profile', methods=['POST'])
@@ -432,8 +435,8 @@ def callback():
         db = load_db()
         if uid not in db:
             db[uid] = {
-                'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 'has_received_shirt': False,
-                'team': '', 'year': '', 'status': '', 'motto': '', 'shoe': ''
+                'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 'badges': [],
+                'has_received_shirt': False, 'team': '', 'year': '', 'status': '', 'motto': '', 'shoe': ''
             }
         db[uid].update({
             'strava_id': uid,

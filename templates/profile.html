@@ -36,7 +36,7 @@
 
     <div class="card" style="margin-top: 20px;">
         <h3 style="font-family: 'Limelight'; margin-top: 0; border-bottom: 2px dashed #eee; padding-bottom: 10px;">
-            RUNNER STATS (2026)
+            RUNNER STATS ({{ now_year }})
         </h3>
 
         <div style="margin-bottom: 20px;">
@@ -46,6 +46,28 @@
             </div>
             <div class="progress-track">
                 <div class="progress-bar bar-purple" style="width: {{ (user.get('dist_month', 0) / 50 * 100)|round|int }}%; max-width: 100%;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <div class="progress-label" style="margin-bottom: 10px;">
+                <span>{{ text.badge_section }}</span>
+            </div>
+            <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+                {% for m in range(1, 13) %}
+                    {% set m_str = "%02d"|format(m) %}
+                    {% set badge_key = (now_year|string) + "-" + m_str %}
+                    {% set has_badge = badge_key in user.get('badges', []) %}
+                    
+                    <div style="min-width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; 
+                        {% if has_badge %}background: var(--purple); color: white; border: 2px solid var(--ink); box-shadow: 2px 2px 0 rgba(0,0,0,0.2);{% else %}background: #eee; color: #aaa; border: 2px dashed #ccc;{% endif %}">
+                        {% if has_badge %}
+                            {{ ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][m-1] }}
+                        {% else %}
+                            🔒
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -106,23 +128,23 @@
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
                 <select name="team" id="teamSelect" onchange="updateYearOptions()" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white;">
                     <option value="" disabled {% if not user.team %}selected{% endif %}>-- Select Team --</option>
-                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>{{ text.opt_md }}</option>
-                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>{{ text.opt_nr }}</option>
-                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>{{ text.opt_er }}</option>
-                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>{{ text.opt_cd }}</option>
-                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>{{ text.opt_staff }}</option>
-                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>{{ text.opt_other }}</option>
+                    <option value="MD" {% if user.team == 'MD' %}selected{% endif %}>MD</option>
+                    <option value="NR" {% if user.team == 'NR' %}selected{% endif %}>NR</option>
+                    <option value="ER" {% if user.team == 'ER' %}selected{% endif %}>ER</option>
+                    <option value="CD" {% if user.team == 'CD' %}selected{% endif %}>CD</option>
+                    <option value="Staff" {% if user.team == 'Staff' %}selected{% endif %}>Staff</option>
+                    <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>Other</option>
                 </select>
             </div>
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
                 <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
                     {% for i in range(1, 7) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
                 </select>
                 <select id="yearStd" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
                     {% for i in range(1, 5) %}<option value="{{ i }}" {% if user.year == i|string %}selected{% endif %}>Year {{ i }}</option>{% endfor %}
-                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>{{ text.opt_grad }}</option>
+                    <option value="Grad" {% if user.year == 'Grad' %}selected{% endif %}>Grad</option>
                 </select>
                 <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Lecturer" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
             </div>

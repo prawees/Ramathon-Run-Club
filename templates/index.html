@@ -11,7 +11,7 @@
     .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; padding: 2px 6px; border-radius: 4px; }
     .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); padding: 1px 5px; border-radius: 4px; margin-left: 2px;}
     .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
-    .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 5px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+    .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
 </style>
 {% endblock %}
 
@@ -24,6 +24,8 @@
     <br><br>
     
     <div style="text-align: center; margin-bottom: 10px; font-family: 'Noto Sans Thai';">
+        <img src="{{ url_for('static', filename='logo.png') }}" style="width: 80px; height: 80px; margin-bottom: 10px; border-radius: 50%; border: 3px solid var(--ink);">
+        
         <h3 style="margin: 0; color: var(--purple); font-size: 1.2rem;">{{ text.countdown_intro }}</h3>
         <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: var(--ink);">{{ text.countdown_sub }}</p>
     </div>

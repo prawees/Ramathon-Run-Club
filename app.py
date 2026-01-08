@@ -5,6 +5,7 @@ import os
 import time
 import datetime
 from datetime import timezone
+import calendar
 
 app = Flask(__name__)
 app.secret_key = 'RAMATHON_PURPLE_KEY'
@@ -20,8 +21,8 @@ SHIRT_CAMPAIGN_ACTIVE = False
 
 # --- RPG GAMIFICATION CONFIG ---
 LEVELS = [
-    # Changed Class D color to lighter grey (#A0A0A0) for better readability
-    {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#A0A0A0', 'icon': '🌱'},
+    # CHANGED: Class D color to #C0C0C0 (Lighter Silver/Grey)
+    {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#C0C0C0', 'icon': '🌱'},
     {'id': 'C', 'name': 'Class C: Runner', 'min': 50, 'max': 200, 'color': '#4CAF50', 'icon': '🏃'},
     {'id': 'B', 'name': 'Class B: Pacer', 'min': 200, 'max': 500, 'color': '#2196F3', 'icon': '⚡'},
     {'id': 'A', 'name': 'Class A: Elite', 'min': 500, 'max': 1000, 'color': '#9C27B0', 'icon': '🔥'},
@@ -108,7 +109,8 @@ TRANSLATIONS = {
         'badge_section': 'เหรียญตราประจำเดือน',
         # IG Campaign
         'ig_promo': "✨ พิเศษ: ใส่ IG ภายใน 25 มี.ค. 69 ลุ้นรับ Starbucks Card! ☕",
-        'ig_verified': 'ยืนยัน IG',
+        # CHANGED: 'ยืนยัน IG' -> 'IG Verified'
+        'ig_verified': 'IG Verified',
         # Profile Form
         'lbl_team': 'สังกัด / ทีม',
         'lbl_year': 'ชั้นปี / ตำแหน่ง',

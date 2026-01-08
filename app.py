@@ -20,7 +20,8 @@ SHIRT_CAMPAIGN_ACTIVE = False
 
 # --- RPG GAMIFICATION CONFIG ---
 LEVELS = [
-    {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#888888', 'icon': '🌱'},
+    # Changed Class D color to lighter grey (#A0A0A0) for better readability
+    {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#A0A0A0', 'icon': '🌱'},
     {'id': 'C', 'name': 'Class C: Runner', 'min': 50, 'max': 200, 'color': '#4CAF50', 'icon': '🏃'},
     {'id': 'B', 'name': 'Class B: Pacer', 'min': 200, 'max': 500, 'color': '#2196F3', 'icon': '⚡'},
     {'id': 'A', 'name': 'Class A: Elite', 'min': 500, 'max': 1000, 'color': '#9C27B0', 'icon': '🔥'},
@@ -40,6 +41,10 @@ TRANSLATIONS = {
         'btn_save': 'Save Profile',
         'view_profile': 'View Public Profile',
         'footer_line': 'Join OpenChat',
+        # Countdown & Header
+        'countdown_intro': "The fun starts now! Let's run Ramathibodians! Link your Strava now!",
+        'countdown_sub': "Shirt challenges begin Q2 2026: 1 Apr 2026!",
+        'countdown_label': 'SEASON STARTS IN:',
         # RPG Specific
         'stats_month': 'MONTHLY GRIND',
         'stats_quarter': 'QUARTERLY QUEST',
@@ -50,7 +55,9 @@ TRANSLATIONS = {
         'xp_desc': '(Yearly XP - Resets Jan 1st)',
         'locked_q2': 'UNLOCKS Q2 2026',
         'badge_section': 'MONTHLY BADGES',
-        'countdown_label': 'SEASON STARTS IN:',
+        # IG Campaign
+        'ig_promo': "✨ Special: Link IG by 25 Mar '26 to win a Starbucks Card! ☕",
+        'ig_verified': 'IG Verified',
         # Profile Form
         'lbl_team': 'Team / Affiliation',
         'lbl_year': 'Year / Role',
@@ -85,6 +92,10 @@ TRANSLATIONS = {
         'btn_save': 'บันทึกข้อมูล',
         'view_profile': 'ดูโปรไฟล์',
         'footer_line': 'เข้ากลุ่ม OpenChat',
+        # Countdown & Header
+        'countdown_intro': "ความสนุกเริ่มแล้ว! ชาวรามาธิบดีเชื่อมต่อ Strava ได้เลย!",
+        'countdown_sub': "ภารกิจชิงเสื้อเริ่ม Q2 2569: 1 เมษายน 2569",
+        'countdown_label': 'เปิดซีซั่นในอีก:',
         # RPG Specific
         'stats_month': 'ภารกิจรายเดือน',
         'stats_quarter': 'ภารกิจพิชิตเสื้อ',
@@ -95,7 +106,9 @@ TRANSLATIONS = {
         'xp_desc': '(สะสมรายปี - รีเซ็ต 1 ม.ค.)',
         'locked_q2': 'เปิดระบบ Q2 2569',
         'badge_section': 'เหรียญตราประจำเดือน',
-        'countdown_label': 'เปิดซีซั่นในอีก:',
+        # IG Campaign
+        'ig_promo': "✨ พิเศษ: ใส่ IG ภายใน 25 มี.ค. 69 ลุ้นรับ Starbucks Card! ☕",
+        'ig_verified': 'ยืนยัน IG',
         # Profile Form
         'lbl_team': 'สังกัด / ทีม',
         'lbl_year': 'ชั้นปี / ตำแหน่ง',

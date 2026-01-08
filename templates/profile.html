@@ -3,6 +3,7 @@
 
 {% block content %}
 {% set level = get_level(user.get('dist_year', 0)) %}
+{% set next_level, xp_needed = get_next_level(user.get('dist_year', 0)) %}
 
 <div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
     
@@ -48,32 +49,46 @@
             </div>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <div class="progress-label" style="color: {% if user.get('dist_quarter', 0) >= 100 %}var(--gold){% else %}inherit{% endif %};">
-                <span>{{ text.stats_quarter }} (Shirt Hunt)</span>
-                <span>{{ user.get('dist_quarter', 0) }} / 100 KM</span>
-            </div>
-            <div class="progress-track" style="border-color: var(--gold);">
-                <div style="position: absolute; right: 5px; top: 0; font-size: 0.8rem; line-height: 18px;">👕</div>
-                <div class="progress-bar bar-gold" style="width: {{ (user.get('dist_quarter', 0) / 100 * 100)|round|int }}%; max-width: 100%;"></div>
-            </div>
-            {% if user.get('dist_quarter', 0) >= 100 %}
-                <div style="text-align: center; font-weight: bold; font-size: 0.8rem; background: #FFF9C4; padding: 5px; border-radius: 4px; color: #F57F17;">
-                    {% if user.get('has_received_shirt') %}
-                        {{ text.badge_shirt_wait }} - {{ text.msg_shirt_next }}
-                    {% else %}
-                        🎉 {{ text.badge_shirt_qual }} - {{ text.msg_shirt_win }}
-                    {% endif %}
+        <div style="margin-bottom: 20px; position: relative;">
+            {% if shirt_active %}
+                <div class="progress-label" style="color: {% if user.get('dist_quarter', 0) >= 100 %}var(--gold){% else %}inherit{% endif %};">
+                    <span>{{ text.stats_quarter }}</span>
+                    <span>{{ user.get('dist_quarter', 0) }} / 100 KM</span>
+                </div>
+                <div class="progress-track" style="border-color: var(--gold);">
+                    <div style="position: absolute; right: 5px; top: 0; font-size: 0.8rem; line-height: 18px;">👕</div>
+                    <div class="progress-bar bar-gold" style="width: {{ (user.get('dist_quarter', 0) / 100 * 100)|round|int }}%; max-width: 100%;"></div>
+                </div>
+                {% if user.get('dist_quarter', 0) >= 100 %}
+                    <div style="text-align: center; font-weight: bold; font-size: 0.8rem; background: #FFF9C4; padding: 5px; border-radius: 4px; color: #F57F17;">
+                        {% if user.get('has_received_shirt') %}
+                            {{ text.badge_shirt_wait }} - {{ text.msg_shirt_next }}
+                        {% else %}
+                            🎉 {{ text.badge_shirt_qual }} - {{ text.msg_shirt_win }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="progress-label" style="opacity: 0.5;">
+                    <span>{{ text.stats_quarter }}</span>
+                    <span>🔒 {{ text.locked_q2 }}</span>
+                </div>
+                <div class="progress-track" style="border-color: #ccc; background: #ddd; position: relative;">
+                     <div style="position: absolute; width: 100%; text-align: center; top: 0; font-size: 0.7rem; color: #666; line-height: 18px; font-weight: bold; letter-spacing: 1px;">COMING Q2 2026</div>
                 </div>
             {% endif %}
         </div>
 
-        <div>
-            <div class="progress-label" style="color: var(--blue);">
+        <div style="border-top: 2px dashed #eee; padding-top: 15px;">
+            <div class="progress-label" style="color: var(--blue); font-size: 0.9rem;">
                 <span>{{ text.stats_total }} ({{ level.name }})</span>
-                <span>{{ user.get('dist_year', 0) }} / {{ level.max }} KM</span>
+                {% if next_level %}
+                    <span>{{ xp_needed }} {{ text.xp_to_next }} {{ next_level.name }} {{ next_level.icon }}</span>
+                {% else %}
+                    <span>{{ text.xp_max }}</span>
+                {% endif %}
             </div>
-            <div class="progress-track" style="border-color: var(--blue);">
+            <div class="progress-track" style="border-color: var(--blue); height: 25px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);">
                 <div class="progress-bar bar-blue" style="width: {{ (user.get('dist_year', 0) / level.max * 100)|round|int }}%; max-width: 100%;"></div>
             </div>
         </div>
@@ -86,7 +101,6 @@
 
     <div class="card" style="margin-top: 20px; background: #fffcf0;">
         <h3 style="font-family: 'Limelight', 'Noto Sans Thai'; color: var(--purple); text-align: center; margin-top: 0;">EDIT PROFILE</h3>
-        
         <form action="{{ url_for('update_profile') }}" method="POST">
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_team }}</label>
@@ -100,7 +114,6 @@
                     <option value="Other" {% if user.team == 'Other' %}selected{% endif %}>{{ text.opt_other }}</option>
                 </select>
             </div>
-
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_year }}</label>
                 <select id="yearMD" name="year" style="width: 100%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; background: white; display: none;">
@@ -113,12 +126,10 @@
                 </select>
                 <input type="text" id="yearText" name="year" value="{{ user.year }}" placeholder="e.g. Lecturer" style="width: 93%; padding: 10px; border: 2px solid var(--ink); font-family: 'Noto Sans Thai'; display: none;">
             </div>
-
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_status }}</label>
                 <input type="text" name="status" maxlength="40" value="{{ user.status }}" style="width: 93%; padding: 10px; border: 2px solid var(--ink);">
             </div>
-
             <div style="display: flex; gap: 15px;">
                 <div style="flex: 1;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">{{ text.lbl_motto }}</label>
@@ -129,20 +140,16 @@
                     <input type="text" name="shoe" maxlength="20" value="{{ user.shoe }}" style="width: 85%; padding: 10px; border: 2px solid var(--ink);">
                 </div>
             </div>
-
             <button type="submit" class="btn-purple" style="width: 100%; margin-top: 20px;">{{ text.btn_save }}</button>
         </form>
     </div>
-
     <script>
         function updateYearOptions() {
             const team = document.getElementById('teamSelect').value;
             const yearMD = document.getElementById('yearMD');
             const yearStd = document.getElementById('yearStd');
             const yearText = document.getElementById('yearText');
-            
             [yearMD, yearStd, yearText].forEach(el => { el.style.display = 'none'; el.disabled = true; });
-
             if (team === 'MD') { yearMD.style.display = 'block'; yearMD.disabled = false; }
             else if (['NR', 'ER', 'CD'].includes(team)) { yearStd.style.display = 'block'; yearStd.disabled = false; }
             else { yearText.style.display = 'block'; yearText.disabled = false; }

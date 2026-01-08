@@ -15,8 +15,11 @@ CLIENT_SECRET = 'be307cce9818cd549fae09f324aa0a31c7da5add'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'database.json')
 
+# --- CAMPAIGN STATUS ---
+# Set to True when Q2 2026 starts to unlock the Shirt Quest
+SHIRT_CAMPAIGN_ACTIVE = False 
+
 # --- RPG GAMIFICATION CONFIG ---
-# Ranks determined by Total Yearly Distance
 LEVELS = [
     {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#888888', 'icon': '🌱'},
     {'id': 'C', 'name': 'Class C: Runner', 'min': 50, 'max': 200, 'color': '#4CAF50', 'icon': '🏃'},
@@ -46,6 +49,7 @@ TRANSLATIONS = {
         'goal_shirt': 'Target: 50KM Shirt',
         'goal_elite': 'Target: 100KM Elite',
         'empty_db': 'No adventurers found yet.',
+        'countdown_label': 'SEASON STARTS IN:',
         # Profile & RPG
         'profile_file': 'Member File',
         'status_claim': 'CLAIMABLE',
@@ -56,11 +60,15 @@ TRANSLATIONS = {
         'btn_sync': '⟳ Sync Strava',
         'btn_save': 'Save Profile',
         'view_profile': 'View Public Profile',
+        'footer_line': 'Join OpenChat',
         # RPG Specific
         'stats_month': 'MONTHLY GRIND',
         'stats_quarter': 'QUARTERLY QUEST',
-        'stats_total': 'ANNUAL RANK',
+        'stats_total': 'ANNUAL CAREER',
         'level_prefix': 'RANK',
+        'xp_to_next': 'KM to level up to',
+        'xp_max': 'MAX LEVEL REACHED',
+        'locked_q2': 'UNLOCKS Q2 2026',
         'badge_shirt_qual': 'SHIRT UNLOCKED',
         'badge_shirt_wait': 'ALREADY CLAIMED',
         'msg_shirt_win': 'You have qualified for the Quarterly Shirt! Contact staff to claim.',
@@ -78,8 +86,15 @@ TRANSLATIONS = {
         'opt_staff': 'Staff / Faculty',
         'opt_other': 'Other',
         'opt_grad': 'Alumni / Grad',
-        # Rules
+        # Rules Page
         'rules_title': 'Club Regulations',
+        'rpg_title': '2. The RPG System',
+        'rpg_monthly_title': 'Monthly Mission',
+        'rpg_monthly_desc': 'Goal: 50 KM. Resets every month.',
+        'rpg_quarterly_title': 'Quarterly Quest',
+        'rpg_quarterly_desc': 'Goal: 100 KM. Unlocks Shirt (1/Year).',
+        'rpg_annual_title': 'Annual Career Ranks',
+        'rpg_annual_desc': 'Accumulate distance all year to rank up!',
         'rules_1_title': '1. The Mission',
         'rules_1_text': 'Fostering health and camaraderie among Ramathibodi medical students and staff.',
         'rules_2_title': '2. The Rewards',
@@ -151,6 +166,7 @@ TRANSLATIONS = {
         'goal_shirt': 'เป้าหมาย: เสื้อวิ่ง 50 กม.',
         'goal_elite': 'เป้าหมาย: 100 กม.',
         'empty_db': 'ยังไม่มีสมาชิกในระบบ',
+        'countdown_label': 'เปิดซีซั่นในอีก:',
         # Profile & RPG
         'profile_file': 'แฟ้มประวัติ',
         'status_claim': 'รับสิทธิ์ได้',
@@ -158,14 +174,18 @@ TRANSLATIONS = {
         'msg_close': 'อีกนิดเดียว! คุณขาดอีกเพียง',
         'msg_km_away': 'กม. จะได้รับเสื้อวิ่ง',
         'msg_win': 'ยอดเยี่ยม! คุณผ่านเกณฑ์แล้ว ติดต่อรับของรางวัลได้ที่คณะ',
-        'btn_sync': '⟳ อัพเดทข้อมูล Strava',
+        'btn_sync': '⟳ อัพเดทข้อมูล',
         'btn_save': 'บันทึกข้อมูล',
         'view_profile': 'ดูโปรไฟล์',
+        'footer_line': 'เข้ากลุ่ม OpenChat',
         # RPG Specific
         'stats_month': 'ภารกิจรายเดือน',
-        'stats_quarter': 'พิชิตเสื้อ (ไตรมาส)',
-        'stats_total': 'ระดับนักวิ่ง (ทั้งปี)',
+        'stats_quarter': 'ภารกิจพิชิตเสื้อ',
+        'stats_total': 'ระดับนักวิ่ง (XP)',
         'level_prefix': 'ระดับ',
+        'xp_to_next': 'กม. สู่ระดับ',
+        'xp_max': 'ระดับสูงสุด',
+        'locked_q2': 'เปิดระบบ Q2 2569',
         'badge_shirt_qual': 'รับเสื้อได้',
         'badge_shirt_wait': 'รับสิทธิ์แล้ว',
         'msg_shirt_win': 'ยินดีด้วย! คุณผ่านเกณฑ์รับเสื้อประจำไตรมาสนี้ ติดต่อรับได้ที่คณะ',
@@ -183,8 +203,15 @@ TRANSLATIONS = {
         'opt_staff': 'Staff (อาจารย์/บุคลากร)',
         'opt_other': 'Other (อื่นๆ)',
         'opt_grad': 'ศิษย์เก่า (Alumni)',
-        # Rules
+        # Rules Page
         'rules_title': 'ระเบียบการ',
+        'rpg_title': '๒. ระบบเลเวลและภารกิจ',
+        'rpg_monthly_title': 'ภารกิจรายเดือน',
+        'rpg_monthly_desc': 'เป้าหมาย: 50 กม. รีเซ็ตทุกเดือน',
+        'rpg_quarterly_title': 'ภารกิจพิชิตเสื้อ (ไตรมาส)',
+        'rpg_quarterly_desc': 'เป้าหมาย: 100 กม. เพื่อรับเสื้อ (จำกัด 1 ตัว/ปี)',
+        'rpg_annual_title': 'ระดับนักวิ่งประจำปี',
+        'rpg_annual_desc': 'สะสมระยะวิ่งทั้งปีเพื่อเลื่อนยศ!',
         'rules_1_title': '๑. พันธกิจ',
         'rules_1_text': 'ส่งเสริมสุขภาพและความสามัคคีในหมู่นักศึกษาและบุคลากรรามาธิบดี',
         'rules_2_title': '๒. รางวัล',
@@ -249,22 +276,26 @@ def save_db(data):
     with open(DB_FILE, 'w') as f: json.dump(data, f, indent=4)
 
 def get_level(km):
-    """Returns the level dict based on total KM."""
+    for lvl in LEVELS:
+        if km < lvl['max']: return lvl
+    return LEVELS[-1]
+
+def get_next_level(km):
+    """Returns (next_level_dict, km_needed) or (None, 0) if maxed."""
     for lvl in LEVELS:
         if km < lvl['max']:
-            return lvl
-    return LEVELS[-1] # Return max level if exceeded
+            idx = LEVELS.index(lvl)
+            if idx + 1 < len(LEVELS):
+                next_lvl = LEVELS[idx + 1]
+                return next_lvl, round(lvl['max'] - km, 2)
+    return None, 0
 
 def get_valid_token(user_id):
     db = load_db()
     user = db.get(user_id)
     if not user: return None
-    # Check expiration (buffer 5 mins)
-    if time.time() < user['expires_at'] - 300:
-        return user['access_token']
+    if time.time() < user['expires_at'] - 300: return user['access_token']
     
-    # Refresh logic
-    print(f"Refreshing token for {user.get('firstname')}...")
     token_url = 'https://www.strava.com/oauth/token'
     payload = {
         'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET,
@@ -273,39 +304,32 @@ def get_valid_token(user_id):
     try:
         r = requests.post(token_url, data=payload).json()
         if 'access_token' in r:
-            user.update({
-                'access_token': r['access_token'],
-                'refresh_token': r['refresh_token'],
-                'expires_at': r['expires_at']
-            })
+            user.update({'access_token': r['access_token'], 'refresh_token': r['refresh_token'], 'expires_at': r['expires_at']})
             db[user_id] = user
             save_db(db)
             return user['access_token']
-    except Exception as e:
-        print(f"Refresh Error: {e}")
+    except: pass
     return None
 
 def get_time_boundaries():
-    """Calculates timestamps for start of Month, Quarter, and Year."""
     now = datetime.datetime.now()
-    
-    # Start of Year
     year_start = datetime.datetime(now.year, 1, 1).replace(tzinfo=timezone.utc).timestamp()
-    
-    # Start of Month
     month_start = datetime.datetime(now.year, now.month, 1).replace(tzinfo=timezone.utc).timestamp()
-    
-    # Start of Quarter
     q_month = (now.month - 1) // 3 * 3 + 1
     quarter_start = datetime.datetime(now.year, q_month, 1).replace(tzinfo=timezone.utc).timestamp()
-    
     return int(month_start), int(quarter_start), int(year_start)
 
 # --- ROUTES ---
 @app.context_processor
 def inject_globals():
     lang = session.get('lang', 'th')
-    return dict(text=TRANSLATIONS[lang], current_lang=lang, get_level=get_level)
+    return dict(
+        text=TRANSLATIONS[lang], 
+        current_lang=lang, 
+        get_level=get_level,
+        get_next_level=get_next_level,
+        shirt_active=SHIRT_CAMPAIGN_ACTIVE
+    )
 
 @app.route('/set_lang/<lang_code>')
 def set_lang(lang_code):
@@ -316,13 +340,11 @@ def set_lang(lang_code):
 def home():
     db = load_db()
     members = list(db.values())
-    # Sort by MONTHLY distance by default for the active leaderboard
     members.sort(key=lambda x: x.get('dist_month', 0), reverse=True)
     return render_template('index.html', members=members)
 
 @app.route('/profile')
 def profile():
-    """Editable profile for logged-in user"""
     user_id = session.get('user_id')
     if not user_id: return redirect(url_for('login'))
     db = load_db()
@@ -332,15 +354,10 @@ def profile():
 
 @app.route('/profile/<user_id>')
 def public_profile(user_id):
-    """Read-only profile for visitors"""
     db = load_db()
     user = db.get(user_id)
     if not user: abort(404)
-    
-    # If viewing own profile, redirect to editable version
-    if session.get('user_id') == user_id:
-        return redirect(url_for('profile'))
-        
+    if session.get('user_id') == user_id: return redirect(url_for('profile'))
     return render_template('profile.html', user=user, readonly=True)
 
 @app.route('/update_stats')
@@ -350,48 +367,32 @@ def update_stats():
     token = get_valid_token(user_id)
     if not token: return redirect(url_for('login'))
 
-    # Fetch activities from start of the year
     ts_month, ts_quarter, ts_year = get_time_boundaries()
-    
     headers = {'Authorization': f"Bearer {token}"}
-    # Fetch enough activities to cover the year (limit 200 for prototype)
     params = {'after': ts_year, 'per_page': 200, 'page': 1}
     
     try:
         r = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
         activities = r.json()
-        
         if isinstance(activities, list):
             d_month, d_quarter, d_year = 0, 0, 0
-            
             for act in activities:
-                # Filter: Run only + Public only
                 if act.get('type') == 'Run' and act.get('visibility') == 'everyone':
-                    # Strava returns dates in ISO format e.g. "2024-01-01T10:00:00Z"
                     act_dt = datetime.datetime.strptime(act['start_date'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
                     act_ts = int(act_dt.timestamp())
                     dist_km = act.get('distance', 0) / 1000
-
                     d_year += dist_km
-                    if act_ts >= ts_quarter:
-                        d_quarter += dist_km
-                    if act_ts >= ts_month:
-                        d_month += dist_km
+                    if act_ts >= ts_quarter: d_quarter += dist_km
+                    if act_ts >= ts_month: d_month += dist_km
             
             db = load_db()
             if user_id in db:
                 db[user_id]['dist_month'] = round(d_month, 2)
                 db[user_id]['dist_quarter'] = round(d_quarter, 2)
                 db[user_id]['dist_year'] = round(d_year, 2)
-                
-                # Compatibility: Ensure older users have new fields
-                if 'has_received_shirt' not in db[user_id]: 
-                    db[user_id]['has_received_shirt'] = False
-                    
+                if 'has_received_shirt' not in db[user_id]: db[user_id]['has_received_shirt'] = False
                 save_db(db)
-    except Exception as e:
-        print(f"Sync Error: {e}")
-
+    except Exception as e: print(f"Sync Error: {e}")
     return redirect(url_for('profile'))
 
 @app.route('/update_profile', methods=['POST'])
@@ -420,7 +421,6 @@ def login():
 def callback():
     code = request.args.get('code')
     if not code: return redirect(url_for('home'))
-    
     redirect_uri = url_for('callback', _external=True)
     data = requests.post('https://www.strava.com/oauth/token', data={
         'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET, 
@@ -430,15 +430,11 @@ def callback():
     if 'access_token' in data:
         uid = str(data['athlete']['id'])
         db = load_db()
-        
-        # Initialize default values for new users
         if uid not in db:
             db[uid] = {
-                'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 
-                'has_received_shirt': False,
+                'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 'has_received_shirt': False,
                 'team': '', 'year': '', 'status': '', 'motto': '', 'shoe': ''
             }
-        
         db[uid].update({
             'strava_id': uid,
             'firstname': data['athlete']['firstname'],
@@ -450,26 +446,19 @@ def callback():
         })
         save_db(db)
         session['user_id'] = uid
-        return redirect(url_for('update_stats')) # Auto-sync on login
-        
+        return redirect(url_for('update_stats'))
     return "Login Failed"
 
 @app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('home'))
+def logout(): session.clear(); return redirect(url_for('home'))
 
 @app.route('/rules')
 def rules(): return render_template('rules.html')
-
 @app.route('/events')
 def events(): return render_template('events.html')
-
 @app.route('/events/meetups')
 def meetups(): return render_template('meetups.html')
-
 @app.route('/events/recap2024')
 def recap2024(): return render_template('recap_2024.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == '__main__': app.run(debug=True)

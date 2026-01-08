@@ -18,14 +18,12 @@
 {% block content %}
 <div class="hero">
     <h1 style="font-family:'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin:0; color: var(--purple);">{{ text.hero_title }}</h1>
-    <div style="font-weight:bold; border-top:2px solid var(--ink); border-bottom:2px solid var(--ink); display:inline-block; padding:5px 20px; margin-top:10px;">
+    <div style="font-weight:bold; display:inline-block; padding:5px 20px; margin-top:10px;">
         {{ text.hero_badge }}
     </div>
     <br><br>
     
     <div style="text-align: center; margin-bottom: 10px; font-family: 'Noto Sans Thai';">
-        <img src="{{ url_for('static', filename='logo.png') }}" style="width: 80px; height: 80px; margin-bottom: 10px; border-radius: 50%; border: 3px solid var(--ink); box-shadow: 2px 2px 0px var(--ink);">
-        
         <h3 style="margin: 0; color: var(--purple); font-size: 1.2rem;">{{ text.countdown_intro }}</h3>
         <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: var(--ink);">{{ text.countdown_sub }}</p>
     </div>

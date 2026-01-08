@@ -4,6 +4,7 @@ import json
 import os
 import time
 import datetime
+from datetime import timezone
 
 app = Flask(__name__)
 app.secret_key = 'RAMATHON_PURPLE_KEY'
@@ -11,9 +12,6 @@ app.secret_key = 'RAMATHON_PURPLE_KEY'
 # --- CONFIGURATION ---
 CLIENT_ID = '194111'
 CLIENT_SECRET = 'be307cce9818cd549fae09f324aa0a31c7da5add'
-
-# We remove the hardcoded REDIRECT_URI here and generate it dynamically in the routes
-# to ensure it matches exactly where the server is running (localhost vs 127.0.0.1).
 
 # --- DATABASE HANDLER ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -99,22 +97,22 @@ TRANSLATIONS = {
         # Recap 2024 Page
         'recap_top_label': 'ARCHIVE REPORT: TK13',
         'recap_main_title': 'Virtual Ramathon 2024',
-        'recap_date': '1 - 30 พฤศจิกายน 2567',
-        'recap_stat_runners': 'ผู้เข้าร่วม',
-        'recap_stat_km': 'ระยะทางรวม',
-        'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย',
-        'recap_roster_title': 'ทำเนียบนักวิ่ง',
+        'recap_date': 'November 1 - 30, 2024',
+        'recap_stat_runners': 'Runners Joined',
+        'recap_stat_km': 'Total KM Ran',
+        'recap_stat_finishers': 'Finishers',
+        'recap_roster_title': 'The Roster',
         'recap_baby': 'Baby Marathon (30k)',
         'recap_super': 'Super Marathon (50k)',
-        'recap_voices_title': 'เสียงจากสนามวิ่ง',
-        'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
-        'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
-        'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
-        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
-        'recap_grant': 'งบประมาณที่ได้รับ:',
-        'recap_used': 'ใช้จ่ายจริง:',
-        'recap_returned': 'ยอดเงินคืนคณะฯ:',
-        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568'
+        'recap_voices_title': 'Voices from the Track',
+        'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
+        'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
+        'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
+        'recap_budget_title': 'Budget Summary (Transparent)',
+        'recap_grant': 'Grant Received:',
+        'recap_used': 'Actual Used:',
+        'recap_returned': 'Returned to Faculty:',
+        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025'
     },
     'th': {
         'title': 'Ramathon Run Club',
@@ -226,6 +224,49 @@ def save_db(data):
     except Exception as e:
         print(f"Error saving DB: {e}")
 
+# --- STRAVA HELPERS ---
+def get_valid_token(user_id):
+    """
+    Checks if the user's access token is expired.
+    If yes, uses the refresh token to get a new one and saves it.
+    Returns the valid access token or None if failed.
+    """
+    db = load_db()
+    user = db.get(user_id)
+    if not user: return None
+
+    # Check expiration (give a 5 minute buffer)
+    if time.time() < user['expires_at'] - 300:
+        return user['access_token']
+
+    # Token expired, refresh it
+    print(f"Refreshing token for {user['firstname']}...")
+    token_url = 'https://www.strava.com/oauth/token'
+    payload = {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'refresh_token',
+        'refresh_token': user['refresh_token']
+    }
+    
+    try:
+        r = requests.post(token_url, data=payload)
+        data = r.json()
+        
+        if 'access_token' in data:
+            user['access_token'] = data['access_token']
+            user['refresh_token'] = data['refresh_token']
+            user['expires_at'] = data['expires_at']
+            db[user_id] = user
+            save_db(db)
+            return user['access_token']
+        else:
+            print("Failed to refresh token:", data)
+            return None
+    except Exception as e:
+        print("Error refreshing token:", e)
+        return None
+
 # --- CONTEXT PROCESSOR ---
 @app.context_processor
 def inject_text():
@@ -278,10 +319,7 @@ def update_profile():
 
 @app.route('/login')
 def login():
-    # Dynamically generate the redirect URI to match the current server address
-    # This prevents the 127.0.0.1 vs localhost mismatch
     redirect_uri = url_for('callback', _external=True)
-    
     scope = "activity:read_all"
     strava_url = (f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}"
                   f"&response_type=code&redirect_uri={redirect_uri}&approval_prompt=auto&scope={scope}")
@@ -297,9 +335,7 @@ def callback():
     if not code: 
         return "<h1>Error</h1><p>No code received from Strava.</p><a href='/'>Go Home</a>"
     
-    # Dynamically match the Redirect URI used in login
     redirect_uri = url_for('callback', _external=True)
-
     token_url = 'https://www.strava.com/oauth/token'
     payload = {
         'client_id': CLIENT_ID, 
@@ -310,10 +346,10 @@ def callback():
     
     try:
         r = requests.post(token_url, data=payload)
-        r.raise_for_status() # Check for HTTP errors
+        r.raise_for_status()
         data = r.json()
     except Exception as e:
-        return f"<h1>Connection Error</h1><p>{str(e)}</p><p>Response: {r.text if 'r' in locals() else 'None'}</p>"
+        return f"<h1>Connection Error</h1><p>{str(e)}</p>"
     
     if 'access_token' not in data: 
         return f"<h1>Token Error</h1><p>Strava did not return a token.</p><p>Debug info: {data}</p>"
@@ -323,7 +359,6 @@ def callback():
         uid = str(athlete['id'])
         db = load_db()
         
-        # Preserve existing stats if re-logging in
         existing_user = db.get(uid, {})
         current_dist = existing_user.get('total_distance', 0)
         current_team = existing_user.get('team', '')
@@ -360,8 +395,61 @@ def logout():
 
 @app.route('/update_stats')
 def update_stats():
-    # Sync logic placeholder
-    return redirect(url_for('home'))
+    user_id = session.get('user_id')
+    if not user_id: return redirect(url_for('login'))
+    
+    # 1. Get a valid token (refreshes if needed)
+    token = get_valid_token(user_id)
+    if not token:
+        return "<h1>Token Error</h1><p>Could not verify your identity. Please log in again.</p>"
+
+    # 2. Calculate the start of the current month timestamp
+    now = datetime.datetime.now()
+    start_of_month = datetime.datetime(now.year, now.month, 1)
+    # Convert to unix timestamp
+    after_timestamp = int(start_of_month.replace(tzinfo=timezone.utc).timestamp())
+
+    # 3. Fetch activities from Strava
+    activities_url = "https://www.strava.com/api/v3/athlete/activities"
+    headers = {'Authorization': f"Bearer {token}"}
+    params = {
+        'after': after_timestamp,
+        'per_page': 100,
+        'page': 1
+    }
+    
+    try:
+        r = requests.get(activities_url, headers=headers, params=params)
+        activities = r.json()
+        
+        if isinstance(activities, dict) and 'errors' in activities:
+             return f"<h1>Strava Error</h1><p>{activities}</p>"
+
+        # 4. Filter and Sum Distance
+        total_meters = 0
+        for act in activities:
+            # Check if it is a run and is public (as per rules)
+            # Strava type can be "Run", "VirtualRun", etc.
+            is_run = act.get('type') == 'Run'
+            # visibility: 'everyone' (public), 'followers_only', 'only_me'
+            is_public = act.get('visibility') == 'everyone'
+            
+            if is_run and is_public:
+                total_meters += act.get('distance', 0)
+        
+        total_km = round(total_meters / 1000, 2)
+        
+        # 5. Update Database
+        db = load_db()
+        if user_id in db:
+            db[user_id]['total_distance'] = total_km
+            save_db(db)
+            
+    except Exception as e:
+        print(f"Sync Error: {e}")
+        return f"<h1>Sync Error</h1><p>{str(e)}</p>"
+
+    return redirect(url_for('profile'))
 
 # --- NEW EVENT ROUTES ---
 @app.route('/events')
@@ -377,5 +465,4 @@ def recap2024():
     return render_template('recap_2024.html')
     
 if __name__ == '__main__':
-    # ENABLE DEBUG MODE to see errors in browser
     app.run(debug=True)

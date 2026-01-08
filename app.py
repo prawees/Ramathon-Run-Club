@@ -20,8 +20,8 @@ SHIRT_CAMPAIGN_ACTIVE = False
 
 # --- RPG GAMIFICATION CONFIG ---
 LEVELS = [
-    # CHANGED: Lighter Grey for better readability
-    {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#C0C0C0', 'icon': '🌱'},
+    # Changed Class D color to lighter grey (#A0A0A0) for better readability
+    {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#A0A0A0', 'icon': '🌱'},
     {'id': 'C', 'name': 'Class C: Runner', 'min': 50, 'max': 200, 'color': '#4CAF50', 'icon': '🏃'},
     {'id': 'B', 'name': 'Class B: Pacer', 'min': 200, 'max': 500, 'color': '#2196F3', 'icon': '⚡'},
     {'id': 'A', 'name': 'Class A: Elite', 'min': 500, 'max': 1000, 'color': '#9C27B0', 'icon': '🔥'},
@@ -108,8 +108,7 @@ TRANSLATIONS = {
         'badge_section': 'เหรียญตราประจำเดือน',
         # IG Campaign
         'ig_promo': "✨ พิเศษ: ใส่ IG ภายใน 25 มี.ค. 69 ลุ้นรับ Starbucks Card! ☕",
-        # CHANGED: Translation as requested
-        'ig_verified': 'IG Verified',
+        'ig_verified': 'ยืนยัน IG',
         # Profile Form
         'lbl_team': 'สังกัด / ทีม',
         'lbl_year': 'ชั้นปี / ตำแหน่ง',
@@ -339,3 +338,10 @@ def logout(): session.clear(); return redirect(url_for('home'))
 @app.route('/rules')
 def rules(): return render_template('rules.html')
 @app.route('/events')
+def events(): return render_template('events.html')
+@app.route('/events/meetups')
+def meetups(): return render_template('meetups.html')
+@app.route('/events/recap2024')
+def recap2024(): return render_template('recap_2024.html')
+
+if __name__ == '__main__': app.run(debug=True)

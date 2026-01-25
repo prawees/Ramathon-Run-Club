@@ -517,4 +517,31 @@ def meetups(): return render_template('meetups.html')
 @app.route('/events/recap2024')
 def recap2024(): return render_template('recap_2024.html')
 
+# --- SECRET ADMIN ROUTES ---
+@app.route('/secret-finishers')
+def finishers_hub():
+    """Admin Hub to select which month to generate the Hall of Fame for."""
+    now = datetime.datetime.now()
+    return render_template('finishers_hub.html', current_year=now.year, current_month=now.month)
+
+@app.route('/secret-finishers/<int:year>/<int:month>')
+def finishers_canvas(year, month):
+    """The clean UI page for screenshots."""
+    db = load_db()
+    badge_key = f"{year}-{month:02d}"
+    
+    finishers = []
+    for user in db.values():
+        if badge_key in user.get('badges', []):
+            finishers.append(user)
+    
+    # Sort alphabetically by first name
+    finishers.sort(key=lambda x: x.get('firstname', '').lower())
+    
+    return render_template('finishers.html', 
+                           finishers=finishers, 
+                           year=year, 
+                           month_name=calendar.month_name[month],
+                           badge_key=badge_key)
+
 if __name__ == '__main__': app.run(debug=True)

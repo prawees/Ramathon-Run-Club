@@ -544,4 +544,31 @@ def finishers_canvas(year, month):
                            month_name=calendar.month_name[month],
                            badge_key=badge_key)
 
+# --- ADMIN & MARKETING ROUTES ---
+@app.route('/admin')
+def admin_hub():
+    """Central hub for all admin tools."""
+    # Simple security: You might want to restrict this in production, 
+    # but for now it's a 'secret' URL as requested.
+    return render_template('admin_hub.html')
+
+@app.route('/admin/art')
+def admin_art():
+    """Generates marketing visuals using live database stats."""
+    db = load_db()
+    
+    # Calculate live stats for the banners
+    total_km = sum(u.get('dist_year', 0) for u in db.values())
+    total_members = len(db)
+    
+    # Find the MVP (Most Dist) for a spotlight banner
+    mvp = None
+    if db:
+        mvp = max(db.values(), key=lambda x: x.get('dist_year', 0))
+
+    return render_template('admin_art.html', 
+                           total_km=int(total_km), 
+                           total_members=total_members,
+                           mvp=mvp)
+
 if __name__ == '__main__': app.run(debug=True)

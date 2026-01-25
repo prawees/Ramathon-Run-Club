@@ -178,8 +178,12 @@
             <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">{{ text.nav_leaderboard }}</a>
             <a href="{{ url_for('events') }}" class="nav-link {% if request.endpoint in ['events', 'meetups', 'recap2024'] %}active{% endif %}">{{ text.nav_events }}</a>
             <a href="{{ url_for('rules') }}" class="nav-link {% if request.endpoint == 'rules' %}active{% endif %}">{{ text.nav_rules }}</a>
+            
             {% if session.get('user_id') %}
                 <a href="{{ url_for('profile') }}" class="btn-purple">{{ text.nav_profile }}</a>
+                <a href="{{ url_for('logout') }}" class="nav-link" style="font-size: 0.8rem; border: 1px solid var(--ink); padding: 5px 10px; border-radius: 4px; margin-left: 5px;">
+                    {{ text.nav_logout }}
+                </a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="btn-purple">{{ text.nav_connect }}</a>
             {% endif %}

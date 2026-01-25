@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Infographic Studio{% endblock %}
+
+{% block head %}
+<style>
+    /* Hide Navigation for screenshot mode */
+    nav, footer, .filter-bar { display: none !important; }
+    body { background: #333 !important; padding: 40px; }
+
+    .studio-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        gap: 50px;
+        justify-content: center;
+    }
+
+    .art-label {
+        color: white; font-family: 'Courier Prime'; margin-bottom: 10px; text-align: center; border-top: 1px solid #555; padding-top: 20px;
+    }
+
+    /* --- CANVAS COMMON --- */
+    .canvas {
+        background: white;
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* --- DESIGN 1: SQUARE (IG FEED) --- */
+    .design-sq {
+        width: 600px; height: 600px;
+        background: radial-gradient(circle at center, #F3E5F5 0%, #E1BEE7 100%);
+        border: 20px solid var(--ink);
+    }
+    .d1-title { font-family: 'Limelight'; font-size: 4rem; color: var(--purple); line-height: 1; margin: 0; text-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
+    .d1-sub { font-family: 'Noto Sans Thai'; font-size: 1.5rem; color: var(--ink); margin-top: 10px; font-weight: bold; }
+    .d1-stat-box {
+        margin-top: 30px;
+        background: white; border: 4px solid var(--ink);
+        padding: 15px 30px;
+        border-radius: 20px;
+        box-shadow: 10px 10px 0 var(--purple);
+    }
+    .d1-stat-num { font-size: 3.5rem; font-family: 'Courier Prime'; font-weight: bold; color: var(--ink); line-height: 1; }
+    .d1-stat-label { font-size: 1rem; color: #666; text-transform: uppercase; letter-spacing: 2px; }
+
+    /* --- DESIGN 2: PORTRAIT (IG STORY) --- */
+    .design-story {
+        width: 400px; height: 711px; /* 9:16 Ratio */
+        background: var(--ink);
+        color: white;
+        border: 10px solid var(--gold);
+    }
+    .d2-dino { font-size: 8rem; animation: float 3s infinite ease-in-out; margin-bottom: 20px; }
+    .d2-title { font-family: 'Limelight'; font-size: 3rem; color: var(--gold); line-height: 1.1; margin: 0 20px; }
+    .d2-text { font-family: 'Noto Sans Thai'; font-size: 1.2rem; margin: 20px 40px; line-height: 1.6; opacity: 0.9; }
+    .d2-btn {
+        background: var(--gold); color: var(--ink);
+        padding: 15px 30px; border-radius: 50px;
+        font-weight: bold; font-size: 1.2rem;
+        margin-top: 30px;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    /* --- DESIGN 3: LANDSCAPE (FB BANNER) --- */
+    .design-wide {
+        width: 800px; height: 418px; /* ~1.91:1 Ratio */
+        background: #fff;
+        border: 5px solid var(--purple);
+        display: flex; flex-direction: row;
+        justify-content: space-between;
+        padding: 0;
+        align-items: stretch;
+    }
+    .d3-left { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--paper); border-right: 3px dashed var(--ink); }
+    .d3-right { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    
+    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="studio-container">
+    
+    <div>
+        <div class="art-label">DESIGN 1: STATS UPDATE (SQUARE)</div>
+        <div class="canvas design-sq">
+            <div style="font-size: 1.5rem; letter-spacing: 5px; margin-bottom: 20px; color: var(--ink);">RAMATHON RUN CLUB</div>
+            <h1 class="d1-title">WE HAVE RUN</h1>
+            <div class="d1-stat-box">
+                <div class="d1-stat-num">{{ "{:,}".format(total_km) }}</div>
+                <div class="d1-stat-label">KILOMETERS</div>
+            </div>
+            <div class="d1-sub" style="margin-top: 30px;">
+                With {{ total_members }} Members Strong!
+            </div>
+            <div style="margin-top: 40px; font-size: 0.9rem;">ramathonrun.pythonanywhere.com</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="art-label">DESIGN 2: RECRUITMENT (STORY)</div>
+        <div class="canvas design-story">
+            <div class="d2-dino">🦖</div>
+            <h1 class="d2-title">JOIN THE<br>CLUB</h1>
+            <p class="d2-text">
+                เปลี่ยนการวิ่งธรรมดา<br>ให้เป็นเกม RPG!<br><br>
+                สะสม XP<br>เก็บเหรียญตรา<br>พิชิตเสื้อ Finisher
+            </p>
+            <div class="d2-btn">JOIN NOW</div>
+            <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.6;">Link in Bio</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="art-label">DESIGN 3: COMMUNITY (LANDSCAPE)</div>
+        <div class="canvas design-wide">
+            <div class="d3-left">
+                <div style="font-size: 5rem;">🏃‍♂️</div>
+                <h1 style="font-family:'Limelight'; font-size: 2.5rem; margin:0; color: var(--purple);">RUN WITH US</h1>
+            </div>
+            <div class="d3-right">
+                <div style="text-align: left;">
+                    <div style="font-size: 1rem; color:#888;">TOTAL DISTANCE</div>
+                    <div style="font-size: 3rem; font-family:'Courier Prime'; font-weight:bold; color:var(--ink);">{{ "{:,}".format(total_km) }} KM</div>
+                    <div style="height: 2px; background:var(--gold); width: 100%; margin: 10px 0;"></div>
+                    <div style="font-size: 1rem; color:#888;">ACTIVE RUNNERS</div>
+                    <div style="font-size: 3rem; font-family:'Courier Prime'; font-weight:bold; color:var(--ink);">{{ total_members }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

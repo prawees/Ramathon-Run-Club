@@ -9,6 +9,8 @@ import calendar
 
 app = Flask(__name__)
 app.secret_key = 'RAMATHON_PURPLE_KEY'
+# CONFIGURATION: Keep users logged in for 1 year (365 days)
+app.permanent_session_lifetime = datetime.timedelta(days=365)
 
 # --- CONFIGURATION ---
 CLIENT_ID = '194111'
@@ -43,7 +45,7 @@ TRANSLATIONS = {
         'footer_line': 'Join OpenChat',
         # Countdown & Header
         'countdown_intro': "The fun starts now! Let's run Ramathibodians! Link your Strava now!",
-        'countdown_sub': "Shirt challenges begin Q2 2026: 1 Apr 2026! (Yearly distance accumulation starts today!)",
+        'countdown_sub': "Shirt Quest starts Q2 2026: Apr 1st! (But Yearly Rank XP accumulation starts TODAY!)",
         'countdown_label': 'SEASON STARTS IN:',
         # RPG Specific
         'stats_month': 'MONTHLY GRIND',
@@ -79,7 +81,7 @@ TRANSLATIONS = {
         'filter_all_teams': 'All Teams',
         'filter_all_years': 'All Years',
         'filter_all_campus': 'All Campuses',
-        # Options (FIXED: Added missing options here)
+        # Options
         'opt_md': 'MD (Medicine)',
         'opt_nr': 'NR (Nursing)',
         'opt_er': 'ER (Paramedic)',
@@ -98,7 +100,7 @@ TRANSLATIONS = {
         'rpg_monthly_desc': 'Goal: 50 KM. Resets every month. Collect badges!',
         'rpg_quarterly_title': 'Quarterly Quest',
         'rpg_quarterly_desc': 'Goal: 100 KM within the current quarter. Unlocks Shirt (1/Year).',
-        'rpg_quarterly_note': '(Distance resets every quarter: Apr-Jun, etc.)',
+        'rpg_quarterly_note': '(Distance resets every quarter: Jan-Mar, Apr-Jun, etc.)',
         'rpg_annual_title': 'Annual Career Ranks',
         'rpg_annual_desc': 'Accumulate distance all year to rank up!',
         'rpg_special_title': 'Year-End Rewards',
@@ -129,11 +131,11 @@ TRANSLATIONS = {
         'meetup_loc_label': 'Locations:',
         'meetup_loc_val': 'Suan Chitralada & Benchakitti Park',
         'meetup_time_label': 'Time:',
-        'meetup_time_val': 'TBA',
+        'meetup_time_val': 'Every last Sunday of the month, 06:00 AM',
         'meetup_pace_label': 'Pace:',
         'meetup_pace_val': 'Zone 2 (Conversation Pace)',
         'meetup_next_box': 'Next Session:',
-        'meetup_next_date': 'TBA @ Benchakitti Park',
+        'meetup_next_date': 'February 22, 2026 @ Benchakitti Park',
         'meetup_meeting_point': 'Meeting Point: Main Amphitheater',
         # Recap 2024 Page
         'recap_top_label': 'ARCHIVE REPORT: TK13',
@@ -168,8 +170,8 @@ TRANSLATIONS = {
         'view_profile': 'ดูโปรไฟล์',
         'footer_line': 'เข้ากลุ่ม OpenChat',
         # Countdown & Header
-        'countdown_intro': "ความสนุกเริ่มแล้ว! ชาวรามาธิบดีเชื่อมต่อ Strava ได้เลย!",
-        'countdown_sub': "ภารกิจชิงเสื้อเริ่ม Q2 2569: 1 เมษายน 2569 (แต่เริ่มสะสมระยะทางประจำปีได้ตั้งแต่วันนี้!)",
+        'countdown_intro': "ความสนุกเริ่มแล้ว! ชาวรามาธิบดีเชื่อมต่อ Strava แล้วออกวิ่งได้เลย!",
+        'countdown_sub': "ภารกิจชิงเสื้อเริ่ม Q2 2569: 1 เมษายน 2569 (แต่เริ่มสะสมระยะทางประจำปีเพื่อลุ้นรางวัลใหญ่ได้ตั้งแต่วันนี้)",
         'countdown_label': 'เปิดซีซั่นในอีก:',
         # RPG Specific
         'stats_month': 'ภารกิจรายเดือน',
@@ -205,7 +207,7 @@ TRANSLATIONS = {
         'filter_all_teams': 'ทุกทีม',
         'filter_all_years': 'ทุกชั้นปี',
         'filter_all_campus': 'ทุกวิทยาเขต',
-        # Options (FIXED: Added missing options here)
+        # Options
         'opt_md': 'MD (แพทยศาสตร์)',
         'opt_nr': 'NR (พยาบาลศาสตร์)',
         'opt_er': 'ER (ฉุกเฉินการแพทย์)',
@@ -224,7 +226,7 @@ TRANSLATIONS = {
         'rpg_monthly_desc': 'เป้าหมาย: 50 กม. รีเซ็ตทุกเดือน สะสมเหรียญเดือน!',
         'rpg_quarterly_title': 'ภารกิจพิชิตเสื้อ (ไตรมาส)',
         'rpg_quarterly_desc': 'เป้าหมาย: 100 กม. ภายในไตรมาสเพื่อรับเสื้อ (จำกัด 1 ตัว/ปี)',
-        'rpg_quarterly_note': '(ระยะสะสมนับใหม่ทุกไตรมาส: เม.ย.-มิ.ย. เป็นต้น)',
+        'rpg_quarterly_note': '(ระยะสะสมนับใหม่ทุกไตรมาส: ม.ค.-มี.ค., เม.ย.-มิ.ย. เป็นต้น)',
         'rpg_annual_title': 'ระดับนักวิ่งประจำปี',
         'rpg_annual_desc': 'สะสมระยะวิ่งทั้งปีเพื่อเลื่อนยศ!',
         'rpg_special_title': 'รางวัลพิเศษปลายปี',
@@ -255,11 +257,11 @@ TRANSLATIONS = {
         'meetup_loc_label': 'สถานที่:',
         'meetup_loc_val': 'สวนจิตรลดา และ สวนเบญจกิติ',
         'meetup_time_label': 'เวลา:',
-        'meetup_time_val': 'TBA',
+        'meetup_time_val': 'ทุกวันอาทิตย์สุดท้ายของเดือน เวลา 06:00 น.',
         'meetup_pace_label': 'เพซ (Pace):',
         'meetup_pace_val': 'โซน 2 (Conversation Pace วิ่งไปคุยไป)',
         'meetup_next_box': 'นัดถัดไป:',
-        'meetup_next_date': 'TBA @ สวนเบญจกิติ',
+        'meetup_next_date': '22 กุมภาพันธ์ 2569 @ สวนเบญจกิติ',
         'meetup_meeting_point': 'จุดนัดพบ: อัฒจันทร์ใหญ่ (Amphitheater)',
         # Recap 2024 Page
         'recap_top_label': 'รายงานสรุปผล: TK13',
@@ -478,6 +480,9 @@ def callback():
             'expires_at': data['expires_at']
         })
         save_db(db)
+        
+        # Make session permanent (based on app config)
+        session.permanent = True
         session['user_id'] = uid
         return redirect(url_for('update_stats'))
     return "Login Failed"

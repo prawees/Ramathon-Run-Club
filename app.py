@@ -8,17 +8,22 @@ from datetime import timezone
 import calendar
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('FLASK_SECRET_KEY', 'RAMATHON_PURPLE_KEY')
+
+# SECURITY: Load secret key from environment variable
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
+
 # CONFIGURATION: Keep users logged in for 1 year (365 days)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
 
 # --- CONFIGURATION ---
-CLIENT_ID = os.getenv('STRAVA_CLIENT_ID', '194111')
-CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET', 'be307cce9818cd549fae09f324aa0a31c7da5add')
+# SECURITY: Load Strava keys from environment variable
+CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
+CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'database.json')
 

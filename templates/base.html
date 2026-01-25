@@ -67,6 +67,20 @@
         .bar-purple { background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); }
         .bar-gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
         .bar-blue { background: repeating-linear-gradient(45deg, var(--blue), var(--blue) 10px, #1976D2 10px, #1976D2 20px); }
+        
+        /* NEW: Gold Shine Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .gold-shine {
+            background: linear-gradient(90deg, #FFD700 0%, #FFF8DC 50%, #FFD700 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+            box-shadow: 0 0 10px #FFD700;
+            border-right: none;
+        }
+
         .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; font-family: 'Noto Sans Thai'; }
         
         .lvl-badge { background: var(--ink); color: white; padding: 5px 10px; border-radius: 4px; font-family: 'Limelight'; display: inline-block; border: 1px solid white; box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
@@ -91,6 +105,33 @@
             display: inline-flex; align-items: center; justify-content: center;
             height: 18px; line-height: 0; vertical-align: middle; padding: 0 6px;
         }
+
+        /* NEW: Aesthetic Badge Styles */
+        .month-badge {
+            min-width: 60px; height: 75px; 
+            border-radius: 8px; 
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            font-weight: bold; 
+            position: relative;
+            border: 2px solid var(--ink);
+            transition: transform 0.2s;
+            margin-right: 10px;
+            background: #fff;
+        }
+        .month-badge.locked {
+            background: #ddd; color: #999; border: 2px dashed #aaa; filter: grayscale(100%);
+        }
+        .month-badge.unlocked {
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+            color: white;
+        }
+        .month-badge.unlocked:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+        .badge-top { font-size: 0.6rem; text-transform: uppercase; margin-bottom: 2px; opacity: 0.9; }
+        .badge-mid { font-size: 1.2rem; font-family: 'Limelight'; line-height: 1; }
+        .badge-star { font-size: 0.8rem; margin-top: 2px; }
 
         @media (max-width: 768px) {
             nav { flex-direction: column; padding: 15px 10px; gap: 15px; }

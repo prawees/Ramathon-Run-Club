@@ -68,17 +68,31 @@
         .bar-gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
         .bar-blue { background: repeating-linear-gradient(45deg, var(--blue), var(--blue) 10px, #1976D2 10px, #1976D2 20px); }
         
-        /* NEW: Gold Shine Animation */
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        /* NEW: Aesthetic Glimmer (Subtle) */
+        @keyframes soft-shine {
+            0% { left: -100%; opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { left: 100%; opacity: 0; }
         }
-        .gold-shine {
-            background: linear-gradient(90deg, #FFD700 0%, #FFF8DC 50%, #FFD700 100%);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite linear;
-            box-shadow: 0 0 10px #FFD700;
-            border-right: none;
+
+        .bar-glimmer {
+            position: relative;
+            /* Subtle Golden Aura */
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); 
+            border-right: 1px solid #FFD700 !important;
+        }
+
+        .bar-glimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            /* White sheen passing over */
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            animation: soft-shine 3s infinite ease-in-out;
         }
 
         .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; font-family: 'Noto Sans Thai'; }
@@ -106,7 +120,7 @@
             height: 18px; line-height: 0; vertical-align: middle; padding: 0 6px;
         }
 
-        /* NEW: Aesthetic Badge Styles */
+        /* Aesthetic Badge Styles */
         .month-badge {
             min-width: 60px; height: 75px; 
             border-radius: 8px; 

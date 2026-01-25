@@ -104,7 +104,8 @@
 
             <div style="font-size:0.8rem; font-weight:bold; margin-bottom: 5px;">{{ text.stats_month }}</div>
             <div class="progress-track" style="margin-bottom: 5px; height: 15px;">
-                <div class="progress-bar bar-purple" style="width: {{ (member.get('dist_month', 0) / 50 * 100)|round|int }}%"></div>
+                <div class="progress-bar bar-purple {% if member.get('dist_month', 0) >= 50 %}bar-glimmer{% endif %}" 
+                     style="width: {{ (member.get('dist_month', 0) / 50 * 100)|round|int }}%"></div>
             </div>
             
             <div style="display: flex; justify-content: space-between; align-items: center;">

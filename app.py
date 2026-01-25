@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, abort
+from flask import Flask, render_template, request, redirect, url_for, session, abort, flash
 import requests
 import json
 import os
@@ -6,15 +6,19 @@ import time
 import datetime
 from datetime import timezone
 import calendar
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'RAMATHON_PURPLE_KEY'
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'RAMATHON_PURPLE_KEY')
 # CONFIGURATION: Keep users logged in for 1 year (365 days)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
 
 # --- CONFIGURATION ---
-CLIENT_ID = '194111'
-CLIENT_SECRET = 'be307cce9818cd549fae09f324aa0a31c7da5add'
+CLIENT_ID = os.getenv('STRAVA_CLIENT_ID', '194111')
+CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET', 'be307cce9818cd549fae09f324aa0a31c7da5add')
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'database.json')
 
@@ -350,6 +354,11 @@ def inject_globals():
         now_year=datetime.datetime.now().year
     )
 
+# 404 Error Handler
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route('/set_lang/<lang_code>')
 def set_lang(lang_code):
     if lang_code in ['en', 'th']: session['lang'] = lang_code
@@ -421,7 +430,11 @@ def update_stats():
                     'badges': earned_badges
                 })
                 save_db(db)
-    except Exception as e: print(f"Sync Error: {e}")
+                flash('Synced successfully! / อัพเดทข้อมูลเรียบร้อย', 'success')
+    except Exception as e: 
+        print(f"Sync Error: {e}")
+        flash('Sync failed. Please try again. / เกิดข้อผิดพลาด กรุณาลองใหม่', 'error')
+
     return redirect(url_for('profile'))
 
 @app.route('/update_profile', methods=['POST'])
@@ -443,6 +456,7 @@ def update_profile():
             'show_strava': show_strava
         })
         save_db(db)
+        flash('Profile updated! / บันทึกข้อมูลสำเร็จ', 'success')
     return redirect(url_for('profile'))
 
 @app.route('/login')
@@ -481,7 +495,6 @@ def callback():
         })
         save_db(db)
         
-        # Make session permanent (based on app config)
         session.permanent = True
         session['user_id'] = uid
         return redirect(url_for('update_stats'))

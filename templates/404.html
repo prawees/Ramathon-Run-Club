@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}404 - Not Found{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 60px 20px;">
+    <div style="font-size: 5rem; margin-bottom: 20px;">🦖❓</div>
+    <h1 style="font-family: 'Limelight'; color: var(--purple);">Whoops! Off Track?</h1>
+    <p style="font-family: 'Noto Sans Thai'; color: var(--ink);">
+        หน้านี้ไม่มีอยู่ในระบบ... สงสัยจะวิ่งออกนอกเส้นทาง!<br>
+        This page does not exist. You might have run off the course!
+    </p>
+    <a href="{{ url_for('home') }}" class="btn-purple" style="margin-top: 20px;">
+        🏠 Back to Start Line
+    </a>
+</div>
+{% endblock %}

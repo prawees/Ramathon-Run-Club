@@ -144,7 +144,12 @@
 
     {% if not readonly %}
     <div style="text-align: center; margin-top: 15px;">
-        <a href="{{ url_for('update_stats') }}" class="btn-purple" style="font-size: 0.8rem;">{{ text.btn_sync }}</a>
+        <a href="{{ url_for('update_stats') }}" 
+           class="btn-purple" 
+           style="font-size: 0.8rem;"
+           onclick="this.innerHTML='⟳ Syncing...'; this.style.opacity='0.7'; this.style.pointerEvents='none';">
+           {{ text.btn_sync }}
+        </a>
     </div>
 
     <div class="card" style="margin-top: 20px; background: #fffcf0;">

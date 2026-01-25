@@ -68,32 +68,29 @@
         .bar-gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
         .bar-blue { background: repeating-linear-gradient(45deg, var(--blue), var(--blue) 10px, #1976D2 10px, #1976D2 20px); }
         
-        /* --- AESTHETIC GLIMMER ANIMATION --- */
-        @keyframes shimmer {
-            0% { left: -100%; opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { left: 100%; opacity: 0; }
-        }
-
+        /* --- NEW: PREMIUM STATIC GOLD --- */
         .bar-glimmer {
+            /* High-End Static Gold Gradient */
+            background: linear-gradient(180deg, #FFF9C4 0%, #FFD700 45%, #FFC107 100%) !important;
+            
+            /* Static Glow (Golden Halo) */
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
+            
+            /* Clean Border */
+            border: 1px solid #FFB300 !important;
+            border-right: 1px solid #FFB300 !important;
+            
+            /* Subtle Glossy Shine on Top (Static) */
             position: relative;
-            /* Subtle Golden Aura */
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.7); 
-            border-right: none !important;
-            overflow: hidden; /* Keeps the shine inside the rounded bar */
         }
-
+        
+        /* Adds a static 'shine' line at the top */
         .bar-glimmer::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 50%;
-            height: 100%;
-            /* White sheen passing over */
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-20deg);
-            animation: shimmer 2.5s infinite ease-in-out;
+            top: 0; left: 0; right: 0; height: 40%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+            pointer-events: none;
         }
 
         .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; font-family: 'Noto Sans Thai'; }
@@ -215,4 +212,15 @@
                 <span>Join Club on Strava</span>
             </a>
             <a href="https://www.instagram.com/ramathon.run/" target="_blank" class="social-btn">
-                <svg viewBox="0 0 24 24" class="insta-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209
+                <svg viewBox="0 0 24 24" class="insta-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Follow @ramathon.run</span>
+            </a>
+            <a href="https://line.me/ti/g2/we77_ngRgfiO7sAAmdw3tYxJY5lwH3xv1EWUJA" target="_blank" class="social-btn">
+                <svg viewBox="0 0 24 24" class="line-icon"><path d="M21.156 8.955c0-4.044-4.226-7.332-9.395-7.332S2.365 4.91 2.365 8.955c0 3.64 2.89 6.697 7.07 7.21l-1.076 3.528c-.2.66.42 1.13.91.56l5.748-6.07c3.785-.466 6.139-2.937 6.139-5.228z"/></svg>
+                <span>{{ text.footer_line }}</span>
+            </a>
+        </div>
+        <div class="footer-text">© 2026 prawees • Ramathon Run Club</div>
+    </footer>
+</body>
+</html>

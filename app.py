@@ -402,12 +402,35 @@ def update_stats():
 
     ts_month, ts_quarter, ts_year = get_season_stats()
     headers = {'Authorization': f"Bearer {token}"}
-    params = {'after': ts_year, 'per_page': 200, 'page': 1}
     
+    # --- PAGINATION LOGIC START ---
+    activities = []
+    page = 1
+    while True:
+        # Loop to fetch all pages (Strava limit is 200 per page)
+        params = {'after': ts_year, 'per_page': 200, 'page': page}
+        try:
+            r = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
+            new_data = r.json()
+            
+            # Stop if no data or error
+            if not new_data or not isinstance(new_data, list):
+                break
+            
+            activities.extend(new_data)
+            
+            # If we got less than 200 items, it's the last page
+            if len(new_data) < 200:
+                break
+                
+            page += 1
+        except Exception as e:
+            print(f"Page Fetch Error: {e}")
+            break
+    # --- PAGINATION LOGIC END ---
+
     try:
-        r = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
-        activities = r.json()
-        if isinstance(activities, list):
+        if activities:
             d_month, d_quarter, d_year = 0, 0, 0
             monthly_totals = {}
             

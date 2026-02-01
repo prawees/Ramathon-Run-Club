@@ -109,11 +109,9 @@
     <div class="grid-container">
         {% for user in batch %}
         <div class="finisher-card">
-            {% set rank = (loop.index0 + 1) + ((loop.parent.loop.index0) * 9) %}
-            
-            {% if rank == 1 %}<div class="medal">🥇</div>{% endif %}
-            {% if rank == 2 %}<div class="medal">🥈</div>{% endif %}
-            {% if rank == 3 %}<div class="medal">🥉</div>{% endif %}
+            {% if user.rank_in_month == 1 %}<div class="medal">🥇</div>{% endif %}
+            {% if user.rank_in_month == 2 %}<div class="medal">🥈</div>{% endif %}
+            {% if user.rank_in_month == 3 %}<div class="medal">🥉</div>{% endif %}
             
             <img src="{{ user.profile or url_for('static', filename='orange.png') }}" 
                  onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';"
@@ -122,7 +120,7 @@
             <div class="finisher-name">{{ user.firstname }} <br> {{ user.lastname }}</div>
             
             <div class="finisher-stats">
-                {{ (user.get('monthly_stats') or {}).get(badge_key, 0)|round(1) }} KM
+                {{ user.month_dist|round(1) }} KM
             </div>
             
             <div style="font-size: 0.7rem; color: #888; margin-top: 5px;">

@@ -1,147 +1,191 @@
 {% extends "base.html" %}
-{% block title %}Finishers {{ month_name }} {{ year }}{% endblock %}
+{% block title %}Hall of Fame - {{ month_name }}{% endblock %}
 
 {% block head %}
 <style>
-    /* HIDE UI ELEMENTS FOR SCREENSHOT */
+    /* RESET & BASICS */
     nav, footer, .filter-bar { display: none !important; }
     
-    /* CANVAS STYLING */
     body { 
-        background-image: none !important; 
-        background-color: #333 !important; 
-        padding: 40px;
+        background-color: #222 !important; /* Dark background for canvas contrast */
+        margin: 0; padding: 40px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        min-height: 100vh;
+    }
+
+    /* --- THE CANVAS: 1080x1080 SQUARE --- */
+    .canvas-container {
+        width: 1080px;
+        height: 1080px;
+        background: #fff; /* Clean White Canvas */
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+
+    /* --- DECORATIVE BACKGROUND ELEMENTS --- */
+    .bg-accent {
+        position: absolute;
+        width: 100%; height: 15px;
+        top: 0; left: 0;
+        background: {{ hist_theme.color }};
+        opacity: 0.8;
+    }
+    .bg-circle {
+        position: absolute;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        background: {{ hist_theme.color }};
+        opacity: 0.03;
+        top: -200px; right: -200px;
+        z-index: 0;
+    }
+
+    /* --- HEADER SECTION --- */
+    .header-section {
+        text-align: center;
+        padding-top: 50px;
+        padding-bottom: 20px;
+        z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 50px;
+    }
+
+    .club-logo {
+        width: 80px; height: auto;
+        margin-bottom: 15px;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+
+    .title-main {
+        font-family: 'Limelight', sans-serif;
+        font-size: 4rem;
+        line-height: 1;
+        color: {{ hist_theme.color }};
+        text-transform: uppercase;
+        letter-spacing: 2px;
         margin: 0;
     }
 
-    /* SQUARE PAGE (1080x1080px) */
-    .page-container {
-        width: 1080px;
-        height: 1080px;
-        background: white;
-        padding: 40px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        position: relative;
+    .title-sub {
+        font-family: 'Courier Prime', monospace;
+        font-size: 1.2rem;
+        color: #888;
+        letter-spacing: 6px;
+        margin-top: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
-    .header-box {
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 4px double {{ hist_theme.color }};
-        padding-bottom: 10px;
-        height: 140px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .club-logo-small {
-        width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid var(--ink); margin-bottom: 5px;
-    }
-
-    /* 3x3 GRID */
-    .grid-container {
+    /* --- GRID LAYOUT --- */
+    .runners-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
         gap: 25px;
-        flex: 1;
-        max-height: 860px;
+        padding: 0 50px 50px 50px;
+        flex: 1; /* Fill remaining space */
+        z-index: 1;
     }
 
-    .finisher-card {
+    /* --- RUNNER CARD DESIGN --- */
+    .runner-card {
         background: #fff;
-        border: 3px solid {{ hist_theme.color }}; /* Fancy Colored Border */
         border-radius: 20px;
-        padding: 10px;
-        text-align: center;
-        box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 15px;
+        transition: transform 0.2s;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+    }
+
+    /* Special Styling for Top 3 */
+    .rank-1, .rank-2, .rank-3 {
+        border: 2px solid {{ hist_theme.color }};
+        background: linear-gradient(to bottom right, #fff, #fafafa);
+    }
+
+    .avatar-container {
         position: relative;
-        overflow: hidden;
-        aspect-ratio: 1/1; /* Force Square */
+        margin-bottom: 12px;
     }
 
-    /* STATS BADGE (Top Left) */
-    .stats-badge {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: {{ hist_theme.color }};
-        color: white;
-        font-family: 'Courier Prime';
-        font-weight: bold;
-        font-size: 1rem;
-        padding: 4px 8px;
-        border-radius: 8px;
-        z-index: 5;
-    }
-
-    .finisher-avatar {
-        width: 110px;
-        height: 110px;
+    .avatar {
+        width: 100px; height: 100px;
         border-radius: 50%;
-        border: 4px solid var(--ink);
         object-fit: cover;
-        margin-bottom: 10px;
+        border: 3px solid #eee;
+    }
+    
+    .rank-1 .avatar { border-color: #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); width: 110px; height: 110px; }
+    .rank-2 .avatar { border-color: #C0C0C0; width: 105px; height: 105px; }
+    .rank-3 .avatar { border-color: #CD7F32; width: 105px; height: 105px; }
+
+    .medal-icon {
+        position: absolute;
+        bottom: -5px; right: -5px;
+        font-size: 2.2rem;
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
     }
 
-    .finisher-name {
-        font-family: 'Limelight', sans-serif;
-        font-size: 1.5rem;
+    .name-text {
+        font-family: 'Noto Sans Thai', sans-serif;
+        font-weight: 800;
+        font-size: 1.4rem;
         color: var(--ink);
-        line-height: 1.1;
         margin-bottom: 5px;
-        text-transform: uppercase;
+        text-align: center;
+        line-height: 1.2;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 95%;
+        max-width: 100%;
     }
 
-    .finisher-quote {
+    .quote-text {
         font-family: 'Noto Sans Thai', sans-serif;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: #777;
+        text-align: center;
         font-style: italic;
-        line-height: 1.2;
-        max-width: 90%;
+        line-height: 1.3;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        min-height: 1.2em;
+        height: 2.6em; /* Fixed height to align cards */
     }
 
-    .medal {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        font-size: 3.5rem;
-        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
-        z-index: 10;
+    /* KM BADGE (Top 3 Only) */
+    .km-badge {
+        margin-top: 8px;
+        background: {{ hist_theme.color }};
+        color: white;
+        font-family: 'Courier Prime', monospace;
+        font-weight: bold;
+        font-size: 1rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    
-    .watermark {
+
+    /* --- FOOTER WATERMARK --- */
+    .canvas-footer {
         position: absolute;
-        bottom: 10px;
+        bottom: 15px;
         width: 100%;
         text-align: center;
-        font-family: 'Courier Prime';
+        font-family: 'Courier Prime', monospace;
         font-size: 0.8rem;
-        color: #ddd;
-        left: 0;
-        letter-spacing: 4px;
+        color: #ccc;
+        letter-spacing: 3px;
         text-transform: uppercase;
     }
 </style>
@@ -150,51 +194,58 @@
 {% block content %}
 
 {% for batch in finishers|batch(9) %}
-<div class="page-container">
-    <div class="header-box">
-        <img src="{{ url_for('static', filename='logo.png') }}" class="club-logo-small">
-        <h1 style="font-family: 'Limelight'; font-size: 3.5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase; line-height: 1;">
-            {{ month_name }} FINISHERS
-        </h1>
-        <div style="font-family: 'Noto Sans Thai', sans-serif; color: #888; font-size: 1.2rem; margin-top: 5px; letter-spacing: 3px; font-weight: bold; text-transform: uppercase;">
-            Hall of Fame • {{ year }}
-        </div>
+<div class="canvas-container">
+    <div class="bg-accent"></div>
+    <div class="bg-circle"></div>
+
+    <div class="header-section">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="club-logo">
+        <h1 class="title-main">{{ month_name }}</h1>
+        <div class="title-sub">HALL OF FAME {{ year }}</div>
     </div>
 
-    <div class="grid-container">
+    <div class="runners-grid">
         {% for user in batch %}
-        <div class="finisher-card">
-            <div class="stats-badge">
-                XP: {{ user.total_xp|round(0)|int }}
+        {% set rank = user.rank_in_month %}
+        
+        <div class="runner-card rank-{{ rank }}">
+            
+            <div class="avatar-container">
+                <img src="{{ user.profile or url_for('static', filename='orange.png') }}" 
+                     onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';"
+                     class="avatar">
+                
+                {% if rank == 1 %}<div class="medal-icon">🥇</div>{% endif %}
+                {% if rank == 2 %}<div class="medal-icon">🥈</div>{% endif %}
+                {% if rank == 3 %}<div class="medal-icon">🥉</div>{% endif %}
             </div>
 
-            {% if user.rank_in_month == 1 %}<div class="medal">🥇</div>{% endif %}
-            {% if user.rank_in_month == 2 %}<div class="medal">🥈</div>{% endif %}
-            {% if user.rank_in_month == 3 %}<div class="medal">🥉</div>{% endif %}
-            
-            <img src="{{ user.profile or url_for('static', filename='orange.png') }}" 
-                 onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';"
-                 class="finisher-avatar">
-            
-            <div class="finisher-name">{{ user.firstname }}</div>
-            
-            <div class="finisher-quote">
+            <div class="name-text">{{ user.firstname }}</div>
+
+            <div class="quote-text">
                 {% if user.motto or user.status %}
                     "{{ user.motto or user.status }}"
                 {% endif %}
             </div>
+
+            {% if rank <= 3 %}
+            <div class="km-badge">
+                {{ user.total_xp|round(0)|int }} KM
+            </div>
+            {% endif %}
+
         </div>
         {% endfor %}
     </div>
-    
-    <div class="watermark">RAMATHON RUN CLUB</div>
+
+    <div class="canvas-footer">RAMATHON RUN CLUB</div>
 </div>
 {% endfor %}
 
 {% if not finishers %}
-<div style="color: white; text-align: center; font-family: 'Courier Prime';">
-    <h1>NO FINISHERS FOUND</h1>
-    <p>Wait for someone to reach 50km!</p>
+<div style="text-align: center; color: white; padding-top: 100px; font-family: 'Courier Prime';">
+    <h1>NO DATA FOUND</h1>
+    <p>Please sync data to generate the Hall of Fame.</p>
 </div>
 {% endif %}
 

@@ -17,12 +17,12 @@
         gap: 50px;
     }
 
-    /* SQUARE PAGE (1080x1080px approx) - Instagram Ready */
+    /* SQUARE PAGE (1080x1080px) */
     .page-container {
         width: 1080px;
         height: 1080px;
         background: white;
-        padding: 60px;
+        padding: 40px; /* Reduced vertical padding */
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -31,71 +31,98 @@
 
     .header-box {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 25px; /* Tighter margin */
         border-bottom: 6px double {{ hist_theme.color }};
-        padding-bottom: 20px;
+        padding-bottom: 15px;
     }
 
     /* 3x3 GRID */
     .grid-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        gap: 30px;
-        flex: 1;
+        grid-template-rows: repeat(3, 1fr); /* Force 3 even rows */
+        gap: 20px;
+        height: 800px; /* Constraint height to ensure fit */
     }
 
     .finisher-card {
         background: #fff;
         border: 2px solid #eee;
         border-radius: 20px;
-        padding: 15px;
+        padding: 10px;
         text-align: center;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: center; /* Center vertically */
         position: relative;
+        overflow: hidden;
     }
 
     .finisher-avatar {
-        width: 150px; /* Made bigger since stats are gone */
-        height: 150px;
+        width: 100px; /* Smaller avatar to fit content */
+        height: 100px;
         border-radius: 50%;
-        border: 6px solid {{ hist_theme.color }};
+        border: 5px solid {{ hist_theme.color }};
         object-fit: cover;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     .finisher-name {
         font-family: 'Limelight', sans-serif;
-        font-size: 2.2rem; /* Larger Font */
+        font-size: 1.6rem;
         color: var(--ink);
         line-height: 1.1;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         text-transform: uppercase;
+    }
+
+    .finisher-quote {
+        font-family: 'Noto Sans Thai', sans-serif;
+        font-size: 0.8rem;
+        color: #777;
+        font-style: italic;
+        line-height: 1.3;
+        margin-bottom: 5px;
+        max-width: 90%;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* ONLY SHOW STATS FOR TOP 3 */
+    .top-stats {
+        font-family: 'Courier Prime';
+        font-weight: bold;
+        color: {{ hist_theme.color }};
+        font-size: 1.4rem;
+        margin-top: 5px;
+        background: #f9f9f9;
+        padding: 2px 10px;
+        border-radius: 10px;
     }
 
     .medal {
         position: absolute;
-        top: -15px;
-        right: -15px;
-        font-size: 4rem;
+        top: -10px;
+        right: -10px;
+        font-size: 3.5rem;
         filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
         z-index: 10;
     }
     
     .watermark {
         position: absolute;
-        bottom: 15px;
+        bottom: 10px;
         width: 100%;
         text-align: center;
         font-family: 'Courier Prime';
-        font-size: 1rem;
-        color: #aaa;
+        font-size: 0.9rem;
+        color: #ccc;
         left: 0;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
     }
 </style>
 {% endblock %}
@@ -105,10 +132,10 @@
 {% for batch in finishers|batch(9) %}
 <div class="page-container">
     <div class="header-box">
-        <h1 style="font-family: 'Limelight'; font-size: 5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
+        <h1 style="font-family: 'Limelight'; font-size: 4.5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
             {{ month_name }}
         </h1>
-        <div style="font-family: 'Courier Prime'; color: var(--ink); font-size: 2rem; margin-top: 10px; letter-spacing: 5px;">
+        <div style="font-family: 'Courier Prime'; color: var(--ink); font-size: 1.8rem; margin-top: 5px; letter-spacing: 5px;">
             HALL OF FAME // {{ year }}
         </div>
     </div>
@@ -126,9 +153,16 @@
             
             <div class="finisher-name">{{ user.firstname }}</div>
             
-            <div style="font-size: 1.2rem; color: #888; font-family:'Noto Sans Thai';">
-                {{ user.team or 'Runner' }}
+            <div class="finisher-quote">
+                "{{ user.motto or user.status or 'Keep Running' }}"
             </div>
+
+            {% if user.rank_in_month <= 3 %}
+            <div class="top-stats">
+                {{ user.month_dist|round(1) }} KM
+            </div>
+            {% endif %}
+            
         </div>
         {% endfor %}
     </div>

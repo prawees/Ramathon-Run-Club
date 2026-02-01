@@ -30,18 +30,18 @@ ADMIN_IDS = ['48771896']
 
 # --- REFINED AESTHETIC THEMES ---
 MONTH_THEMES = {
-    1: {'color': '#1E88E5', 'name': 'Cool Blue'},       # Jan
-    2: {'color': '#F06292', 'name': 'Pastel Love'},     # Feb: UPDATED TO PASTEL PINK
-    3: {'color': '#43A047', 'name': 'Forest Green'},    # Mar
-    4: {'color': '#FB8C00', 'name': 'Solar Orange'},    # Apr
-    5: {'color': '#8E24AA', 'name': 'Royal Purple'},    # May
-    6: {'color': '#00ACC1', 'name': 'Ocean Cyan'},      # Jun
-    7: {'color': '#FFB300', 'name': 'Golden Hour'},     # Jul
-    8: {'color': '#1E88E5', 'name': 'Mother Blue'},     # Aug
-    9: {'color': '#F4511E', 'name': 'Autumn Rust'},     # Sep
-    10: {'color': '#546E7A', 'name': 'Shadow Grey'},    # Oct
-    11: {'color': '#6D4C41', 'name': 'Vintage Brown'},  # Nov
-    12: {'color': '#E53935', 'name': 'Holiday Red'}     # Dec
+    1: {'color': '#1E88E5', 'name': 'Cool Blue'},       # Jan: Professional Blue
+    2: {'color': '#F48FB1', 'name': 'Pastel Love'},     # Feb: Soft Pastel Pink
+    3: {'color': '#43A047', 'name': 'Forest Green'},    # Mar: Natural Green
+    4: {'color': '#FB8C00', 'name': 'Solar Orange'},    # Apr: Warm Orange
+    5: {'color': '#8E24AA', 'name': 'Royal Purple'},    # May: Deep Purple
+    6: {'color': '#00ACC1', 'name': 'Ocean Cyan'},      # Jun: Teal
+    7: {'color': '#FFB300', 'name': 'Golden Hour'},     # Jul: Amber
+    8: {'color': '#1E88E5', 'name': 'Mother Blue'},     # Aug: Blue
+    9: {'color': '#F4511E', 'name': 'Autumn Rust'},     # Sep: Burnt Orange
+    10: {'color': '#546E7A', 'name': 'Shadow Grey'},    # Oct: Cool Grey
+    11: {'color': '#6D4C41', 'name': 'Vintage Brown'},  # Nov: Earthy
+    12: {'color': '#E53935', 'name': 'Holiday Red'}     # Dec: Red
 }
 
 LEVELS = [
@@ -514,12 +514,13 @@ def finishers_canvas(year, month):
     db = load_db()
     badge_key = f"{year}-{month:02d}"
     
-    # Filter Finishers
+    # 1. Filter Finishers
     finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
     
-    # FIXED: Sort logic that handles empty/None stats safely
+    # 2. FIXED: Sort logic that safely handles empty/None stats
     finishers.sort(key=lambda x: (x.get('monthly_stats') or {}).get(badge_key, 0), reverse=True)
     
+    # 3. FIXED: Calculate hist_theme properly for the template
     hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
     
     return render_template('finishers.html', 

@@ -108,14 +108,17 @@ def get_season_stats():
     return int(month_start.timestamp()), int(quarter_start.timestamp()), int(year_start.timestamp())
 
 def get_aqi(lang='th'):
+    """Fetches AQI with Fallback and Translated Messages"""
     try:
         url = f"https://api.waqi.info/feed/ratchathewi/?token={AQI_TOKEN}"
         r = requests.get(url, timeout=3)
         data = r.json()
+        
         if data.get('status') != 'ok':
             url = f"https://api.waqi.info/feed/bangkok/?token={AQI_TOKEN}"
             r = requests.get(url, timeout=3)
             data = r.json()
+
         if data.get('status') == 'ok':
             aqi = data['data']['aqi']
             msgs = TRANSLATIONS[lang]
@@ -123,7 +126,9 @@ def get_aqi(lang='th'):
             elif aqi <= 100: return {'val': aqi, 'status': 'Moderate', 'color': '#FFC107', 'msg': msgs['aqi_mod']}
             elif aqi <= 150: return {'val': aqi, 'status': 'Unhealthy (Sens.)', 'color': '#FF9800', 'msg': msgs['aqi_sens']}
             else: return {'val': aqi, 'status': 'Unhealthy', 'color': '#F44336', 'msg': msgs['aqi_bad']}
-    except: pass
+    except:
+        pass
+    
     return {'val': '-', 'status': 'No Data', 'color': '#9E9E9E', 'msg': 'API Error'}
 
 @app.context_processor
@@ -132,7 +137,15 @@ def inject_globals():
     tz = timezone(timedelta(hours=7))
     now = datetime.datetime.now(tz)
     theme = MONTH_THEMES.get(now.month, MONTH_THEMES[1])
-    return dict(text=TRANSLATIONS[lang], current_lang=lang, get_level=get_level, get_next_level=get_next_level, shirt_active=SHIRT_CAMPAIGN_ACTIVE, now_year=now.year, now_month=now.month, now_month_name=now.strftime("%B"), theme_color=theme['color'], theme_name=theme['name'], campaign_finished=(now > CAMPAIGN_END_DATE))
+    
+    return dict(
+        text=TRANSLATIONS[lang], current_lang=lang, 
+        get_level=get_level, get_next_level=get_next_level,
+        shirt_active=SHIRT_CAMPAIGN_ACTIVE,
+        now_year=now.year, now_month=now.month, now_month_name=now.strftime("%B"),
+        theme_color=theme['color'], theme_name=theme['name'],
+        campaign_finished=(now > CAMPAIGN_END_DATE)
+    )
 
 @app.errorhandler(404)
 def page_not_found(e): return render_template('404.html'), 404
@@ -165,9 +178,13 @@ def home():
         member_display['display_dist'] = monthly_dist
         members.append(member_display)
         
-    # NEW SORT: Sort by Total Annual XP (dist_year) descending
-    members.sort(key=lambda x: x.get('dist_year', 0), reverse=True)
-    return render_template('index.html', members=members, fun_fact=longest_run_champion)
+    # NEW SORT: Month Descending, then Total Year Descending
+    members.sort(key=lambda x: (x['display_dist'], x.get('dist_year', 0)), reverse=True)
+    
+    lang = session.get('lang', 'th')
+    aqi_data = get_aqi(lang)
+
+    return render_template('index.html', members=members, aqi=aqi_data, fun_fact=longest_run_champion)
 
 @app.route('/profile')
 def profile():
@@ -333,11 +350,11 @@ def finishers_canvas(year, month):
         db = load_db()
         badge_key = f"{year}-{month:02d}"
         
-        # 1. Filter: Find qualified finishers
+        # 1. Filter: Qualified finishers
         finishers = []
         for u in db.values():
             m_stats = u.get('monthly_stats', {})
-            # Fallback calc for Jan 2026
+            # Jan 2026 Fallback Calculation
             if year == 2026 and month == 1 and badge_key not in m_stats:
                 feb_dist = m_stats.get('2026-02', 0)
                 total_dist = u.get('dist_year', 0)
@@ -349,7 +366,7 @@ def finishers_canvas(year, month):
             if dist >= 50: 
                 finishers.append(u)
 
-        # 2. NEW SORT: Sort by Total Annual XP (dist_year)
+        # 2. SORT BY TOTAL XP (Legend Status) - as requested
         finishers.sort(key=lambda x: x.get('dist_year', 0), reverse=True)
         
         # 3. Prepare data for template
@@ -358,6 +375,8 @@ def finishers_canvas(year, month):
             f_data = f.copy()
             f_data['rank_in_month'] = i + 1
             f_data['month_dist'] = f.get('monthly_stats', {}).get(badge_key, 0)
+            # Add Total XP for display
+            f_data['total_xp'] = f.get('dist_year', 0)
             ranked_finishers.append(f_data)
 
         hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])

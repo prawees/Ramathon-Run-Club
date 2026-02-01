@@ -18,12 +18,12 @@
         margin: 0;
     }
 
-    /* SQUARE PAGE (1080x1080px approx) - Instagram Ready */
+    /* SQUARE PAGE (1080x1080px) */
     .page-container {
         width: 1080px;
         height: 1080px;
         background: white;
-        padding: 60px 50px; /* Adjusted padding to prevent crop */
+        padding: 40px;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -32,57 +32,81 @@
 
     .header-box {
         text-align: center;
-        margin-bottom: 25px; /* Tighter margin */
+        margin-bottom: 20px;
         border-bottom: 4px double {{ hist_theme.color }};
-        padding-bottom: 15px;
-        height: 120px; /* Fixed height for header */
+        padding-bottom: 10px;
+        height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .club-logo-small {
+        width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid var(--ink); margin-bottom: 5px;
     }
 
-    /* 3x3 GRID - COMPACT TO FIT */
+    /* 3x3 GRID */
     .grid-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
-        gap: 30px;
-        height: 880px; /* Exact height calc (1080 - 60padding*2 - header) */
+        gap: 25px;
         flex: 1;
+        max-height: 860px;
     }
 
     .finisher-card {
         background: #fff;
-        border: 2px solid #eee;
-        border-radius: 15px;
-        padding: 15px;
+        border: 3px solid {{ hist_theme.color }}; /* Fancy Colored Border */
+        border-radius: 20px;
+        padding: 10px;
         text-align: center;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-between; /* Space out content nicely */
+        justify-content: center;
         position: relative;
         overflow: hidden;
-        height: 100%;
-        box-sizing: border-box;
+        aspect-ratio: 1/1; /* Force Square */
+    }
+
+    /* STATS BADGE (Top Left) */
+    .stats-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: {{ hist_theme.color }};
+        color: white;
+        font-family: 'Courier Prime';
+        font-weight: bold;
+        font-size: 1rem;
+        padding: 4px 8px;
+        border-radius: 8px;
+        z-index: 5;
     }
 
     .finisher-avatar {
-        width: 110px; /* Sized for balance */
+        width: 110px;
         height: 110px;
         border-radius: 50%;
-        border: 5px solid {{ hist_theme.color }};
+        border: 4px solid var(--ink);
         object-fit: cover;
+        margin-bottom: 10px;
     }
 
     .finisher-name {
         font-family: 'Limelight', sans-serif;
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         color: var(--ink);
         line-height: 1.1;
+        margin-bottom: 5px;
         text-transform: uppercase;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 100%;
+        max-width: 95%;
     }
 
     .finisher-quote {
@@ -91,32 +115,19 @@
         color: #777;
         font-style: italic;
         line-height: 1.2;
-        max-width: 95%;
+        max-width: 90%;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        min-height: 2.4em; /* Reserve space for 2 lines */
-    }
-
-    /* ONLY SHOW STATS FOR TOP 3 */
-    .top-stats {
-        font-family: 'Courier Prime';
-        font-weight: bold;
-        color: {{ hist_theme.color }};
-        font-size: 1.2rem;
-        background: #f9f9f9;
-        padding: 4px 10px;
-        border-radius: 10px;
-        width: 100%;
-        box-sizing: border-box;
+        min-height: 1.2em;
     }
 
     .medal {
         position: absolute;
         top: -10px;
         right: -10px;
-        font-size: 3rem;
+        font-size: 3.5rem;
         filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
         z-index: 10;
     }
@@ -141,8 +152,9 @@
 {% for batch in finishers|batch(9) %}
 <div class="page-container">
     <div class="header-box">
-        <h1 style="font-family: 'Limelight'; font-size: 4.5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
-            {{ month_name }}
+        <img src="{{ url_for('static', filename='logo.png') }}" class="club-logo-small">
+        <h1 style="font-family: 'Limelight'; font-size: 3.5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase; line-height: 1;">
+            {{ month_name }} FINISHERS
         </h1>
         <div style="font-family: 'Noto Sans Thai', sans-serif; color: #888; font-size: 1.2rem; margin-top: 5px; letter-spacing: 3px; font-weight: bold; text-transform: uppercase;">
             Hall of Fame • {{ year }}
@@ -152,6 +164,10 @@
     <div class="grid-container">
         {% for user in batch %}
         <div class="finisher-card">
+            <div class="stats-badge">
+                XP: {{ user.total_xp|round(0)|int }}
+            </div>
+
             {% if user.rank_in_month == 1 %}<div class="medal">🥇</div>{% endif %}
             {% if user.rank_in_month == 2 %}<div class="medal">🥈</div>{% endif %}
             {% if user.rank_in_month == 3 %}<div class="medal">🥉</div>{% endif %}
@@ -167,13 +183,6 @@
                     "{{ user.motto or user.status }}"
                 {% endif %}
             </div>
-
-            {% if user.rank_in_month <= 3 %}
-            <div class="top-stats">
-                {{ user.month_dist|round(1) }} KM
-            </div>
-            {% endif %}
-            
         </div>
         {% endfor %}
     </div>

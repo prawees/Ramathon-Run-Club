@@ -139,6 +139,13 @@
         </div>
 
         <div style="border-top: 2px dashed #eee; padding-top: 15px;">
+            {% if campaign_finished %}
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <h2 style="font-family: 'Limelight'; color: var(--gold); margin: 0;">🎉 HAPPY NEW YEAR! 🎉</h2>
+                    <p style="font-family: 'Courier Prime'; color: var(--purple);">Season 2026 Concluded</p>
+                </div>
+            {% endif %}
+
             <div class="progress-label" style="color: var(--blue); font-size: 0.9rem;">
                 <span>{{ text.stats_total }} <small style="color:#666; font-weight:normal;">{{ text.xp_desc }}</small></span>
                 {% if next_level %}
@@ -153,6 +160,31 @@
             </div>
         </div>
     </div>
+
+    {% if user.monthly_stats %}
+    <div class="card" style="margin-top: 20px; background: #fafafa;">
+        <h3 style="font-family: 'Limelight'; margin-top: 0; border-bottom: 2px dashed #eee; padding-bottom: 10px; color: var(--ink);">
+            🗓️ MY JOURNEY LOG
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+            {% for month_key, km in user.monthly_stats.items()|sort(reverse=True) %}
+                <div style="background: white; border: 1px solid #ccc; padding: 10px; border-radius: 8px; text-align: center; position: relative; overflow: hidden;">
+                    <div style="border-bottom: 1px dashed #ccc; margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; color: var(--purple); font-size: 0.8rem;">
+                        {{ month_key }}
+                    </div>
+                    <div style="font-family: 'Courier Prime'; font-size: 1.1rem; font-weight: bold;">
+                        {{ km|round(1) }}
+                    </div>
+                    <div style="font-size: 0.7rem; color: #888;">KM</div>
+                    
+                    {% if km >= 50 %}
+                        <div style="position: absolute; bottom: -5px; right: -5px; font-size: 1.5rem; opacity: 0.3;">⭐</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
     {% if not readonly %}
     <div style="text-align: center; margin-top: 15px;">

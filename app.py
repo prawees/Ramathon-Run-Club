@@ -165,7 +165,8 @@ def home():
         member_display['display_dist'] = monthly_dist
         members.append(member_display)
         
-    members.sort(key=lambda x: x['display_dist'], reverse=True)
+    # NEW SORT: Sort by Total Annual XP (dist_year) descending
+    members.sort(key=lambda x: x.get('dist_year', 0), reverse=True)
     return render_template('index.html', members=members, fun_fact=longest_run_champion)
 
 @app.route('/profile')
@@ -332,28 +333,26 @@ def finishers_canvas(year, month):
         db = load_db()
         badge_key = f"{year}-{month:02d}"
         
-        # 1. Filter: User MUST have the badge OR have data for that month
+        # 1. Filter: Find qualified finishers
         finishers = []
         for u in db.values():
             m_stats = u.get('monthly_stats', {})
-            # Special check for Jan 2026 calculation if not present
+            # Fallback calc for Jan 2026
             if year == 2026 and month == 1 and badge_key not in m_stats:
-                # If jan stat missing, assume (Total - Feb)
                 feb_dist = m_stats.get('2026-02', 0)
                 total_dist = u.get('dist_year', 0)
                 jan_calc = total_dist - feb_dist
                 if jan_calc > 0:
-                    m_stats[badge_key] = jan_calc # Inject calculated value
+                    m_stats[badge_key] = jan_calc 
             
-            # Check if they have distance for this month
             dist = m_stats.get(badge_key, 0)
-            if dist >= 50: # Only >= 50km
+            if dist >= 50: 
                 finishers.append(u)
 
-        # 2. Sort by distance in THAT month
-        finishers.sort(key=lambda x: x.get('monthly_stats', {}).get(badge_key, 0), reverse=True)
+        # 2. NEW SORT: Sort by Total Annual XP (dist_year)
+        finishers.sort(key=lambda x: x.get('dist_year', 0), reverse=True)
         
-        # 3. Rank
+        # 3. Prepare data for template
         ranked_finishers = []
         for i, f in enumerate(finishers):
             f_data = f.copy()

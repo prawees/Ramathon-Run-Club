@@ -15,14 +15,15 @@
         flex-direction: column;
         align-items: center;
         gap: 50px;
+        margin: 0;
     }
 
-    /* SQUARE PAGE (1080x1080px approx) */
+    /* SQUARE PAGE (1080x1080px approx) - Instagram Ready */
     .page-container {
         width: 1080px;
         height: 1080px;
         background: white;
-        padding: 50px; 
+        padding: 60px 50px; /* Adjusted padding to prevent crop */
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -31,9 +32,10 @@
 
     .header-box {
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 25px; /* Tighter margin */
         border-bottom: 4px double {{ hist_theme.color }};
         padding-bottom: 15px;
+        height: 120px; /* Fixed height for header */
     }
 
     /* 3x3 GRID - COMPACT TO FIT */
@@ -41,46 +43,46 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
-        gap: 20px;
+        gap: 30px;
+        height: 880px; /* Exact height calc (1080 - 60padding*2 - header) */
         flex: 1;
-        max-height: 850px; /* Constrain height */
     }
 
     .finisher-card {
         background: #fff;
         border: 2px solid #eee;
         border-radius: 15px;
-        padding: 10px;
+        padding: 15px;
         text-align: center;
         box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between; /* Space out content nicely */
         position: relative;
         overflow: hidden;
+        height: 100%;
+        box-sizing: border-box;
     }
 
     .finisher-avatar {
-        width: 100px;
-        height: 100px;
+        width: 110px; /* Sized for balance */
+        height: 110px;
         border-radius: 50%;
-        border: 4px solid {{ hist_theme.color }};
+        border: 5px solid {{ hist_theme.color }};
         object-fit: cover;
-        margin-bottom: 10px;
     }
 
     .finisher-name {
         font-family: 'Limelight', sans-serif;
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         color: var(--ink);
-        line-height: 1;
-        margin-bottom: 5px;
+        line-height: 1.1;
         text-transform: uppercase;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 95%;
+        max-width: 100%;
     }
 
     .finisher-quote {
@@ -89,13 +91,12 @@
         color: #777;
         font-style: italic;
         line-height: 1.2;
-        margin-bottom: 5px;
-        max-width: 90%;
+        max-width: 95%;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        min-height: 1.2em; /* Keeps layout stable even if empty */
+        min-height: 2.4em; /* Reserve space for 2 lines */
     }
 
     /* ONLY SHOW STATS FOR TOP 3 */
@@ -104,10 +105,11 @@
         font-weight: bold;
         color: {{ hist_theme.color }};
         font-size: 1.2rem;
-        margin-top: 5px;
         background: #f9f9f9;
-        padding: 2px 8px;
-        border-radius: 8px;
+        padding: 4px 10px;
+        border-radius: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .medal {
@@ -121,7 +123,7 @@
     
     .watermark {
         position: absolute;
-        bottom: 15px;
+        bottom: 10px;
         width: 100%;
         text-align: center;
         font-family: 'Courier Prime';

@@ -3,31 +3,120 @@
 
 {% block head %}
 <style>
+    /* HIDE UI ELEMENTS FOR SCREENSHOT */
     nav, footer, .filter-bar { display: none !important; }
-    body { background-image: none !important; background-color: #333 !important; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
-    .page-container { width: 1000px; height: 1000px; background: white; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; }
-    .header-box { text-align: center; margin-bottom: 30px; border-bottom: 4px double var(--ink); padding-bottom: 10px; }
-    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 20px; flex: 1; }
-    .finisher-card { background: white; border: 3px solid var(--ink); border-radius: 12px; padding: 10px; text-align: center; box-shadow: 6px 6px 0 rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-    .finisher-avatar { width: 100px; height: 100px; border-radius: 50%; border: 4px solid {{ hist_theme.color }}; object-fit: cover; margin-bottom: 15px; }
     
-    /* BIGGER FONTS */
-    .finisher-name { font-family: 'Limelight', sans-serif; font-size: 1.8rem; color: var(--ink); line-height: 1.1; margin-bottom: 5px; text-transform: uppercase; }
-    .finisher-stats { font-family: 'Courier Prime'; font-weight: bold; color: {{ hist_theme.color }}; font-size: 2.2rem; }
+    /* CANVAS STYLING */
+    body { 
+        background-image: none !important; 
+        background-color: #333 !important; 
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+    }
+
+    /* SQUARE PAGE (1080x1080px approx) - Instagram Ready */
+    .page-container {
+        width: 1080px;
+        height: 1080px;
+        background: white;
+        padding: 60px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .header-box {
+        text-align: center;
+        margin-bottom: 40px;
+        border-bottom: 6px double {{ hist_theme.color }};
+        padding-bottom: 20px;
+    }
+
+    /* 3x3 GRID */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 30px;
+        flex: 1;
+    }
+
+    .finisher-card {
+        background: #fff;
+        border: 2px solid #eee;
+        border-radius: 20px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .finisher-avatar {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        border: 6px solid {{ hist_theme.color }};
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+
+    .finisher-name {
+        font-family: 'Limelight', sans-serif;
+        font-size: 2rem;
+        color: var(--ink);
+        line-height: 1.1;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .finisher-stats {
+        font-family: 'Courier Prime';
+        font-weight: bold;
+        color: {{ hist_theme.color }};
+        font-size: 2.5rem;
+    }
+
+    .medal {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        font-size: 4rem;
+        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
+        z-index: 10;
+    }
     
-    .medal { position: absolute; top: -15px; right: -15px; font-size: 3.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10; }
+    .watermark {
+        position: absolute;
+        bottom: 15px;
+        width: 100%;
+        text-align: center;
+        font-family: 'Courier Prime';
+        font-size: 1rem;
+        color: #aaa;
+        left: 0;
+        letter-spacing: 2px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
+
 {% for batch in finishers|batch(9) %}
 <div class="page-container">
     <div class="header-box">
-        <h1 style="font-family: 'Limelight'; font-size: 4rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
-            {{ month_name }} FINISHERS
+        <h1 style="font-family: 'Limelight'; font-size: 5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
+            {{ month_name }}
         </h1>
-        <div style="font-family: 'Courier Prime'; color: var(--ink); font-size: 1.5rem; margin-top: 5px;">
-            HALL OF FAME // {{ year }} // PAGE {{ loop.index }}
+        <div style="font-family: 'Courier Prime'; color: var(--ink); font-size: 2rem; margin-top: 10px; letter-spacing: 5px;">
+            HALL OF FAME // {{ year }}
         </div>
     </div>
 
@@ -48,12 +137,14 @@
                 {{ user.month_dist|round(1) }} KM
             </div>
             
-            <div style="font-size: 1rem; color: #888; margin-top: 5px;">
+            <div style="font-size: 1.2rem; color: #888; margin-top: 5px; font-family:'Noto Sans Thai';">
                 {{ user.team or 'Runner' }}
             </div>
         </div>
         {% endfor %}
     </div>
+    
+    <div class="watermark">RAMATHON RUN CLUB</div>
 </div>
 {% endfor %}
 
@@ -63,4 +154,5 @@
     <p>Wait for someone to reach 50km!</p>
 </div>
 {% endif %}
+
 {% endblock %}

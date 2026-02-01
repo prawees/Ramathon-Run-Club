@@ -102,10 +102,6 @@
         .badge-mid { font-size: 1.2rem; font-family: 'Limelight'; line-height: 1; }
         .badge-star { font-size: 0.8rem; margin-top: 2px; }
 
-        /* RAINING EMOJIS */
-        .emoji-rain { position: fixed; top: -50px; font-size: 24px; animation: fall linear forwards; z-index: 9999; pointer-events: none; opacity: 0.8; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-
         @media (max-width: 768px) {
             nav { flex-direction: column; padding: 15px 10px; gap: 15px; }
             .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
@@ -177,28 +173,5 @@
         </div>
         <div class="footer-text">© 2026 prawees • Ramathon Run Club</div>
     </footer>
-
-    <script>
-        function createRain() {
-            const container = document.body;
-            const emojis = ['❤️', '🏃', '🦖', '🌸'];
-            const count = 20; 
-
-            for (let i = 0; i < count; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('emoji-rain');
-                drop.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.animationDuration = (Math.random() * 2 + 3) + 's';
-                drop.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                container.appendChild(drop);
-
-                setTimeout(() => { drop.remove(); }, 5000);
-            }
-        }
-        
-        // Start rain once on load (No setInterval loop)
-        window.addEventListener('load', createRain);
-    </script>
 </body>
 </html>

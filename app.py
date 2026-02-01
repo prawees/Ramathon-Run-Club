@@ -8,12 +8,12 @@ from datetime import timezone, timedelta
 import calendar
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 
-# SECURITY: Load secrets
+# SECURITY
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
@@ -25,13 +25,25 @@ DB_FILE = os.path.join(BASE_DIR, 'database.json')
 
 # --- CONSTANTS ---
 SHIRT_CAMPAIGN_ACTIVE = False
-CAMPAIGN_END_YEAR = 2026
 CAMPAIGN_END_DATE = datetime.datetime(2026, 12, 31, 23, 59, 59, tzinfo=timezone(timedelta(hours=7)))
-
-# --- ADMIN IDS (Protect your admin pages) ---
 ADMIN_IDS = ['48771896'] 
 
-# --- RPG GAMIFICATION CONFIG ---
+# --- THEMES ---
+MONTH_THEMES = {
+    1: {'color': '#2196F3', 'name': 'Cool Blue'},      # Jan
+    2: {'color': '#E91E63', 'name': 'Lovely Pink'},    # Feb
+    3: {'color': '#4CAF50', 'name': 'Fresh Green'},    # Mar
+    4: {'color': '#FF5722', 'name': 'Songkran Fire'},  # Apr
+    5: {'color': '#9C27B0', 'name': 'Royal Purple'},   # May
+    6: {'color': '#00BCD4', 'name': 'Rainy Cyan'},     # Jun
+    7: {'color': '#FFC107', 'name': 'Golden Sun'},     # Jul
+    8: {'color': '#03A9F4', 'name': 'Mother Blue'},    # Aug
+    9: {'color': '#FF9800', 'name': 'Autumn Amber'},   # Sep
+    10: {'color': '#607D8B', 'name': 'Spooky Grey'},   # Oct
+    11: {'color': '#795548', 'name': 'Loy Krathong'},  # Nov
+    12: {'color': '#F44336', 'name': 'Festive Red'}    # Dec
+}
+
 LEVELS = [
     {'id': 'D', 'name': 'Class D: Rookie', 'min': 0, 'max': 50, 'color': '#C0C0C0', 'icon': '🌱'},
     {'id': 'C', 'name': 'Class C: Runner', 'min': 50, 'max': 200, 'color': '#4CAF50', 'icon': '🏃'},
@@ -45,7 +57,6 @@ TRANSLATIONS = {
     'th': { 'title': 'Ramathon Run Club', 'nav_leaderboard': 'ตารางคะแนน', 'nav_events': 'กิจกรรม', 'nav_rules': 'กติกา', 'nav_profile': 'ข้อมูลส่วนตัว', 'nav_connect': 'เชื่อมต่อ STRAVA', 'nav_logout': 'ออกจากระบบ', 'btn_sync': '⟳ อัพเดทข้อมูล', 'btn_save': 'บันทึกข้อมูล', 'view_profile': 'ดูโปรไฟล์', 'footer_line': 'เข้ากลุ่ม OpenChat', 'countdown_intro': "ความสนุกเริ่มแล้ว! ชาวรามาธิบดีเชื่อมต่อ Strava แล้วออกวิ่งได้เลย!", 'countdown_sub': "ภารกิจชิงเสื้อเริ่ม Q2 2569: 1 เมษายน 2569 (แต่เริ่มสะสมระยะทางประจำปีเพื่อลุ้นรางวัลใหญ่ได้ตั้งแต่วันนี้)", 'countdown_label': 'เปิดซีซั่นในอีก:', 'stats_month': 'ภารกิจรายเดือน', 'stats_quarter': 'ภารกิจพิชิตเสื้อ', 'stats_total': 'ระดับนักวิ่ง (XP)', 'level_prefix': 'ระดับ', 'xp_to_next': 'กม. สู่ระดับ', 'xp_max': 'ระดับสูงสุด', 'xp_desc': '(สะสมรายปี - รีเซ็ต 1 ม.ค.)', 'locked_q2': 'เปิดระบบ Q2 2569', 'badge_section': 'เหรียญตราประจำเดือน', 'badge_locked': 'ยังไม่ปลดล็อค', 'badge_shirt_qual': 'รับเสื้อได้', 'badge_shirt_wait': 'รับสิทธิ์แล้ว', 'msg_shirt_win': 'ยินดีด้วย! คุณผ่านเกณฑ์รับเสื้อประจำไตรมาสนี้ ติดต่อรับได้ที่คณะ', 'msg_shirt_next': 'ยอดเยี่ยม! (คุณได้รับสิทธิ์เสื้อของปีนี้ไปแล้ว)', 'ig_promo': "✨ พิเศษ: ใส่ IG ภายใน 25 มี.ค. 69 ลุ้นรับ Starbucks Card! ☕", 'ig_verified': 'IG Verified', 'lbl_team': 'สังกัด / ทีม', 'lbl_year': 'ชั้นปี / ตำแหน่ง', 'lbl_campus': 'วิทยาเขตหลัก', 'lbl_status': 'สเตตัสวันนี้', 'lbl_motto': 'คติประจำใจนักวิ่ง', 'lbl_shoe': 'รองเท้าคู่ใจ', 'lbl_route': 'เส้นทางวิ่งโปรด', 'lbl_social': 'ช่องทางติดต่อ', 'lbl_ig': 'Instagram ID (ไม่ต้องใส่ @)', 'lbl_show_strava': 'แสดงปุ่ม Strava บนหน้าโปรไฟล์', 'filter_search': 'ค้นหาชื่อ...', 'filter_all_teams': 'ทุกทีม', 'filter_all_years': 'ทุกชั้นปี', 'filter_all_campus': 'ทุกวิทยาเขต', 'opt_md': 'MD (แพทยศาสตร์)', 'opt_nr': 'NR (พยาบาลศาสตร์)', 'opt_er': 'ER (ฉุกเฉินการแพทย์)', 'opt_cd': 'CD (สื่อสารความหมายฯ)', 'opt_staff': 'Staff (อาจารย์/บุคลากร)', 'opt_other': 'Other (อื่นๆ)', 'opt_grad': 'ศิษย์เก่า (Alumni)', 'opt_pyt': 'พญาไท', 'opt_cnmi': 'จักรีนฤบดินทร์', 'opt_salaya': 'ศาลายา', 'empty_db': 'ยังไม่มีสมาชิกในระบบ' }
 }
 
-# --- HELPERS ---
 def load_db():
     if not os.path.exists(DB_FILE): return {}
     try:
@@ -75,10 +86,7 @@ def get_valid_token(user_id):
     if time.time() < user['expires_at'] - 300: return user['access_token']
     
     token_url = 'https://www.strava.com/oauth/token'
-    payload = {
-        'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET,
-        'grant_type': 'refresh_token', 'refresh_token': user['refresh_token']
-    }
+    payload = { 'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET, 'grant_type': 'refresh_token', 'refresh_token': user['refresh_token'] }
     try:
         r = requests.post(token_url, data=payload).json()
         if 'access_token' in r:
@@ -90,44 +98,34 @@ def get_valid_token(user_id):
     return None
 
 def get_season_stats():
-    # FIX: Use Bangkok Time (UTC+7) for all calculations
-    # This ensures "February" starts at 00:00 Thailand time, not UTC.
     tz = timezone(timedelta(hours=7))
     now = datetime.datetime.now(tz)
-    
-    # Year Start: Jan 1st 00:00 BKK
     year_start = datetime.datetime(now.year, 1, 1, tzinfo=tz)
-    
-    # Month Start: 1st of current month 00:00 BKK
     month_start = datetime.datetime(now.year, now.month, 1, tzinfo=tz)
-    
-    # Quarter Start
     q_month = (now.month - 1) // 3 * 3 + 1
     quarter_start = datetime.datetime(now.year, q_month, 1, tzinfo=tz)
-    
     return int(month_start.timestamp()), int(quarter_start.timestamp()), int(year_start.timestamp())
 
-# --- ROUTES ---
 @app.context_processor
 def inject_globals():
     lang = session.get('lang', 'th')
     tz = timezone(timedelta(hours=7))
     now = datetime.datetime.now(tz)
-    campaign_finished = now > CAMPAIGN_END_DATE
+    
+    # DETERMINE THEME
+    theme = MONTH_THEMES.get(now.month, MONTH_THEMES[1])
     
     return dict(
-        text=TRANSLATIONS[lang], 
-        current_lang=lang, 
-        get_level=get_level,
-        get_next_level=get_next_level,
+        text=TRANSLATIONS[lang], current_lang=lang, 
+        get_level=get_level, get_next_level=get_next_level,
         shirt_active=SHIRT_CAMPAIGN_ACTIVE,
-        now_year=now.year,
-        campaign_finished=campaign_finished
+        now_year=now.year, now_month=now.month, now_month_name=now.strftime("%B"),
+        theme_color=theme['color'], theme_name=theme['name'],
+        campaign_finished=(now > CAMPAIGN_END_DATE)
     )
 
 @app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
+def page_not_found(e): return render_template('404.html'), 404
 
 @app.route('/set_lang/<lang_code>')
 def set_lang(lang_code):
@@ -137,8 +135,23 @@ def set_lang(lang_code):
 @app.route('/')
 def home():
     db = load_db()
-    members = list(db.values())
-    members.sort(key=lambda x: x.get('dist_month', 0), reverse=True)
+    
+    # Calculate CURRENT MONTH Key (Bangkok Time)
+    tz = timezone(timedelta(hours=7))
+    now = datetime.datetime.now(tz)
+    current_month_key = now.strftime("%Y-%m")
+    
+    members = []
+    for uid, data in db.items():
+        # IMPORTANT: Look up stats from history to handle monthly reset automatically
+        monthly_dist = data.get('monthly_stats', {}).get(current_month_key, 0)
+        
+        # Create display object without overwriting DB
+        member_display = data.copy()
+        member_display['display_dist'] = monthly_dist
+        members.append(member_display)
+        
+    members.sort(key=lambda x: x['display_dist'], reverse=True)
     return render_template('index.html', members=members)
 
 @app.route('/profile')
@@ -168,7 +181,6 @@ def update_stats():
     ts_month, ts_quarter, ts_year = get_season_stats()
     headers = {'Authorization': f"Bearer {token}"}
     
-    # --- PAGINATION & SYNC LOGIC ---
     activities = []
     page = 1
     while True:
@@ -180,9 +192,7 @@ def update_stats():
             activities.extend(new_data)
             if len(new_data) < 200: break
             page += 1
-        except Exception as e:
-            print(f"Sync Error: {e}")
-            break
+        except: break
             
     try:
         d_month, d_quarter, d_year = 0, 0, 0
@@ -190,7 +200,6 @@ def update_stats():
         
         for act in activities:
             if act.get('type') == 'Run' and act.get('visibility') == 'everyone':
-                # Convert UTC activity time to Bangkok timestamp for accurate monthly bins
                 act_dt = datetime.datetime.strptime(act['start_date'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
                 act_ts = int(act_dt.timestamp())
                 dist_km = act.get('distance', 0) / 1000
@@ -199,8 +208,7 @@ def update_stats():
                 if act_ts >= ts_quarter: d_quarter += dist_km
                 if act_ts >= ts_month: d_month += dist_km
                 
-                # Bin by Month (in Local Time perspective)
-                # We add 7 hours to the UTC activity time to determine which 'Thai Month' it belongs to
+                # Bin by Month (Local Time +7)
                 local_dt = act_dt + timedelta(hours=7)
                 month_key = local_dt.strftime("%Y-%m")
                 monthly_totals[month_key] = monthly_totals.get(month_key, 0) + dist_km
@@ -214,13 +222,11 @@ def update_stats():
                 'dist_quarter': round(d_quarter, 2),
                 'dist_year': round(d_year, 2),
                 'badges': earned_badges,
-                'monthly_stats': monthly_totals # SAVE HISTORY
+                'monthly_stats': monthly_totals
             })
             save_db(db)
-            flash('Synced successfully! / อัพเดทข้อมูลเรียบร้อย', 'success')
-    except Exception as e:
-        print(f"Calc Error: {e}")
-        flash('Sync failed. Please try again.', 'error')
+            flash('Synced successfully!', 'success')
+    except: flash('Sync failed.', 'error')
 
     return redirect(url_for('profile'))
 
@@ -232,14 +238,10 @@ def update_profile():
     if user_id in db:
         show_strava = 'on' if request.form.get('show_strava') else 'off'
         db[user_id].update({
-            'team': request.form.get('team'),
-            'year': request.form.get('year'),
-            'campus': request.form.get('campus'),
-            'status': request.form.get('status'),
-            'motto': request.form.get('motto'),
-            'shoe': request.form.get('shoe'),
-            'fav_route': request.form.get('fav_route'),
-            'instagram': request.form.get('instagram'),
+            'team': request.form.get('team'), 'year': request.form.get('year'),
+            'campus': request.form.get('campus'), 'status': request.form.get('status'),
+            'motto': request.form.get('motto'), 'shoe': request.form.get('shoe'),
+            'fav_route': request.form.get('fav_route'), 'instagram': request.form.get('instagram'),
             'show_strava': show_strava
         })
         save_db(db)
@@ -249,8 +251,7 @@ def update_profile():
 @app.route('/login')
 def login():
     redirect_uri = url_for('callback', _external=True)
-    scope = "activity:read_all"
-    return redirect(f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&response_type=code&redirect_uri={redirect_uri}&approval_prompt=auto&scope={scope}")
+    return redirect(f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&response_type=code&redirect_uri={redirect_uri}&approval_prompt=auto&scope=activity:read_all")
 
 @app.route('/callback')
 def callback():
@@ -258,32 +259,20 @@ def callback():
     if not code: return redirect(url_for('home'))
     redirect_uri = url_for('callback', _external=True)
     data = requests.post('https://www.strava.com/oauth/token', data={
-        'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET, 
-        'code': code, 'grant_type': 'authorization_code'
+        'client_id': CLIENT_ID, 'client_secret': CLIENT_SECRET, 'code': code, 'grant_type': 'authorization_code'
     }).json()
-    
     if 'access_token' in data:
         uid = str(data['athlete']['id'])
         db = load_db()
         if uid not in db:
-            db[uid] = {
-                'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 'badges': [],
-                'team': '', 'year': '', 'campus': '', 'status': '', 
-                'motto': '', 'shoe': '', 'fav_route': '', 'instagram': '', 'show_strava': 'off',
-                'monthly_stats': {} 
-            }
+            db[uid] = {'dist_month': 0, 'dist_quarter': 0, 'dist_year': 0, 'badges': [], 'team': '', 'year': '', 'campus': '', 'status': '', 'motto': '', 'shoe': '', 'fav_route': '', 'instagram': '', 'show_strava': 'off', 'monthly_stats': {}}
         db[uid].update({
-            'strava_id': uid,
-            'firstname': data['athlete']['firstname'],
-            'lastname': data['athlete']['lastname'],
-            'profile': data['athlete']['profile'],
-            'access_token': data['access_token'],
-            'refresh_token': data['refresh_token'],
-            'expires_at': data['expires_at']
+            'strava_id': uid, 'firstname': data['athlete']['firstname'], 'lastname': data['athlete']['lastname'],
+            'profile': data['athlete']['profile'], 'access_token': data['access_token'],
+            'refresh_token': data['refresh_token'], 'expires_at': data['expires_at']
         })
         save_db(db)
-        session.permanent = True
-        session['user_id'] = uid
+        session.permanent = True; session['user_id'] = uid
         return redirect(url_for('update_stats'))
     return "Login Failed"
 
@@ -299,33 +288,26 @@ def meetups(): return render_template('meetups.html')
 @app.route('/events/recap2024')
 def recap2024(): return render_template('recap_2024.html')
 
-# --- ADMIN & MARKETING ROUTES ---
 @app.route('/admin')
 def admin_hub():
-    if session.get('user_id') not in ADMIN_IDS:
-        flash('⛔ Access Denied', 'error')
-        return redirect(url_for('home'))
+    if session.get('user_id') not in ADMIN_IDS: return redirect(url_for('home'))
     return render_template('admin_hub.html')
 
 @app.route('/admin/art')
 def admin_art():
     if session.get('user_id') not in ADMIN_IDS: return redirect(url_for('home'))
-    db = load_db()
-    total_km = sum(u.get('dist_year', 0) for u in db.values())
-    total_members = len(db)
+    db = load_db(); total_km = sum(u.get('dist_year', 0) for u in db.values()); total_members = len(db)
     mvp = max(db.values(), key=lambda x: x.get('dist_year', 0)) if db else None
     return render_template('admin_art.html', total_km=int(total_km), total_members=total_members, mvp=mvp)
 
 @app.route('/secret-finishers')
 def finishers_hub():
-    # Only protect if you want to, otherwise open to all
     now = datetime.datetime.now()
     return render_template('finishers_hub.html', current_year=now.year, current_month=now.month)
 
 @app.route('/secret-finishers/<int:year>/<int:month>')
 def finishers_canvas(year, month):
-    db = load_db()
-    badge_key = f"{year}-{month:02d}"
+    db = load_db(); badge_key = f"{year}-{month:02d}"
     finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
     finishers.sort(key=lambda x: x.get('firstname', '').lower())
     return render_template('finishers.html', finishers=finishers, year=year, month_name=calendar.month_name[month], badge_key=badge_key)

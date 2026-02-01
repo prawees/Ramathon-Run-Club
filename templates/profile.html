@@ -5,6 +5,9 @@
 {% set level = get_level(user.get('dist_year', 0)) %}
 {% set next_level, xp_needed = get_next_level(user.get('dist_year', 0)) %}
 
+{% set current_badge_key = (now_year|string) + "-" + ("%02d"|format(now_month)) %}
+{% set current_monthly_dist = user.get('monthly_stats', {}).get(current_badge_key, 0) %}
+
 <div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
     
     <div class="card" style="text-align: center; position: relative;">
@@ -81,12 +84,12 @@
 
         <div style="margin-bottom: 20px;">
             <div class="progress-label">
-                <span>{{ text.stats_month }}</span>
-                <span>{{ user.get('dist_month', 0) }} / 50 KM</span>
+                <span>{{ text.stats_month }} ({{ now_month_name }})</span>
+                <span>{{ current_monthly_dist|round(2) }} / 50 KM</span>
             </div>
             <div class="progress-track">
-                <div class="progress-bar bar-purple {% if user.get('dist_month', 0) >= 50 %}bar-glimmer{% endif %}" 
-                     style="width: {{ (user.get('dist_month', 0) / 50 * 100)|round|int }}%; max-width: 100%;"></div>
+                <div class="progress-bar bar-purple {% if current_monthly_dist >= 50 %}bar-glimmer{% endif %}" 
+                     style="width: {{ (current_monthly_dist / 50 * 100)|round|int }}%; max-width: 100%;"></div>
             </div>
         </div>
 
@@ -97,18 +100,24 @@
                     {% set m_str = "%02d"|format(m) %}
                     {% set badge_key = (now_year|string) + "-" + m_str %}
                     {% set has_badge = badge_key in user.get('badges', []) %}
+                    {% set badge_dist = user.get('monthly_stats', {}).get(badge_key, 0) %}
+                    
                     {% set month_names = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
                     
                     {% set colors = ["#2196F3", "#E91E63", "#4CAF50", "#FF9800", "#9C27B0", "#00BCD4", "#F44336", "#FFC107", "#795548", "#607D8B", "#3F51B5", "#009688"] %}
                     {% set theme_color = colors[m-1] %}
 
-                    <div class="month-badge {% if has_badge %}unlocked{% else %}locked{% endif %}" 
-                         style="{% if has_badge %}background: linear-gradient(135deg, {{ theme_color }} 0%, #fff 150%);{% endif %}">
-                        
-                        <div class="badge-top">{{ now_year }}</div>
-                        <div class="badge-mid">{{ month_names[m-1] }}</div>
-                        <div class="badge-star">{% if has_badge %}⭐{% else %}🔒{% endif %}</div>
-                    
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="month-badge {% if has_badge %}unlocked{% else %}locked{% endif %}" 
+                             style="{% if has_badge %}background: linear-gradient(135deg, {{ theme_color }} 0%, #fff 150%);{% endif %}">
+                            
+                            <div class="badge-top">{{ now_year }}</div>
+                            <div class="badge-mid">{{ month_names[m-1] }}</div>
+                            <div class="badge-star">{% if has_badge %}⭐{% else %}🔒{% endif %}</div>
+                        </div>
+                        <div style="font-size: 0.7rem; font-weight: bold; margin-top: 5px; color: #555;">
+                            {{ badge_dist|round(1) }} km
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -161,30 +170,36 @@
         </div>
     </div>
 
-    {% if user.monthly_stats %}
     <div class="card" style="margin-top: 20px; background: #fafafa;">
         <h3 style="font-family: 'Limelight'; margin-top: 0; border-bottom: 2px dashed #eee; padding-bottom: 10px; color: var(--ink);">
             🗓️ MY JOURNEY LOG
         </h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
-            {% for month_key, km in user.monthly_stats.items()|sort(reverse=True) %}
-                <div style="background: white; border: 1px solid #ccc; padding: 10px; border-radius: 8px; text-align: center; position: relative; overflow: hidden;">
-                    <div style="border-bottom: 1px dashed #ccc; margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; color: var(--purple); font-size: 0.8rem;">
-                        {{ month_key }}
+        
+        {% if user.monthly_stats %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+                {% for month_key, km in user.monthly_stats.items()|sort(reverse=True) %}
+                    <div style="background: white; border: 1px solid #ccc; padding: 10px; border-radius: 8px; text-align: center; position: relative; overflow: hidden; box-shadow: 2px 2px 0 #eee;">
+                        <div style="border-bottom: 1px dashed #ccc; margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; color: var(--purple); font-size: 0.8rem;">
+                            {{ month_key }}
+                        </div>
+                        <div style="font-family: 'Courier Prime'; font-size: 1.1rem; font-weight: bold;">
+                            {{ km|round(1) }}
+                        </div>
+                        <div style="font-size: 0.7rem; color: #888;">KM</div>
+                        
+                        {% if km >= 50 %}
+                            <div style="position: absolute; bottom: -5px; right: -5px; font-size: 1.5rem; opacity: 0.3;">⭐</div>
+                        {% endif %}
                     </div>
-                    <div style="font-family: 'Courier Prime'; font-size: 1.1rem; font-weight: bold;">
-                        {{ km|round(1) }}
-                    </div>
-                    <div style="font-size: 0.7rem; color: #888;">KM</div>
-                    
-                    {% if km >= 50 %}
-                        <div style="position: absolute; bottom: -5px; right: -5px; font-size: 1.5rem; opacity: 0.3;">⭐</div>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 20px; opacity: 0.6;">
+                <div style="font-size: 2rem;">🗺️</div>
+                <p>No journey data yet.<br>Click <b>Sync Strava</b> to build your history!</p>
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
 
     {% if not readonly %}
     <div style="text-align: center; margin-top: 15px;">

@@ -20,9 +20,9 @@
 <div class="hero">
     <div style="font-size: 5rem; line-height: 1; margin-bottom: 10px;">🦖💨</div>
 
-    <h1 style="font-family:'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin:0; color: var(--purple);">{{ text.hero_title }}</h1>
-    <div style="font-weight:bold; display:inline-block; padding:5px 20px; margin-top:10px;">
-        {{ text.hero_badge }}
+    <h1 style="font-family:'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin:0; color: var(--purple);">{{ text.title }}</h1>
+    <div style="font-weight:bold; display:inline-block; padding:5px 20px; margin-top:10px; border: 2px solid var(--ink); border-radius: 20px; background: #fff;">
+        THEME: {{ theme_name }}
     </div>
     <br><br>
     
@@ -63,7 +63,6 @@
 <div class="grid" id="leaderboardGrid">
     {% for member in members %}
     {% set level = get_level(member.get('dist_year', 0)) %}
-    
     <a href="{{ url_for('public_profile', user_id=member.strava_id) }}" class="card-link leader-card" 
        data-name="{{ member.firstname }} {{ member.lastname }}"
        data-team="{{ member.team }}"
@@ -102,14 +101,14 @@
                 </div>
             </div>
 
-            <div style="font-size:0.8rem; font-weight:bold; margin-bottom: 5px;">{{ text.stats_month }}</div>
+            <div style="font-size:0.8rem; font-weight:bold; margin-bottom: 5px;">{{ now_month_name|upper }} MISSION</div>
             <div class="progress-track" style="margin-bottom: 5px; height: 15px;">
-                <div class="progress-bar bar-purple {% if member.get('dist_month', 0) >= 50 %}bar-glimmer{% endif %}" 
-                     style="width: {{ (member.get('dist_month', 0) / 50 * 100)|round|int }}%"></div>
+                <div class="progress-bar bar-purple {% if member.display_dist >= 50 %}bar-glimmer{% endif %}" 
+                     style="width: {{ (member.display_dist / 50 * 100)|round|int }}%"></div>
             </div>
             
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="font-weight: bold;">{{ member.get('dist_month', 0) }} KM</div>
+                <div style="font-weight: bold;">{{ member.display_dist|round(2) }} KM</div>
                 {% if member.shoe %}
                     <div style="font-size: 0.6rem; background: #f0f0f0; padding: 2px 4px; border-radius: 4px; border: 1px solid #ddd;">
                         👟 {{ member.shoe }}

@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ramathon{% endblock %}</title>
-    
     <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
-    
     <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Courier+Prime:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
     <meta name="referrer" content="no-referrer">
     
     <style>
-        /* --- THEME --- */
+        /* --- DYNAMIC THEME --- */
         :root { 
-            --paper: #F3E5F5; --ink: #240046; --purple: #9D4EDD; --gold: #FFD700; 
+            --paper: #F3E5F5; 
+            --ink: #240046; 
+            /* THEME COLOR INJECTED FROM APP.PY */
+            --purple: {{ theme_color }}; 
+            --gold: #FFD700; 
             --green: #008000; --blue: #2196F3; --strava: #FC4C02; --line: #00B900;
         }
         
@@ -27,26 +29,20 @@
         /* --- NAV --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 30px; border-bottom: 3px double var(--ink); background: rgba(243, 229, 245, 0.95); position: sticky; top: 0; z-index: 1000; }
         .brand-container { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        
-        .logo-img { 
-            width: 50px; height: 50px; 
-            border-radius: 50%; object-fit: cover;
-            border: 2px solid var(--ink); 
-            transition: transform 0.3s;
-        }
+        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ink); transition: transform 0.3s; }
         .logo-img:hover { transform: rotate(10deg) scale(1.1); }
-
         .brand-text { font-family: 'Limelight', cursive; font-size: 1.5rem; color: var(--ink); text-transform: uppercase; }
+        
         .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-link { text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; position: relative; transition: color 0.2s; }
-        .nav-link.active::after { content: ''; position: absolute; width: 100%; height: 3px; bottom: -5px; left: 0; background-color: var(--purple); background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, var(--purple) 2px, var(--purple) 4px); }
-        .nav-link:active { color: var(--purple); text-shadow: 0 0 8px rgba(157, 78, 221, 0.6); transform: scale(0.95); }
+        .nav-link.active::after { content: ''; position: absolute; width: 100%; height: 3px; bottom: -5px; left: 0; background-color: var(--purple); }
+        .nav-link:active { color: var(--purple); transform: scale(0.95); }
 
         .btn-purple { background: var(--purple) !important; color: white !important; padding: 8px 16px; font-family: 'Limelight', 'Noto Sans Thai', cursive; border: 2px solid var(--ink); box-shadow: 4px 4px 0px var(--ink); transition: all 0.2s; border-radius: 4px; text-decoration: none; display: inline-block; cursor: pointer;}
         .btn-purple:hover { background: var(--paper) !important; color: var(--purple) !important; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--ink); }
 
         .lang-switch a { font-size: 1rem; text-decoration: none; color: var(--ink); opacity: 0.5; padding: 0 5px; }
-        .lang-switch a.active { opacity: 1; transform: scale(1.1); display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
+        .lang-switch a.active { opacity: 1; transform: scale(1.1); display: inline-block; }
         .content { flex: 1; padding-bottom: 60px; }
         
         footer { text-align: center; padding: 40px 20px; border-top: 2px dashed var(--ink); background: rgba(255, 255, 255, 0.5); margin-top: auto; }
@@ -64,93 +60,49 @@
         /* RPG Bars */
         .progress-track { width: 100%; height: 20px; background: #eee; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; position: relative; margin: 5px 0 15px 0; }
         .progress-bar { height: 100%; border-right: 2px solid var(--ink); transition: width 1s; }
-        .bar-purple { background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #7b3eb0 10px, #7b3eb0 20px); }
+        .bar-purple { background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #fff 10px, #fff 20px); }
         .bar-gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
         .bar-blue { background: repeating-linear-gradient(45deg, var(--blue), var(--blue) 10px, #1976D2 10px, #1976D2 20px); }
         
-        /* --- NEW: PREMIUM STATIC GOLD --- */
+        /* PREMIUM STATIC GOLD GLIMMER */
         .bar-glimmer {
-            /* High-End Static Gold Gradient */
             background: linear-gradient(180deg, #FFF9C4 0%, #FFD700 45%, #FFC107 100%) !important;
-            
-            /* Static Glow (Golden Halo) */
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
-            
-            /* Clean Border */
             border: 1px solid #FFB300 !important;
             border-right: 1px solid #FFB300 !important;
-            
-            /* Subtle Glossy Shine on Top (Static) */
             position: relative;
         }
-        
-        /* Adds a static 'shine' line at the top */
         .bar-glimmer::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 40%;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 40%;
             background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
             pointer-events: none;
         }
 
         .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; font-family: 'Noto Sans Thai'; }
-        
         .lvl-badge { background: var(--ink); color: white; padding: 5px 10px; border-radius: 4px; font-family: 'Limelight'; display: inline-block; border: 1px solid white; box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
-
-        .speech-bubble {
-            position: relative; background: #f0f0f0; border-radius: 10px; padding: 8px 12px; font-size: 0.75rem; color: var(--ink); font-style: italic; border: 2px solid var(--ink); margin-bottom: 10px; display: inline-block; max-width: 90%;
-        }
-        .speech-bubble::after {
-            content: ''; position: absolute; left: 20px; bottom: -8px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid var(--ink);
-        }
-        .speech-bubble::before {
-            content: ''; position: absolute; left: 22px; bottom: -4px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #f0f0f0; z-index: 1;
-        }
-
-        .filter-bar {
-            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.8); border: 2px dashed var(--ink); border-radius: 8px;
-        }
+        
+        .speech-bubble { position: relative; background: #f0f0f0; border-radius: 10px; padding: 8px 12px; font-size: 0.75rem; color: var(--ink); font-style: italic; border: 2px solid var(--ink); margin-bottom: 10px; display: inline-block; max-width: 90%; }
+        .speech-bubble::after { content: ''; position: absolute; left: 20px; bottom: -8px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid var(--ink); }
+        
+        .filter-bar { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.8); border: 2px dashed var(--ink); border-radius: 8px; }
         .filter-input { padding: 8px; border: 2px solid var(--ink); border-radius: 4px; font-family: 'Noto Sans Thai'; transition: box-shadow 0.2s; }
         .filter-input:focus { outline: none; box-shadow: 0 0 5px var(--purple); }
 
-        .team-badge, .year-badge, .rank-badge-small {
-            display: inline-flex; align-items: center; justify-content: center;
-            height: 18px; line-height: 0; vertical-align: middle; padding: 0 6px;
-        }
+        .team-badge, .year-badge, .rank-badge-small { display: inline-flex; align-items: center; justify-content: center; height: 18px; line-height: 0; vertical-align: middle; padding: 0 6px; }
 
-        /* Aesthetic Badge Styles */
-        .month-badge {
-            min-width: 60px; height: 75px; 
-            border-radius: 8px; 
-            display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; 
-            font-weight: bold; 
-            position: relative;
-            border: 2px solid var(--ink);
-            transition: transform 0.2s;
-            margin-right: 10px;
-            background: #fff;
-        }
-        .month-badge.locked {
-            background: #ddd; color: #999; border: 2px dashed #aaa; filter: grayscale(100%);
-        }
-        .month-badge.unlocked {
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
-            color: white;
-        }
-        .month-badge.unlocked:hover {
-            transform: translateY(-3px) scale(1.05);
-        }
+        /* BADGES */
+        .month-badge { min-width: 60px; height: 75px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; position: relative; border: 2px solid var(--ink); transition: transform 0.2s; margin-right: 10px; background: #fff; }
+        .month-badge.locked { background: #ddd; color: #999; border: 2px dashed #aaa; filter: grayscale(100%); }
+        .month-badge.unlocked { box-shadow: 3px 3px 0 rgba(0,0,0,0.2); color: white; }
+        .month-badge.unlocked:hover { transform: translateY(-3px) scale(1.05); }
         .badge-top { font-size: 0.6rem; text-transform: uppercase; margin-bottom: 2px; opacity: 0.9; }
         .badge-mid { font-size: 1.2rem; font-family: 'Limelight'; line-height: 1; }
         .badge-star { font-size: 0.8rem; margin-top: 2px; }
 
         @media (max-width: 768px) {
             nav { flex-direction: column; padding: 15px 10px; gap: 15px; }
-            .brand-container { margin-bottom: 5px; }
             .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
             .social-container { flex-direction: column; align-items: center; gap: 15px; }
-            .social-btn { width: 220px; justify-content: center; }
             .filter-bar { flex-direction: column; }
             .filter-input { width: 100%; box-sizing: border-box; }
         }
@@ -178,12 +130,9 @@
             <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">{{ text.nav_leaderboard }}</a>
             <a href="{{ url_for('events') }}" class="nav-link {% if request.endpoint in ['events', 'meetups', 'recap2024'] %}active{% endif %}">{{ text.nav_events }}</a>
             <a href="{{ url_for('rules') }}" class="nav-link {% if request.endpoint == 'rules' %}active{% endif %}">{{ text.nav_rules }}</a>
-            
             {% if session.get('user_id') %}
                 <a href="{{ url_for('profile') }}" class="btn-purple">{{ text.nav_profile }}</a>
-                <a href="{{ url_for('logout') }}" class="nav-link" style="font-size: 0.8rem; border: 1px solid var(--ink); padding: 5px 10px; border-radius: 4px; margin-left: 5px;">
-                    {{ text.nav_logout }}
-                </a>
+                <a href="{{ url_for('logout') }}" class="nav-link" style="border:1px solid var(--ink); padding:5px 10px; border-radius:4px; font-size:0.8rem;">{{ text.nav_logout }}</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="btn-purple">{{ text.nav_connect }}</a>
             {% endif %}
@@ -205,7 +154,6 @@
             </div>
           {% endif %}
         {% endwith %}
-        
         {% block content %}{% endblock %}
     </div>
 

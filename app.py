@@ -108,17 +108,14 @@ def get_season_stats():
     return int(month_start.timestamp()), int(quarter_start.timestamp()), int(year_start.timestamp())
 
 def get_aqi(lang='th'):
-    """Fetches AQI with Fallback and Translated Messages"""
     try:
         url = f"https://api.waqi.info/feed/ratchathewi/?token={AQI_TOKEN}"
         r = requests.get(url, timeout=3)
         data = r.json()
-        
         if data.get('status') != 'ok':
             url = f"https://api.waqi.info/feed/bangkok/?token={AQI_TOKEN}"
             r = requests.get(url, timeout=3)
             data = r.json()
-
         if data.get('status') == 'ok':
             aqi = data['data']['aqi']
             msgs = TRANSLATIONS[lang]
@@ -126,9 +123,7 @@ def get_aqi(lang='th'):
             elif aqi <= 100: return {'val': aqi, 'status': 'Moderate', 'color': '#FFC107', 'msg': msgs['aqi_mod']}
             elif aqi <= 150: return {'val': aqi, 'status': 'Unhealthy (Sens.)', 'color': '#FF9800', 'msg': msgs['aqi_sens']}
             else: return {'val': aqi, 'status': 'Unhealthy', 'color': '#F44336', 'msg': msgs['aqi_bad']}
-    except:
-        pass
-    
+    except: pass
     return {'val': '-', 'status': 'No Data', 'color': '#9E9E9E', 'msg': 'API Error'}
 
 @app.context_processor
@@ -137,15 +132,7 @@ def inject_globals():
     tz = timezone(timedelta(hours=7))
     now = datetime.datetime.now(tz)
     theme = MONTH_THEMES.get(now.month, MONTH_THEMES[1])
-    
-    return dict(
-        text=TRANSLATIONS[lang], current_lang=lang, 
-        get_level=get_level, get_next_level=get_next_level,
-        shirt_active=SHIRT_CAMPAIGN_ACTIVE,
-        now_year=now.year, now_month=now.month, now_month_name=now.strftime("%B"),
-        theme_color=theme['color'], theme_name=theme['name'],
-        campaign_finished=(now > CAMPAIGN_END_DATE)
-    )
+    return dict(text=TRANSLATIONS[lang], current_lang=lang, get_level=get_level, get_next_level=get_next_level, shirt_active=SHIRT_CAMPAIGN_ACTIVE, now_year=now.year, now_month=now.month, now_month_name=now.strftime("%B"), theme_color=theme['color'], theme_name=theme['name'], campaign_finished=(now > CAMPAIGN_END_DATE))
 
 @app.errorhandler(404)
 def page_not_found(e): return render_template('404.html'), 404
@@ -345,18 +332,33 @@ def finishers_canvas(year, month):
         db = load_db()
         badge_key = f"{year}-{month:02d}"
         
-        # 1. Filter
-        finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
+        # 1. Filter: User MUST have the badge OR have data for that month
+        finishers = []
+        for u in db.values():
+            m_stats = u.get('monthly_stats', {})
+            # Special check for Jan 2026 calculation if not present
+            if year == 2026 and month == 1 and badge_key not in m_stats:
+                # If jan stat missing, assume (Total - Feb)
+                feb_dist = m_stats.get('2026-02', 0)
+                total_dist = u.get('dist_year', 0)
+                jan_calc = total_dist - feb_dist
+                if jan_calc > 0:
+                    m_stats[badge_key] = jan_calc # Inject calculated value
+            
+            # Check if they have distance for this month
+            dist = m_stats.get(badge_key, 0)
+            if dist >= 50: # Only >= 50km
+                finishers.append(u)
+
+        # 2. Sort by distance in THAT month
+        finishers.sort(key=lambda x: x.get('monthly_stats', {}).get(badge_key, 0), reverse=True)
         
-        # 2. Sort safely by THAT MONTH's distance
-        finishers.sort(key=lambda x: (x.get('monthly_stats') or {}).get(badge_key, 0), reverse=True)
-        
-        # 3. Pre-calculate Ranks to prevent Template Logic Errors
+        # 3. Rank
         ranked_finishers = []
         for i, f in enumerate(finishers):
             f_data = f.copy()
             f_data['rank_in_month'] = i + 1
-            f_data['month_dist'] = (f.get('monthly_stats') or {}).get(badge_key, 0)
+            f_data['month_dist'] = f.get('monthly_stats', {}).get(badge_key, 0)
             ranked_finishers.append(f_data)
 
         hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
@@ -368,6 +370,6 @@ def finishers_canvas(year, month):
                                badge_key=badge_key,
                                hist_theme=hist_theme)
     except Exception as e:
-        return f"Error generating page: {str(e)}", 500
+        return f"Error: {str(e)}", 500
 
 if __name__ == '__main__': app.run(debug=True)

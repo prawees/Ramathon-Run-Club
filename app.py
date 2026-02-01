@@ -179,11 +179,7 @@ def home():
         members.append(member_display)
         
     members.sort(key=lambda x: x['display_dist'], reverse=True)
-    
-    lang = session.get('lang', 'th')
-    aqi_data = get_aqi(lang)
-
-    return render_template('index.html', members=members, aqi=aqi_data, fun_fact=longest_run_champion)
+    return render_template('index.html', members=members, fun_fact=longest_run_champion)
 
 @app.route('/profile')
 def profile():

@@ -30,18 +30,18 @@ ADMIN_IDS = ['48771896']
 
 # --- REFINED AESTHETIC THEMES ---
 MONTH_THEMES = {
-    1: {'color': '#1E88E5', 'name': 'Cool Blue'},       # Jan: Professional Blue
-    2: {'color': '#D81B60', 'name': 'Ruby Rose'},       # Feb: Deep Pink/Red (Not Neon)
-    3: {'color': '#43A047', 'name': 'Forest Green'},    # Mar: Natural Green
-    4: {'color': '#FB8C00', 'name': 'Solar Orange'},    # Apr: Warm Orange
-    5: {'color': '#8E24AA', 'name': 'Royal Purple'},    # May: Deep Purple (Classic)
-    6: {'color': '#00ACC1', 'name': 'Ocean Cyan'},      # Jun: Teal
-    7: {'color': '#FFB300', 'name': 'Golden Hour'},     # Jul: Amber
-    8: {'color': '#1E88E5', 'name': 'Mother Blue'},     # Aug: Same as Jan (Blue)
-    9: {'color': '#F4511E', 'name': 'Autumn Rust'},     # Sep: Burnt Orange
-    10: {'color': '#546E7A', 'name': 'Shadow Grey'},    # Oct: Cool Grey
-    11: {'color': '#6D4C41', 'name': 'Vintage Brown'},  # Nov: Earthy
-    12: {'color': '#E53935', 'name': 'Holiday Red'}     # Dec: Red
+    1: {'color': '#1E88E5', 'name': 'Cool Blue'},       # Jan
+    2: {'color': '#F06292', 'name': 'Pastel Love'},     # Feb: UPDATED TO PASTEL PINK
+    3: {'color': '#43A047', 'name': 'Forest Green'},    # Mar
+    4: {'color': '#FB8C00', 'name': 'Solar Orange'},    # Apr
+    5: {'color': '#8E24AA', 'name': 'Royal Purple'},    # May
+    6: {'color': '#00ACC1', 'name': 'Ocean Cyan'},      # Jun
+    7: {'color': '#FFB300', 'name': 'Golden Hour'},     # Jul
+    8: {'color': '#1E88E5', 'name': 'Mother Blue'},     # Aug
+    9: {'color': '#F4511E', 'name': 'Autumn Rust'},     # Sep
+    10: {'color': '#546E7A', 'name': 'Shadow Grey'},    # Oct
+    11: {'color': '#6D4C41', 'name': 'Vintage Brown'},  # Nov
+    12: {'color': '#E53935', 'name': 'Holiday Red'}     # Dec
 }
 
 LEVELS = [
@@ -137,7 +137,6 @@ TRANSLATIONS = {
         'rules_2_li2': '100 KM: Unlock Elite Monthly Status.',
         'rules_3_title': '3. Sync Rules',
         'rules_3_text': 'Only Public runs count.',
-        # RECAP 2024 SPECIFIC KEYS
         'recap_top_label': 'ARCHIVE REPORT: TK13',
         'recap_main_title': 'Virtual Ramathon 2024',
         'recap_date': 'November 1 - 30, 2024',
@@ -241,7 +240,6 @@ TRANSLATIONS = {
         'rules_2_li2': 'สะสมครบ ๑๐๐ กม.: ปลดล็อคระดับ Elite ประจำเดือน',
         'rules_3_title': '๓. กติกาการส่งผล',
         'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)',
-        # RECAP 2024 SPECIFIC KEYS
         'recap_top_label': 'รายงานสรุปผล: TK13',
         'recap_main_title': 'Virtual Ramathon 2024',
         'recap_date': '1 - 30 พฤศจิกายน 2567',
@@ -349,8 +347,8 @@ def home():
     
     members = []
     for uid, data in db.items():
-        # IMPORTANT: Look up stats from history to handle monthly reset automatically
-        monthly_dist = data.get('monthly_stats', {}).get(current_month_key, 0)
+        # Look up stats from history safely
+        monthly_dist = (data.get('monthly_stats') or {}).get(current_month_key, 0)
         
         # Create display object without overwriting DB
         member_display = data.copy()
@@ -516,13 +514,12 @@ def finishers_canvas(year, month):
     db = load_db()
     badge_key = f"{year}-{month:02d}"
     
-    # 1. Filter Finishers
+    # Filter Finishers
     finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
     
-    # 2. Sort by Distance in that specific month (Highest to Lowest)
-    finishers.sort(key=lambda x: x.get('monthly_stats', {}).get(badge_key, 0), reverse=True)
+    # FIXED: Sort logic that handles empty/None stats safely
+    finishers.sort(key=lambda x: (x.get('monthly_stats') or {}).get(badge_key, 0), reverse=True)
     
-    # 3. Get Theme for that specific month (Not current month)
     hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
     
     return render_template('finishers.html', 

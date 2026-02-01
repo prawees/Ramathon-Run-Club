@@ -13,7 +13,6 @@
         :root { 
             --paper: #F3E5F5; 
             --ink: #240046; 
-            /* THEME COLOR INJECTED FROM APP.PY */
             --purple: {{ theme_color }}; 
             --gold: #FFD700; 
             --green: #008000; --blue: #2196F3; --strava: #FC4C02; --line: #00B900;
@@ -60,7 +59,12 @@
         /* RPG Bars */
         .progress-track { width: 100%; height: 20px; background: #eee; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; position: relative; margin: 5px 0 15px 0; }
         .progress-bar { height: 100%; border-right: 2px solid var(--ink); transition: width 1s; }
-        .bar-purple { background: repeating-linear-gradient(45deg, var(--purple), var(--purple) 10px, #fff 10px, #fff 20px); }
+        
+        /* NEW: SMOOTH GRADIENT BAR */
+        .bar-purple { 
+            background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, var(--purple) 100%);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
         .bar-gold { background: repeating-linear-gradient(45deg, var(--gold), var(--gold) 10px, #b08d1e 10px, #b08d1e 20px); }
         .bar-blue { background: repeating-linear-gradient(45deg, var(--blue), var(--blue) 10px, #1976D2 10px, #1976D2 20px); }
         
@@ -90,7 +94,6 @@
 
         .team-badge, .year-badge, .rank-badge-small { display: inline-flex; align-items: center; justify-content: center; height: 18px; line-height: 0; vertical-align: middle; padding: 0 6px; }
 
-        /* BADGES */
         .month-badge { min-width: 60px; height: 75px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; position: relative; border: 2px solid var(--ink); transition: transform 0.2s; margin-right: 10px; background: #fff; }
         .month-badge.locked { background: #ddd; color: #999; border: 2px dashed #aaa; filter: grayscale(100%); }
         .month-badge.unlocked { box-shadow: 3px 3px 0 rgba(0,0,0,0.2); color: white; }

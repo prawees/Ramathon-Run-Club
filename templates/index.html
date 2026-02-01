@@ -13,6 +13,12 @@
     .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); padding: 1px 5px; border-radius: 4px; margin-left: 2px; display: inline-flex; align-items: center; height: 18px; }
     .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-flex; align-items: center; height: 18px; }
     .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+    
+    /* AQI & Fun Fact Styles */
+    .info-bar { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .info-card { background: white; border: 2px solid var(--ink); border-radius: 8px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
+    .info-val { font-weight: bold; font-family: 'Courier Prime'; font-size: 1.2rem; }
+    .info-label { font-size: 0.8rem; opacity: 0.7; }
 </style>
 {% endblock %}
 
@@ -24,22 +30,35 @@
     
     <div style="margin-top: 25px; margin-bottom: 25px;">
         <h2 style="font-family: 'Noto Sans Thai'; color: #D81B60; margin: 0; font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px 0px rgba(255, 182, 193, 0.5);">
-            "กุมภาแล้ว...เมื่อไหร่จะมีคนกุมมือ" 🌹
+            "รักคนอื่นแล้ว อย่าลืมรักตัวเองนะจ๊ะ" 🌹
         </h2>
-        <p style="font-size: 0.9rem; color: #666; margin-top: 8px; font-style: italic; max-width: 600px; margin-left: auto; margin-right: auto;">
-            (Why is everything pink? Because running is self-love! <br>Or maybe we just want attention... Happy Valentine's Month!)
-        </p>
     </div>
     
-    <div style="text-align: center; margin-bottom: 10px; font-family: 'Noto Sans Thai';">
-        <h3 style="margin: 0; color: var(--purple); font-size: 1.2rem;">{{ text.countdown_intro }}</h3>
-        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: var(--ink);">{{ text.countdown_sub }}</p>
+    <div class="info-bar">
+        <div class="countdown-box">
+            <div style="font-size: 0.8rem; font-family: 'Noto Sans Thai';">{{ text.countdown_label }} Q2 2026</div>
+            <div id="countdown" style="font-family: 'Courier Prime'; font-size: 1.5rem; font-weight: bold;">00d 00h 00m 00s</div>
+        </div>
+
+        {% if aqi %}
+        <div class="info-card" style="border-color: {{ aqi.color }};">
+            <div style="text-align: center;">
+                <div style="font-size: 0.7rem; font-weight: bold; color: {{ aqi.color }};">AQI (Ratchathewi)</div>
+                <div class="info-val" style="color: {{ aqi.color }};">{{ aqi.val }}</div>
+            </div>
+            <div style="border-left: 1px solid #ddd; padding-left: 10px; font-size: 0.8rem; max-width: 150px;">
+                <strong>{{ aqi.status }}</strong><br>{{ aqi.msg }}
+            </div>
+        </div>
+        {% endif %}
     </div>
-    
-    <div class="countdown-box">
-        <div style="font-size: 0.8rem; font-family: 'Noto Sans Thai';">{{ text.countdown_label }} Q2 2026</div>
-        <div id="countdown" style="font-family: 'Courier Prime'; font-size: 1.5rem; font-weight: bold;">00d 00h 00m 00s</div>
+
+    {% if fun_fact %}
+    <div style="margin-top: 20px; display: inline-block; background: #fff3e0; border: 2px dashed #ff9800; padding: 10px 20px; border-radius: 50px;">
+        <span style="font-weight: bold; color: #e65100;">🏆 Longest Run of {{ now_month_name }}:</span> 
+        {{ fun_fact.name }} ({{ fun_fact.dist|round(1) }} km)
     </div>
+    {% endif %}
 </div>
 
 <div style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
@@ -75,7 +94,16 @@
        data-year="{{ member.year }}"
        data-campus="{{ member.campus }}">
        
-        <div class="card">
+        <div class="card" style="position: relative;">
+            
+            {% if loop.index == 1 %}
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10;">🥇</div>
+            {% elif loop.index == 2 %}
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10;">🥈</div>
+            {% elif loop.index == 3 %}
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10;">🥉</div>
+            {% endif %}
+
             {% if member.status %}
             <div style="position: relative; margin-bottom: 20px; padding-left: 10px;">
                 <div class="speech-bubble" style="font-size: 0.8rem; padding: 6px 10px;">

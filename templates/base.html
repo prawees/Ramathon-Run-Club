@@ -60,7 +60,7 @@
         .progress-track { width: 100%; height: 20px; background: #eee; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; position: relative; margin: 5px 0 15px 0; }
         .progress-bar { height: 100%; border-right: 2px solid var(--ink); transition: width 1s; }
         
-        /* NEW: SMOOTH GRADIENT BAR (No more stripes!) */
+        /* NEW: SMOOTH GRADIENT BAR */
         .bar-purple { 
             background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, var(--purple) 100%);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
@@ -182,28 +182,23 @@
         function createRain() {
             const container = document.body;
             const emojis = ['❤️', '🏃', '🦖', '🌸'];
-            const count = 20; // Number of drops at once
+            const count = 20; 
 
             for (let i = 0; i < count; i++) {
                 const drop = document.createElement('div');
                 drop.classList.add('emoji-rain');
                 drop.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                 drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.animationDuration = (Math.random() * 2 + 3) + 's'; // 3-5s fall time
-                drop.style.fontSize = (Math.random() * 20 + 20) + 'px'; // 20-40px size
+                drop.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                drop.style.fontSize = (Math.random() * 20 + 20) + 'px';
                 container.appendChild(drop);
 
-                // Remove after animation
                 setTimeout(() => { drop.remove(); }, 5000);
             }
         }
         
-        // Start rain on load
-        window.addEventListener('load', () => {
-            createRain();
-            // Optional: Keep raining gently
-            setInterval(createRain, 3000);
-        });
+        // Start rain once on load (No setInterval loop)
+        window.addEventListener('load', createRain);
     </script>
 </body>
 </html>

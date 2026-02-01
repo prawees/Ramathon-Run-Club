@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
-# You can get a free token from https://aqicn.org/data-platform/token/
+# Get a free token from: https://aqicn.org/data-platform/token/
 AQI_TOKEN = os.getenv('AQI_TOKEN', 'demo') 
 
 # CONFIGURATION
@@ -33,7 +33,7 @@ ADMIN_IDS = ['48771896']
 # --- THEMES ---
 MONTH_THEMES = {
     1: {'color': '#1E88E5', 'name': 'Cool Blue'},
-    2: {'color': '#F48FB1', 'name': 'Pastel Love'},
+    2: {'color': '#F48FB1', 'name': 'Pastel Love'}, # Feb: Pastel Pink
     3: {'color': '#43A047', 'name': 'Fresh Green'},
     4: {'color': '#FB8C00', 'name': 'Solar Orange'},
     5: {'color': '#8E24AA', 'name': 'Royal Purple'},
@@ -55,8 +55,238 @@ LEVELS = [
 ]
 
 TRANSLATIONS = {
-    'en': { 'title': 'Ramathon Run Club', 'nav_leaderboard': 'LEADERBOARD', 'nav_events': 'EVENTS', 'nav_rules': 'RULES', 'nav_profile': 'MY PROFILE', 'nav_connect': 'CONNECT STRAVA', 'nav_logout': 'LOGOUT', 'btn_sync': '⟳ Sync Strava', 'btn_save': 'Save Profile', 'view_profile': 'View Public Profile', 'footer_line': 'Join OpenChat', 'countdown_intro': "The fun starts now! Let's run Ramathibodians! Link your Strava now!", 'countdown_sub': "Shirt Quest starts Q2 2026: Apr 1st! (But Yearly Rank XP accumulation starts TODAY!)", 'countdown_label': 'SEASON STARTS IN:', 'stats_month': 'MONTHLY GRIND', 'stats_quarter': 'QUARTERLY QUEST', 'stats_total': 'ANNUAL CAREER', 'level_prefix': 'RANK', 'xp_to_next': 'KM to level up to', 'xp_max': 'MAX LEVEL REACHED', 'xp_desc': '(Yearly XP - Resets Jan 1st)', 'locked_q2': 'UNLOCKS Q2 2026', 'badge_section': 'MONTHLY BADGES', 'badge_locked': 'Locked', 'badge_shirt_qual': 'SHIRT UNLOCKED', 'badge_shirt_wait': 'ALREADY CLAIMED', 'msg_shirt_win': 'You have qualified for the Quarterly Shirt! Contact staff to claim.', 'msg_shirt_next': 'Great job! You have already claimed a shirt this year.', 'ig_promo': "✨ Special: Link IG by 25 Mar '26 to win a Starbucks Card! ☕", 'ig_verified': 'IG Verified', 'lbl_team': 'Team / Affiliation', 'lbl_year': 'Year / Role', 'lbl_campus': 'Campus', 'lbl_status': 'Status Message', 'lbl_motto': 'Running Motto', 'lbl_shoe': 'Battle Shoe', 'lbl_route': 'Fav. Running Route', 'lbl_social': 'Social Connect', 'lbl_ig': 'Instagram Handle (no @)', 'lbl_show_strava': 'Show Strava Link on Profile', 'filter_search': 'Search Name...', 'filter_all_teams': 'All Teams', 'filter_all_years': 'All Years', 'filter_all_campus': 'All Campuses', 'opt_md': 'MD (Medicine)', 'opt_nr': 'NR (Nursing)', 'opt_er': 'ER (Paramedic)', 'opt_cd': 'CD (Comm. Disorders)', 'opt_staff': 'Staff / Faculty', 'opt_other': 'Other', 'opt_grad': 'Alumni / Grad', 'opt_pyt': 'PYT (Phayathai)', 'opt_cnmi': 'CNMI (Chakri)', 'opt_salaya': 'Salaya', 'empty_db': 'No adventurers found yet.' },
-    'th': { 'title': 'Ramathon Run Club', 'nav_leaderboard': 'ตารางคะแนน', 'nav_events': 'กิจกรรม', 'nav_rules': 'กติกา', 'nav_profile': 'ข้อมูลส่วนตัว', 'nav_connect': 'เชื่อมต่อ STRAVA', 'nav_logout': 'ออกจากระบบ', 'btn_sync': '⟳ อัพเดทข้อมูล', 'btn_save': 'บันทึกข้อมูล', 'view_profile': 'ดูโปรไฟล์', 'footer_line': 'เข้ากลุ่ม OpenChat', 'countdown_intro': "ความสนุกเริ่มแล้ว! ชาวรามาธิบดีเชื่อมต่อ Strava แล้วออกวิ่งได้เลย!", 'countdown_sub': "ภารกิจชิงเสื้อเริ่ม Q2 2569: 1 เมษายน 2569 (แต่เริ่มสะสมระยะทางประจำปีเพื่อลุ้นรางวัลใหญ่ได้ตั้งแต่วันนี้)", 'countdown_label': 'เปิดซีซั่นในอีก:', 'stats_month': 'ภารกิจรายเดือน', 'stats_quarter': 'ภารกิจพิชิตเสื้อ', 'stats_total': 'ระดับนักวิ่ง (XP)', 'level_prefix': 'ระดับ', 'xp_to_next': 'กม. สู่ระดับ', 'xp_max': 'ระดับสูงสุด', 'xp_desc': '(สะสมรายปี - รีเซ็ต 1 ม.ค.)', 'locked_q2': 'เปิดระบบ Q2 2569', 'badge_section': 'เหรียญตราประจำเดือน', 'badge_locked': 'ยังไม่ปลดล็อค', 'badge_shirt_qual': 'รับเสื้อได้', 'badge_shirt_wait': 'รับสิทธิ์แล้ว', 'msg_shirt_win': 'ยินดีด้วย! คุณผ่านเกณฑ์รับเสื้อประจำไตรมาสนี้ ติดต่อรับได้ที่คณะ', 'msg_shirt_next': 'ยอดเยี่ยม! (คุณได้รับสิทธิ์เสื้อของปีนี้ไปแล้ว)', 'ig_promo': "✨ พิเศษ: ใส่ IG ภายใน 25 มี.ค. 69 ลุ้นรับ Starbucks Card! ☕", 'ig_verified': 'IG Verified', 'lbl_team': 'สังกัด / ทีม', 'lbl_year': 'ชั้นปี / ตำแหน่ง', 'lbl_campus': 'วิทยาเขตหลัก', 'lbl_status': 'สเตตัสวันนี้', 'lbl_motto': 'คติประจำใจนักวิ่ง', 'lbl_shoe': 'รองเท้าคู่ใจ', 'lbl_route': 'เส้นทางวิ่งโปรด', 'lbl_social': 'ช่องทางติดต่อ', 'lbl_ig': 'Instagram ID (ไม่ต้องใส่ @)', 'lbl_show_strava': 'แสดงปุ่ม Strava บนหน้าโปรไฟล์', 'filter_search': 'ค้นหาชื่อ...', 'filter_all_teams': 'ทุกทีม', 'filter_all_years': 'ทุกชั้นปี', 'filter_all_campus': 'ทุกวิทยาเขต', 'opt_md': 'MD (แพทยศาสตร์)', 'opt_nr': 'NR (พยาบาลศาสตร์)', 'opt_er': 'ER (ฉุกเฉินการแพทย์)', 'opt_cd': 'CD (สื่อสารความหมายฯ)', 'opt_staff': 'Staff (อาจารย์/บุคลากร)', 'opt_other': 'Other (อื่นๆ)', 'opt_grad': 'ศิษย์เก่า (Alumni)', 'opt_pyt': 'พญาไท', 'opt_cnmi': 'จักรีนฤบดินทร์', 'opt_salaya': 'ศาลายา', 'empty_db': 'ยังไม่มีสมาชิกในระบบ' }
+    'en': {
+        'title': 'Ramathon Run Club',
+        'nav_leaderboard': 'LEADERBOARD',
+        'nav_events': 'EVENTS',
+        'nav_rules': 'RULES',
+        'nav_profile': 'MY PROFILE',
+        'nav_connect': 'CONNECT STRAVA',
+        'nav_logout': 'LOGOUT',
+        'btn_sync': '⟳ Sync Strava',
+        'btn_save': 'Save Profile',
+        'view_profile': 'View Public Profile',
+        'footer_line': 'Join OpenChat',
+        'countdown_intro': "The fun starts now! Let's run Ramathibodians! Link your Strava now!",
+        'countdown_sub': "Shirt Quest starts Q2 2026: Apr 1st! (But Yearly Rank XP accumulation starts TODAY!)",
+        'countdown_label': 'SEASON STARTS IN:',
+        'stats_month': 'MONTHLY GRIND',
+        'stats_quarter': 'QUARTERLY QUEST',
+        'stats_total': 'ANNUAL CAREER',
+        'level_prefix': 'RANK',
+        'xp_to_next': 'KM to level up to',
+        'xp_max': 'MAX LEVEL REACHED',
+        'xp_desc': '(Yearly XP - Resets Jan 1st)',
+        'locked_q2': 'UNLOCKS Q2 2026',
+        'badge_section': 'MONTHLY BADGES',
+        'badge_locked': 'Locked',
+        'badge_shirt_qual': 'SHIRT UNLOCKED',
+        'badge_shirt_wait': 'ALREADY CLAIMED',
+        'msg_shirt_win': 'You have qualified for the Quarterly Shirt! Contact staff to claim.',
+        'msg_shirt_next': 'Great job! You have already claimed a shirt this year.',
+        'ig_promo': "✨ Special: Link IG by 25 Mar '26 to win a Starbucks Card! ☕",
+        'ig_verified': 'IG Verified',
+        'lbl_team': 'Team / Affiliation',
+        'lbl_year': 'Year / Role',
+        'lbl_campus': 'Campus',
+        'lbl_status': 'Status Message',
+        'lbl_motto': 'Running Motto',
+        'lbl_shoe': 'Battle Shoe',
+        'lbl_route': 'Fav. Running Route',
+        'lbl_social': 'Social Connect',
+        'lbl_ig': 'Instagram Handle (no @)',
+        'lbl_show_strava': 'Show Strava Link on Profile',
+        'filter_search': 'Search Name...',
+        'filter_all_teams': 'All Teams',
+        'filter_all_years': 'All Years',
+        'filter_all_campus': 'All Campuses',
+        'opt_md': 'MD (Medicine)',
+        'opt_nr': 'NR (Nursing)',
+        'opt_er': 'ER (Paramedic)',
+        'opt_cd': 'CD (Comm. Disorders)',
+        'opt_staff': 'Staff / Faculty',
+        'opt_other': 'Other',
+        'opt_grad': 'Alumni / Grad',
+        'opt_pyt': 'PYT (Phayathai)',
+        'opt_cnmi': 'CNMI (Chakri)',
+        'opt_salaya': 'Salaya',
+        'empty_db': 'No adventurers found yet.',
+        'events_main_title': 'CLUB EVENTS',
+        'badge_upcoming': 'UPCOMING',
+        'badge_archive': 'ARCHIVE',
+        'evt_meetup_title': '🏃 Ramathon Meetups',
+        'evt_meetup_desc': "Join the 'Easy Pace' crew. Monthly runs at Suan Chitralada & Benchakitti Park.",
+        'evt_meetup_btn': 'View Schedule →',
+        'evt_recap_title': '📜 Virtual Run 2024 Recap',
+        'evt_recap_desc': 'A look back at our previous success: 10,000+ KM ran by 283 Ramathibodians.',
+        'evt_recap_btn': 'Read Report →',
+        'rules_title': 'Club Regulations',
+        'rpg_title': '2. The RPG System',
+        'rpg_monthly_title': 'Monthly Mission',
+        'rpg_monthly_desc': 'Goal: 50 KM. Resets every month. Collect badges!',
+        'rpg_quarterly_title': 'Quarterly Quest',
+        'rpg_quarterly_desc': 'Goal: 100 KM within the current quarter. Unlocks Shirt (1/Year).',
+        'rpg_quarterly_note': '(Distance resets every quarter: Jan-Mar, Apr-Jun, etc.)',
+        'rpg_annual_title': 'Annual Career Ranks',
+        'rpg_annual_desc': 'Accumulate distance all year to rank up!',
+        'rpg_special_title': 'Year-End Rewards',
+        'rpg_special_a': 'Class A Finishers: Lucky draw for 5x Running Gear Sets.',
+        'rpg_special_s': 'Class S Finishers: Lucky draw for Shokz OpenRun Pro 2.',
+        'rules_1_title': '1. The Mission',
+        'rules_1_text': 'Fostering health and camaraderie among Ramathibodi medical students and staff.',
+        'rules_2_title': '2. The Rewards',
+        'rules_2_li1': '50 KM: Qualify for the Club Monthly Shirt.',
+        'rules_2_li2': '100 KM: Unlock Elite Monthly Status.',
+        'rules_3_title': '3. Sync Rules',
+        'rules_3_text': 'Only Public runs count.',
+        'recap_top_label': 'ARCHIVE REPORT: TK13',
+        'recap_main_title': 'Virtual Ramathon 2024',
+        'recap_date': 'November 1 - 30, 2024',
+        'recap_stat_runners': 'Runners Joined',
+        'recap_stat_km': 'Total KM Ran',
+        'recap_stat_finishers': 'Finishers',
+        'recap_roster_title': 'The Roster',
+        'recap_baby': 'Baby Marathon (30k)',
+        'recap_super': 'Super Marathon (50k)',
+        'recap_voices_title': 'Voices from the Track',
+        'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
+        'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
+        'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
+        'recap_budget_title': 'Budget Summary (Transparent)',
+        'recap_grant': 'Grant Received:',
+        'recap_used': 'Actual Used:',
+        'recap_returned': 'Returned to Faculty:',
+        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025',
+        'meetup_page_title': 'Ramathon Meetups',
+        'meetup_quote': '"From Virtual to Reality"',
+        'meetup_card_title': '🌳 The "Easy Pace" Sundays',
+        'meetup_card_text': 'Connect with fellow medics, nurses, and staff in a relaxed environment. No PBs, just vibes.',
+        'meetup_loc_label': 'Locations:',
+        'meetup_loc_val': 'Suan Chitralada & Benchakitti Park',
+        'meetup_time_label': 'Time:',
+        'meetup_time_val': 'Every last Sunday of the month, 06:00 AM',
+        'meetup_pace_label': 'Pace:',
+        'meetup_pace_val': 'Zone 2 (Conversation Pace)',
+        'meetup_next_box': 'Next Session:',
+        'meetup_next_date': 'February 22, 2026 @ Benchakitti Park',
+        'meetup_meeting_point': 'Meeting Point: Main Amphitheater'
+    },
+    'th': {
+        'title': 'Ramathon Run Club',
+        'nav_leaderboard': 'ตารางคะแนน',
+        'nav_events': 'กิจกรรม',
+        'nav_rules': 'กติกา',
+        'nav_profile': 'ข้อมูลส่วนตัว',
+        'nav_connect': 'เชื่อมต่อ STRAVA',
+        'nav_logout': 'ออกจากระบบ',
+        'btn_sync': '⟳ อัพเดทข้อมูล',
+        'btn_save': 'บันทึกข้อมูล',
+        'view_profile': 'ดูโปรไฟล์',
+        'footer_line': 'เข้ากลุ่ม OpenChat',
+        'countdown_intro': "ความสนุกเริ่มแล้ว! ชาวรามาธิบดีเชื่อมต่อ Strava แล้วออกวิ่งได้เลย!",
+        'countdown_sub': "ภารกิจชิงเสื้อเริ่ม Q2 2569: 1 เมษายน 2569 (แต่เริ่มสะสมระยะทางประจำปีเพื่อลุ้นรางวัลใหญ่ได้ตั้งแต่วันนี้)",
+        'countdown_label': 'เปิดซีซั่นในอีก:',
+        'stats_month': 'ภารกิจรายเดือน',
+        'stats_quarter': 'ภารกิจพิชิตเสื้อ',
+        'stats_total': 'ระดับนักวิ่ง (XP)',
+        'level_prefix': 'ระดับ',
+        'xp_to_next': 'กม. สู่ระดับ',
+        'xp_max': 'ระดับสูงสุด',
+        'xp_desc': '(สะสมรายปี - รีเซ็ต 1 ม.ค.)',
+        'locked_q2': 'เปิดระบบ Q2 2569',
+        'badge_section': 'เหรียญตราประจำเดือน',
+        'badge_locked': 'ยังไม่ปลดล็อค',
+        'badge_shirt_qual': 'รับเสื้อได้',
+        'badge_shirt_wait': 'รับสิทธิ์แล้ว',
+        'msg_shirt_win': 'ยินดีด้วย! คุณผ่านเกณฑ์รับเสื้อประจำไตรมาสนี้ ติดต่อรับได้ที่คณะ',
+        'msg_shirt_next': 'ยอดเยี่ยม! (คุณได้รับสิทธิ์เสื้อของปีนี้ไปแล้ว)',
+        'ig_promo': "✨ พิเศษ: ใส่ IG ภายใน 25 มี.ค. 69 ลุ้นรับ Starbucks Card! ☕",
+        'ig_verified': 'IG Verified',
+        'lbl_team': 'สังกัด / ทีม',
+        'lbl_year': 'ชั้นปี / ตำแหน่ง',
+        'lbl_campus': 'วิทยาเขตหลัก',
+        'lbl_status': 'สเตตัสวันนี้',
+        'lbl_motto': 'คติประจำใจนักวิ่ง',
+        'lbl_shoe': 'รองเท้าคู่ใจ',
+        'lbl_route': 'เส้นทางวิ่งโปรด',
+        'lbl_social': 'ช่องทางติดต่อ',
+        'lbl_ig': 'Instagram ID (ไม่ต้องใส่ @)',
+        'lbl_show_strava': 'แสดงปุ่ม Strava บนหน้าโปรไฟล์',
+        'filter_search': 'ค้นหาชื่อ...',
+        'filter_all_teams': 'ทุกทีม',
+        'filter_all_years': 'ทุกชั้นปี',
+        'filter_all_campus': 'ทุกวิทยาเขต',
+        'opt_md': 'MD (แพทยศาสตร์)',
+        'opt_nr': 'NR (พยาบาลศาสตร์)',
+        'opt_er': 'ER (ฉุกเฉินการแพทย์)',
+        'opt_cd': 'CD (สื่อสารความหมายฯ)',
+        'opt_staff': 'Staff (อาจารย์/บุคลากร)',
+        'opt_other': 'Other (อื่นๆ)',
+        'opt_grad': 'ศิษย์เก่า (Alumni)',
+        'opt_pyt': 'พญาไท',
+        'opt_cnmi': 'จักรีนฤบดินทร์',
+        'opt_salaya': 'ศาลายา',
+        'empty_db': 'ยังไม่มีสมาชิกในระบบ',
+        'events_main_title': 'กิจกรรมชมรม',
+        'badge_upcoming': 'เร็วๆ นี้',
+        'badge_archive': 'ทำเนียบรุ่น',
+        'evt_meetup_title': '🏃 นัดวิ่งรามาธอน (Meetups)',
+        'evt_meetup_desc': "เข้าร่วมกลุ่ม 'Easy Pace' วิ่งสบายๆ ทุกเดือนที่สวนจิตรลดา และ สวนเบญจกิติ",
+        'evt_meetup_btn': 'ดูตารางกิจกรรม →',
+        'evt_recap_title': '📜 สรุปผล Virtual Run 2024',
+        'evt_recap_desc': 'ย้อนดูความสำเร็จในปีที่ผ่านมา: ระยะทางรวมกว่า 10,000 กม. จากชาวรามาธิบดี 283 ท่าน',
+        'evt_recap_btn': 'อ่านรายงานสรุป →',
+        'rules_title': 'ระเบียบการ',
+        'rpg_title': '๒. ระบบเลเวลและภารกิจ',
+        'rpg_monthly_title': 'ภารกิจรายเดือน',
+        'rpg_monthly_desc': 'เป้าหมาย: 50 กม. รีเซ็ตทุกเดือน สะสมเหรียญเดือน!',
+        'rpg_quarterly_title': 'ภารกิจพิชิตเสื้อ (ไตรมาส)',
+        'rpg_quarterly_desc': 'เป้าหมาย: 100 กม. ภายในไตรมาสเพื่อรับเสื้อ (จำกัด 1 ตัว/ปี)',
+        'rpg_quarterly_note': '(ระยะสะสมนับใหม่ทุกไตรมาส: ม.ค.-มี.ค., เม.ย.-มิ.ย. เป็นต้น)',
+        'rpg_annual_title': 'ระดับนักวิ่งประจำปี',
+        'rpg_annual_desc': 'สะสมระยะวิ่งทั้งปีเพื่อเลื่อนยศ!',
+        'rpg_special_title': 'รางวัลพิเศษปลายปี',
+        'rpg_special_a': 'ผู้จบ Class A: ลุ้นรับรางวัลอุปกรณ์วิ่ง 5 รางวัล',
+        'rpg_special_s': 'ผู้จบ Class S: ลุ้นรับหูฟัง Shokz OpenRun Pro 2',
+        'rules_1_title': '๑. พันธกิจ',
+        'rules_1_text': 'ส่งเสริมสุขภาพและความสามัคคีในหมู่นักศึกษาและบุคลากรรามาธิบดี',
+        'rules_2_title': '๒. รางวัล',
+        'rules_2_li1': 'สะสมครบ ๕๐ กม.: รับเสื้อวิ่งประจำเดือน (Club Monthly Shirt)',
+        'rules_2_li2': 'สะสมครบ ๑๐๐ กม.: ปลดล็อคระดับ Elite ประจำเดือน',
+        'rules_3_title': '๓. กติกาการส่งผล',
+        'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)',
+        'recap_top_label': 'รายงานสรุปผล: TK13',
+        'recap_main_title': 'Virtual Ramathon 2024',
+        'recap_date': '1 - 30 พฤศจิกายน 2567',
+        'recap_stat_runners': 'ผู้เข้าร่วม',
+        'recap_stat_km': 'ระยะทางรวม',
+        'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย',
+        'recap_roster_title': 'ทำเนียบนักวิ่ง',
+        'recap_baby': 'Baby Marathon (30k)',
+        'recap_super': 'Super Marathon (50k)',
+        'recap_voices_title': 'เสียงจากสนามวิ่ง',
+        'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
+        'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
+        'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
+        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
+        'recap_grant': 'งบประมาณที่ได้รับ:',
+        'recap_used': 'ใช้จ่ายจริง:',
+        'recap_returned': 'ยอดเงินคืนคณะฯ:',
+        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568',
+        'meetup_page_title': 'นัดวิ่งรามาธอน',
+        'meetup_quote': '"จากโลกออนไลน์ สู่สนามจริง"',
+        'meetup_card_title': '🌳 อาทิตย์วิ่งสบาย (The "Easy Pace" Sundays)',
+        'meetup_card_text': 'พบปะเพื่อนนักศึกษา แพทย์ พยาบาล และบุคลากรในบรรยากาศสบายๆ ไม่เน้นทำเวลา เน้นมิตรภาพ',
+        'meetup_loc_label': 'สถานที่:',
+        'meetup_loc_val': 'สวนจิตรลดา และ สวนเบญจกิติ',
+        'meetup_time_label': 'เวลา:',
+        'meetup_time_val': 'ทุกวันอาทิตย์สุดท้ายของเดือน เวลา 06:00 น.',
+        'meetup_pace_label': 'เพซ (Pace):',
+        'meetup_pace_val': 'โซน 2 (Conversation Pace วิ่งไปคุยไป)',
+        'meetup_next_box': 'นัดถัดไป:',
+        'meetup_next_date': '22 กุมภาพันธ์ 2569 @ สวนเบญจกิติ',
+        'meetup_meeting_point': 'จุดนัดพบ: อัฒจันทร์ใหญ่ (Amphitheater)'
+    }
 }
 
 def load_db():
@@ -111,18 +341,16 @@ def get_season_stats():
 def get_aqi():
     """Fetches AQI for Ratchathewi, Bangkok"""
     try:
-        # Using a public feed URL. If AQI_TOKEN is 'demo', it uses the demo token.
         url = f"https://api.waqi.info/feed/ratchathewi/?token={AQI_TOKEN}"
         r = requests.get(url, timeout=5)
         data = r.json()
         if data['status'] == 'ok':
             aqi = data['data']['aqi']
             
-            # Interpret AQI
             if aqi <= 50: return {'val': aqi, 'status': 'Good', 'color': '#4CAF50', 'msg': 'Air is great! Go run! 🏃💨'}
-            elif aqi <= 100: return {'val': aqi, 'status': 'Moderate', 'color': '#FFC107', 'msg': 'Acceptable quality. Enjoy your run.'}
-            elif aqi <= 150: return {'val': aqi, 'status': 'Unhealthy (Sens.)', 'color': '#FF9800', 'msg': 'Sensitive groups should reduce outdoor running.'}
-            else: return {'val': aqi, 'status': 'Unhealthy', 'color': '#F44336', 'msg': 'Bad air! Use a treadmill or wear a mask! 😷'}
+            elif aqi <= 100: return {'val': aqi, 'status': 'Moderate', 'color': '#FFC107', 'msg': 'Acceptable. Enjoy your run.'}
+            elif aqi <= 150: return {'val': aqi, 'status': 'Unhealthy (Sens.)', 'color': '#FF9800', 'msg': 'Sensitive groups should reduce running.'}
+            else: return {'val': aqi, 'status': 'Unhealthy', 'color': '#F44336', 'msg': 'Bad air! Use a treadmill! 😷'}
             
     except:
         pass
@@ -181,7 +409,6 @@ def home():
         
     members.sort(key=lambda x: x['display_dist'], reverse=True)
     
-    # Get Air Quality
     aqi_data = get_aqi()
 
     return render_template('index.html', members=members, aqi=aqi_data, fun_fact=longest_run_champion)
@@ -254,8 +481,6 @@ def update_stats():
         
         db = load_db()
         if user_id in db:
-            # Preserve existing max runs if not calculated (e.g. partial sync), 
-            # but here we resync everything so it's fine to overwrite.
             current_longest_runs = db[user_id].get('longest_runs', {})
             current_longest_runs.update(monthly_max_run)
 
@@ -353,13 +578,11 @@ def finishers_canvas(year, month):
     db = load_db()
     badge_key = f"{year}-{month:02d}"
     
-    # 1. Filter Finishers
     finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
-    
-    # 2. Sort logic
+    # SAFETY: Handle cases where monthly_stats might not exist yet
     finishers.sort(key=lambda x: (x.get('monthly_stats') or {}).get(badge_key, 0), reverse=True)
     
-    # 3. Hist Theme
+    # FIXED: This line was crashing before because MONTH_THEMES was missing in the old file
     hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
     
     return render_template('finishers.html', 

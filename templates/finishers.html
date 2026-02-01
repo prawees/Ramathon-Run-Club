@@ -17,12 +17,12 @@
         gap: 50px;
     }
 
-    /* SQUARE PAGE (1080x1080px) */
+    /* SQUARE PAGE (1080x1080px approx) - Instagram Ready */
     .page-container {
         width: 1080px;
         height: 1080px;
         background: white;
-        padding: 40px; /* Reduced vertical padding */
+        padding: 50px; /* Reduced padding slightly to prevent overflow */
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -31,8 +31,8 @@
 
     .header-box {
         text-align: center;
-        margin-bottom: 25px; /* Tighter margin */
-        border-bottom: 6px double {{ hist_theme.color }};
+        margin-bottom: 25px; /* Tighter header margin */
+        border-bottom: 4px double {{ hist_theme.color }};
         padding-bottom: 15px;
     }
 
@@ -40,29 +40,30 @@
     .grid-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr); /* Force 3 even rows */
-        gap: 20px;
-        height: 800px; /* Constraint height to ensure fit */
+        grid-template-rows: repeat(3, 1fr);
+        gap: 25px;
+        flex: 1;
+        max-height: 850px; /* Constrain grid height */
     }
 
     .finisher-card {
         background: #fff;
         border: 2px solid #eee;
-        border-radius: 20px;
+        border-radius: 15px;
         padding: 10px;
         text-align: center;
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center; /* Center vertically */
+        justify-content: center;
         position: relative;
         overflow: hidden;
     }
 
     .finisher-avatar {
-        width: 100px; /* Smaller avatar to fit content */
-        height: 100px;
+        width: 110px; /* Sized for balance */
+        height: 110px;
         border-radius: 50%;
         border: 5px solid {{ hist_theme.color }};
         object-fit: cover;
@@ -76,6 +77,10 @@
         line-height: 1.1;
         margin-bottom: 5px;
         text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 95%;
     }
 
     .finisher-quote {
@@ -87,9 +92,10 @@
         margin-bottom: 5px;
         max-width: 90%;
         display: -webkit-box;
-        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-line-clamp: 2; /* Limit text lines */
         -webkit-box-orient: vertical;
         overflow: hidden;
+        height: 2.6em; /* Fixed height reservation */
     }
 
     /* ONLY SHOW STATS FOR TOP 3 */
@@ -115,7 +121,7 @@
     
     .watermark {
         position: absolute;
-        bottom: 10px;
+        bottom: 15px;
         width: 100%;
         text-align: center;
         font-family: 'Courier Prime';
@@ -132,11 +138,11 @@
 {% for batch in finishers|batch(9) %}
 <div class="page-container">
     <div class="header-box">
-        <h1 style="font-family: 'Limelight'; font-size: 4.5rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
+        <h1 style="font-family: 'Limelight'; font-size: 4rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
             {{ month_name }}
         </h1>
-        <div style="font-family: 'Courier Prime'; color: var(--ink); font-size: 1.8rem; margin-top: 5px; letter-spacing: 5px;">
-            HALL OF FAME // {{ year }}
+        <div style="font-family: 'Noto Sans Thai', sans-serif; color: #888; font-size: 1.2rem; margin-top: 5px; letter-spacing: 3px; font-weight: bold; text-transform: uppercase;">
+            Hall of Fame • {{ year }}
         </div>
     </div>
 
@@ -154,7 +160,9 @@
             <div class="finisher-name">{{ user.firstname }}</div>
             
             <div class="finisher-quote">
-                "{{ user.motto or user.status or 'Keep Running' }}"
+                {% if user.motto or user.status %}
+                    "{{ user.motto or user.status }}"
+                {% endif %}
             </div>
 
             {% if user.rank_in_month <= 3 %}

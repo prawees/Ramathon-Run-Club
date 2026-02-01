@@ -352,7 +352,7 @@ def finishers_canvas(year, month):
         # 1. Filter
         finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
         
-        # 2. Sort safely
+        # 2. Sort safely by THAT MONTH's distance
         finishers.sort(key=lambda x: (x.get('monthly_stats') or {}).get(badge_key, 0), reverse=True)
         
         # 3. Pre-calculate Ranks to prevent Template Logic Errors

@@ -28,20 +28,20 @@ SHIRT_CAMPAIGN_ACTIVE = False
 CAMPAIGN_END_DATE = datetime.datetime(2026, 12, 31, 23, 59, 59, tzinfo=timezone(timedelta(hours=7)))
 ADMIN_IDS = ['48771896'] 
 
-# --- THEMES ---
+# --- REFINED AESTHETIC THEMES ---
 MONTH_THEMES = {
-    1: {'color': '#2196F3', 'name': 'Cool Blue'},      # Jan
-    2: {'color': '#E91E63', 'name': 'Lovely Pink'},    # Feb
-    3: {'color': '#4CAF50', 'name': 'Fresh Green'},    # Mar
-    4: {'color': '#FF5722', 'name': 'Songkran Fire'},  # Apr
-    5: {'color': '#9C27B0', 'name': 'Royal Purple'},   # May
-    6: {'color': '#00BCD4', 'name': 'Rainy Cyan'},     # Jun
-    7: {'color': '#FFC107', 'name': 'Golden Sun'},     # Jul
-    8: {'color': '#03A9F4', 'name': 'Mother Blue'},    # Aug
-    9: {'color': '#FF9800', 'name': 'Autumn Amber'},   # Sep
-    10: {'color': '#607D8B', 'name': 'Spooky Grey'},   # Oct
-    11: {'color': '#795548', 'name': 'Loy Krathong'},  # Nov
-    12: {'color': '#F44336', 'name': 'Festive Red'}    # Dec
+    1: {'color': '#1E88E5', 'name': 'Cool Blue'},       # Jan: Professional Blue
+    2: {'color': '#D81B60', 'name': 'Ruby Rose'},       # Feb: Deep Pink/Red (Not Neon)
+    3: {'color': '#43A047', 'name': 'Forest Green'},    # Mar: Natural Green
+    4: {'color': '#FB8C00', 'name': 'Solar Orange'},    # Apr: Warm Orange
+    5: {'color': '#8E24AA', 'name': 'Royal Purple'},    # May: Deep Purple (Classic)
+    6: {'color': '#00ACC1', 'name': 'Ocean Cyan'},      # Jun: Teal
+    7: {'color': '#FFB300', 'name': 'Golden Hour'},     # Jul: Amber
+    8: {'color': '#1E88E5', 'name': 'Mother Blue'},     # Aug: Same as Jan (Blue)
+    9: {'color': '#F4511E', 'name': 'Autumn Rust'},     # Sep: Burnt Orange
+    10: {'color': '#546E7A', 'name': 'Shadow Grey'},    # Oct: Cool Grey
+    11: {'color': '#6D4C41', 'name': 'Vintage Brown'},  # Nov: Earthy
+    12: {'color': '#E53935', 'name': 'Holiday Red'}     # Dec: Red
 }
 
 LEVELS = [
@@ -109,7 +109,6 @@ TRANSLATIONS = {
         'opt_cnmi': 'CNMI (Chakri)',
         'opt_salaya': 'Salaya',
         'empty_db': 'No adventurers found yet.',
-        # MISSING KEYS RESTORED BELOW
         'events_main_title': 'CLUB EVENTS',
         'badge_upcoming': 'UPCOMING',
         'badge_archive': 'ARCHIVE',
@@ -137,7 +136,26 @@ TRANSLATIONS = {
         'rules_2_li1': '50 KM: Qualify for the Club Monthly Shirt.',
         'rules_2_li2': '100 KM: Unlock Elite Monthly Status.',
         'rules_3_title': '3. Sync Rules',
-        'rules_3_text': 'Only Public runs count.'
+        'rules_3_text': 'Only Public runs count.',
+        # RECAP 2024 SPECIFIC KEYS
+        'recap_top_label': 'ARCHIVE REPORT: TK13',
+        'recap_main_title': 'Virtual Ramathon 2024',
+        'recap_date': 'November 1 - 30, 2024',
+        'recap_stat_runners': 'Runners Joined',
+        'recap_stat_km': 'Total KM Ran',
+        'recap_stat_finishers': 'Finishers',
+        'recap_roster_title': 'The Roster',
+        'recap_baby': 'Baby Marathon (30k)',
+        'recap_super': 'Super Marathon (50k)',
+        'recap_voices_title': 'Voices from the Track',
+        'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."',
+        'recap_q2': '"Better mental health. Body feels stronger and I have more energy."',
+        'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."',
+        'recap_budget_title': 'Budget Summary (Transparent)',
+        'recap_grant': 'Grant Received:',
+        'recap_used': 'Actual Used:',
+        'recap_returned': 'Returned to Faculty:',
+        'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025'
     },
     'th': {
         'title': 'Ramathon Run Club',
@@ -195,7 +213,6 @@ TRANSLATIONS = {
         'opt_cnmi': 'จักรีนฤบดินทร์',
         'opt_salaya': 'ศาลายา',
         'empty_db': 'ยังไม่มีสมาชิกในระบบ',
-        # MISSING KEYS RESTORED BELOW
         'events_main_title': 'กิจกรรมชมรม',
         'badge_upcoming': 'เร็วๆ นี้',
         'badge_archive': 'ทำเนียบรุ่น',
@@ -223,7 +240,26 @@ TRANSLATIONS = {
         'rules_2_li1': 'สะสมครบ ๕๐ กม.: รับเสื้อวิ่งประจำเดือน (Club Monthly Shirt)',
         'rules_2_li2': 'สะสมครบ ๑๐๐ กม.: ปลดล็อคระดับ Elite ประจำเดือน',
         'rules_3_title': '๓. กติกาการส่งผล',
-        'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)'
+        'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)',
+        # RECAP 2024 SPECIFIC KEYS
+        'recap_top_label': 'รายงานสรุปผล: TK13',
+        'recap_main_title': 'Virtual Ramathon 2024',
+        'recap_date': '1 - 30 พฤศจิกายน 2567',
+        'recap_stat_runners': 'ผู้เข้าร่วม',
+        'recap_stat_km': 'ระยะทางรวม',
+        'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย',
+        'recap_roster_title': 'ทำเนียบนักวิ่ง',
+        'recap_baby': 'Baby Marathon (30k)',
+        'recap_super': 'Super Marathon (50k)',
+        'recap_voices_title': 'เสียงจากสนามวิ่ง',
+        'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"',
+        'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"',
+        'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"',
+        'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)',
+        'recap_grant': 'งบประมาณที่ได้รับ:',
+        'recap_used': 'ใช้จ่ายจริง:',
+        'recap_returned': 'ยอดเงินคืนคณะฯ:',
+        'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568'
     }
 }
 
@@ -477,9 +513,23 @@ def finishers_hub():
 
 @app.route('/secret-finishers/<int:year>/<int:month>')
 def finishers_canvas(year, month):
-    db = load_db(); badge_key = f"{year}-{month:02d}"
+    db = load_db()
+    badge_key = f"{year}-{month:02d}"
+    
+    # 1. Filter Finishers
     finishers = [u for u in db.values() if badge_key in u.get('badges', [])]
-    finishers.sort(key=lambda x: x.get('firstname', '').lower())
-    return render_template('finishers.html', finishers=finishers, year=year, month_name=calendar.month_name[month], badge_key=badge_key)
+    
+    # 2. Sort by Distance in that specific month (Highest to Lowest)
+    finishers.sort(key=lambda x: x.get('monthly_stats', {}).get(badge_key, 0), reverse=True)
+    
+    # 3. Get Theme for that specific month (Not current month)
+    hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
+    
+    return render_template('finishers.html', 
+                           finishers=finishers, 
+                           year=year, 
+                           month_name=calendar.month_name[month],
+                           badge_key=badge_key,
+                           hist_theme=hist_theme)
 
 if __name__ == '__main__': app.run(debug=True)

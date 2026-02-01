@@ -9,141 +9,135 @@
     /* CANVAS STYLING */
     body { 
         background-image: none !important; 
-        background-color: #f8f9fa !important; 
+        background-color: #333 !important; 
         padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+    }
+
+    /* SQUARE PAGE (1080x1080px approx) */
+    .page-container {
+        width: 1000px;
+        height: 1000px;
+        background: white;
+        padding: 40px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
     }
 
     .header-box {
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
         border-bottom: 4px double var(--ink);
-        padding-bottom: 20px;
+        padding-bottom: 10px;
     }
 
+    /* 3x3 GRID */
     .grid-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 30px;
-        max-width: 1400px;
-        margin: 0 auto;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 20px;
+        flex: 1;
     }
 
     .finisher-card {
         background: white;
-        border: 3px solid var(--ink);
+        border: 2px solid var(--ink);
         border-radius: 12px;
-        padding: 20px;
+        padding: 10px;
         text-align: center;
-        box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+        box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         position: relative;
     }
 
     .finisher-avatar {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         border-radius: 50%;
-        border: 4px solid var(--gold);
+        border: 3px solid {{ hist_theme.color }};
         object-fit: cover;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .finisher-name {
         font-family: 'Limelight', sans-serif;
-        font-size: 1.1rem;
-        color: var(--purple);
-        line-height: 1.2;
+        font-size: 1rem;
+        color: var(--ink);
+        line-height: 1.1;
         margin-bottom: 5px;
         text-transform: uppercase;
     }
 
-    .finisher-team {
-        background: var(--ink);
-        color: white;
-        font-size: 0.7rem;
-        padding: 2px 8px;
-        border-radius: 10px;
+    .finisher-stats {
         font-family: 'Courier Prime';
-        margin-bottom: 10px;
-        display: inline-block;
+        font-weight: bold;
+        color: {{ hist_theme.color }};
+        font-size: 1.2rem;
     }
 
-    .finisher-quote {
-        font-family: 'Noto Sans Thai', sans-serif;
-        font-size: 0.8rem;
-        color: #555;
-        font-style: italic;
-        background: #f4f4f4;
-        padding: 8px;
-        border-radius: 8px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .badge-icon {
+    .medal {
         position: absolute;
         top: -10px;
         right: -10px;
-        background: var(--gold);
-        color: var(--ink);
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        border: 2px solid var(--ink);
-        font-size: 1.2rem;
-        z-index: 10;
+        font-size: 2rem;
+        text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="header-box">
-    <div style="font-size: 4rem;">🏆</div>
-    <h1 style="font-family: 'Limelight'; font-size: 3rem; margin: 0; color: var(--ink);">MONTHLY FINISHERS</h1>
-    <h2 style="font-family: 'Courier Prime'; color: var(--purple); margin: 10px 0 0 0;">{{ month_name|upper }} {{ year }}</h2>
-    <div style="margin-top: 10px; font-family: 'Noto Sans Thai'; color: #666;">
-        MISSION COMPLETE: 50 KM
-    </div>
-</div>
 
-{% if finishers %}
-<div class="grid-container">
-    {% for user in finishers %}
-    <div class="finisher-card">
-        <div class="badge-icon">✓</div>
-        
-        <img src="{{ user.profile or url_for('static', filename='orange.png') }}" 
-             onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';"
-             class="finisher-avatar">
-        
-        <div class="finisher-name">{{ user.firstname }} <br> {{ user.lastname }}</div>
-        
-        <div class="finisher-team">
-            {{ user.team or 'Runner' }} {% if user.year %}| {{ user.year }}{% endif %}
+{% for batch in finishers|batch(9) %}
+<div class="page-container">
+    <div class="header-box">
+        <h1 style="font-family: 'Limelight'; font-size: 3rem; margin: 0; color: {{ hist_theme.color }}; text-transform: uppercase;">
+            {{ month_name }} FINISHERS
+        </h1>
+        <div style="font-family: 'Courier Prime'; color: var(--ink); font-size: 1.2rem; margin-top: 5px;">
+            HALL OF FAME // {{ year }} // PAGE {{ loop.index }}
         </div>
-
-        {% if user.motto %}
-        <div class="finisher-quote">"{{ user.motto }}"</div>
-        {% elif user.status %}
-        <div class="finisher-quote">"{{ user.status }}"</div>
-        {% else %}
-        <div class="finisher-quote" style="opacity:0.5;">- Ramathon Runner -</div>
-        {% endif %}
     </div>
-    {% endfor %}
+
+    <div class="grid-container">
+        {% for user in batch %}
+        <div class="finisher-card">
+            {% set rank = (loop.index0 + 1) + ((loop.parent.loop.index0) * 9) %}
+            
+            {% if rank == 1 %}<div class="medal">🥇</div>{% endif %}
+            {% if rank == 2 %}<div class="medal">🥈</div>{% endif %}
+            {% if rank == 3 %}<div class="medal">🥉</div>{% endif %}
+            
+            <img src="{{ user.profile or url_for('static', filename='orange.png') }}" 
+                 onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';"
+                 class="finisher-avatar">
+            
+            <div class="finisher-name">{{ user.firstname }} <br> {{ user.lastname }}</div>
+            
+            <div class="finisher-stats">
+                {{ user.get('monthly_stats', {}).get(badge_key, 0)|round(1) }} KM
+            </div>
+            
+            <div style="font-size: 0.7rem; color: #888; margin-top: 5px;">
+                {{ user.team or 'Runner' }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-<div style="text-align: center; margin-top: 50px; font-family: 'Courier Prime'; opacity: 0.5;">
-    Total Finishers: {{ finishers|length }}
-</div>
-{% else %}
-<div style="text-align: center; padding: 50px;">
-    <h2 style="color: #aaa;">No finishers found for {{ month_name }} {{ year }} yet... 🐢</h2>
+{% endfor %}
+
+{% if not finishers %}
+<div style="color: white; text-align: center; font-family: 'Courier Prime';">
+    <h1>NO FINISHERS FOUND</h1>
+    <p>Wait for someone to reach 50km!</p>
 </div>
 {% endif %}
 

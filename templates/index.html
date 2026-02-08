@@ -12,80 +12,91 @@
     .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; height: 18px; }
     .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); padding: 1px 5px; border-radius: 4px; margin-left: 2px; display: inline-flex; align-items: center; height: 18px; }
     .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-flex; align-items: center; height: 18px; }
-    .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
     
     .slogan-box { margin: 25px 0 15px 0; }
     .event-desc { font-family: 'Noto Sans Thai'; font-size: 1rem; color: var(--ink); opacity: 0.8; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6; }
 
-    .info-grid { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; 
-        gap: 15px; 
-        max-width: 500px; 
-        margin: 0 auto 20px auto; 
+    /* RACE TRACK MINIMAP */
+    .race-track-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: #eee;
+        height: 120px;
+        border: 4px solid var(--ink);
+        border-radius: 60px;
+        position: relative;
+        overflow-x: auto;
+        overflow-y: hidden;
+        background-image: 
+            linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.5) 50%),
+            repeating-linear-gradient(0deg, #555, #555 2px, transparent 2px, transparent 40px);
+        background-size: 100px 100%, 100% 40px;
+        box-shadow: inset 0 10px 20px rgba(0,0,0,0.2);
     }
-
-    .widget-card {
-        background: white;
-        border: 2px solid var(--ink); 
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+    .track-finish-line {
+        position: absolute;
+        right: 40px; top: 0; bottom: 0; width: 20px;
+        background: repeating-linear-gradient(45deg, #000, #000 5px, #fff 5px, #fff 10px);
+        border-left: 2px solid var(--ink);
+    }
+    .runner-on-track {
+        position: absolute;
+        bottom: 20px;
+        transition: left 2s ease-in-out;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        text-decoration: none;
-        color: var(--ink);
-        height: 100px; 
-        box-sizing: border-box;
-        transition: transform 0.2s;
+        z-index: 10;
+        cursor: pointer;
     }
-    
+    .runner-on-track img {
+        width: 45px; height: 45px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .runner-on-track .dist-pop {
+        position: absolute;
+        top: -25px;
+        background: var(--ink);
+        color: white;
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .runner-on-track:hover .dist-pop { opacity: 1; }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; margin: 0 auto 20px auto; }
+    .widget-card { background: white; border: 2px solid var(--ink); border-radius: 12px; padding: 15px; box-shadow: 4px 4px 0 rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; color: var(--ink); height: 100px; box-sizing: border-box; transition: transform 0.2s; }
     a.widget-card:hover { transform: translateY(-3px); box-shadow: 6px 6px 0 rgba(0,0,0,0.15); border-color: #00BCD4; }
-
-    .widget-label { font-size: 0.8rem; font-family: 'Noto Sans Thai'; color: #666; margin-bottom: 5px; font-weight: bold; }
     .widget-value { font-family: 'Courier Prime'; font-size: 1.4rem; font-weight: bold; color: var(--purple); }
-    .widget-sub { font-size: 0.7rem; color: #888; margin-top: 2px; }
-
     .btn-green { background: #00B900; color: white; text-decoration: none; padding: 12px 20px; border-radius: 50px; font-weight: bold; font-family: 'Noto Sans Thai'; display: inline-flex; align-items: center; gap: 10px; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); transition: transform 0.2s; border: 2px solid var(--ink); margin-top: 10px; }
-    .btn-green:hover { transform: translateY(-3px); }
 
-    /* [NEW] Stats Box Styles */
-    .fun-stats-container {
-        display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;
-    }
-    .stat-bubble {
-        background: #fff3e0; border: 2px dashed #ff9800; 
-        padding: 10px 20px; border-radius: 50px; 
-        display: inline-flex; align-items: center; gap: 8px;
-        font-family: 'Noto Sans Thai', sans-serif;
-        font-size: 0.9rem;
-    }
+    /* Stats Bubbles */
+    .fun-stats-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+    .stat-bubble { background: #fff3e0; border: 2px dashed #ff9800; padding: 10px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; font-family: 'Noto Sans Thai', sans-serif; font-size: 0.9rem; }
     .stat-bubble.blue { background: #e3f2fd; border-color: #2196F3; }
     .stat-bubble.purple { background: #f3e5f5; border-color: #9c27b0; }
-    .stat-label { font-weight: bold; color: #e65100; }
-    .stat-bubble.blue .stat-label { color: #1565C0; }
-    .stat-bubble.purple .stat-label { color: #7B1FA2; }
 
-    @media (max-width: 480px) {
-        .info-grid { grid-template-columns: 1fr; max-width: 300px; }
-        .fun-stats-container { flex-direction: column; align-items: center; }
-    }
+    .emoji-rain { position: fixed; top: -50px; font-size: 20px; animation: fall linear forwards; z-index: 9999; pointer-events: none; opacity: 0.6; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+    @media (max-width: 480px) { .info-grid { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="hero">
     <div style="font-size: 5rem; line-height: 1; margin-bottom: 10px;">{{ random_animal }}💨</div>
-
     <h1 style="font-family:'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin:0; color: var(--purple);">{{ text.title }}</h1>
     
     <div class="slogan-box">
         <div style="font-family: 'Noto Sans Thai', sans-serif; font-weight: bold; color: #D81B60; letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; border: 1px solid #D81B60; display: inline-block; padding: 2px 12px; border-radius: 20px;">
-            ✨ {{ now_month_name }} EDITION ✨
+            ✨ {{ now_month_name }} EDITION {{ now_month_abbr }} ✨
         </div>
-
         <h2 style="font-family: 'Noto Sans Thai'; color: #D81B60; margin: 0; font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px 0px rgba(255, 182, 193, 0.5);">
             "รักคนอื่นแล้ว อย่าลืมรักตัวเองนะจ๊ะ" 🌹
         </h2>
@@ -95,48 +106,51 @@
         วิ่งสะสมระยะทางเพื่อสุขภาพที่ดี พิชิตเสื้อ Finisher ประจำไตรมาส<br>
         และลุ้นรับของรางวัลมากมายตลอดปี 2026!
     </div>
-    
+
     <div class="info-grid">
         <div class="widget-card">
-            <div class="widget-label">{{ text.countdown_label }} Q2</div>
+            <div style="font-size: 0.7rem; font-weight:bold;">{{ text.countdown_label }} Q2</div>
             <div class="widget-value" id="countdown">00d 00h</div>
         </div>
-
         <a href="https://www.iqair.com/th-en/thailand/bangkok/ratchathewi" target="_blank" class="widget-card">
-            <div class="widget-label">เช็คฝุ่น (Ratchathewi)</div>
+            <div style="font-size: 0.7rem; font-weight:bold;">เช็คฝุ่น (Ratchathewi)</div>
             <div style="font-size: 1.8rem;">☁️</div>
-            <div class="widget-sub">คลิกดู IQAir</div>
         </a>
     </div>
 
-    <div>
-        <a href="https://line.me/ti/g2/we77_ngRgfiO7sAAmdw3tYxJY5lwH3xv1EWUJA" target="_blank" class="btn-green">
-            <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;"><path d="M21.156 8.955c0-4.044-4.226-7.332-9.395-7.332S2.365 4.91 2.365 8.955c0 3.64 2.89 6.697 7.07 7.21l-1.076 3.528c-.2.66.42 1.13.91.56l5.748-6.07c3.785-.466 6.139-2.937 6.139-5.228z"/></svg>
-            เข้าร่วมกลุ่ม OpenChat
-        </a>
+    <a href="https://line.me/ti/g2/we77_ngRgfiO7sAAmdw3tYxJY5lwH3xv1EWUJA" target="_blank" class="btn-green">
+        <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;"><path d="M21.156 8.955c0-4.044-4.226-7.332-9.395-7.332S2.365 4.91 2.365 8.955c0 3.64 2.89 6.697 7.07 7.21l-1.076 3.528c-.2.66.42 1.13.91.56l5.748-6.07c3.785-.466 6.139-2.937 6.139-5.228z"/></svg>
+        เข้าร่วมกลุ่ม OpenChat
+    </a>
+
+    <div class="race-track-container">
+        <div class="track-finish-line"></div>
+        {% set goal_dist = 50.0 %}
+        {% for member in members[:30] %}
+            {% set pos = (member.display_dist / goal_dist * 80) %}
+            {% if pos > 85 %}{% set pos = 85 %}{% endif %}
+            <div class="runner-on-track" style="left: {{ pos }}%; z-index: {{ 100 - loop.index }};">
+                <span class="dist-pop">{{ member.firstname }}: {{ member.display_dist|round(1) }}k</span>
+                <img src="{{ member.profile or url_for('static', filename='orange.png') }}" alt="{{ member.firstname }}">
+            </div>
+        {% endfor %}
     </div>
 
     <div class="fun-stats-container">
         {% if fun_stats.longest_run %}
         <div class="stat-bubble">
-            <span class="stat-label">🏆 {{ text.stat_longest_run }} {{ now_month_abbr }}:</span> 
-            {{ fun_stats.longest_run.name }} ({{ fun_stats.longest_run.dist|round(1) }} km)
+            <span style="font-weight:bold; color:#e65100;">🏆 {{ text.stat_longest_run }}:</span> {{ fun_stats.longest_run.name }} ({{ fun_stats.longest_run.dist|round(1) }} km)
         </div>
         {% endif %}
-
         <div class="stat-bubble blue">
-            <span class="stat-label">🌍 {{ text.stat_club_total }} {{ now_month_abbr }}:</span> 
-            {{ "{:,}".format(fun_stats.club_total|round|int) }} km
+            <span style="font-weight:bold; color:#1565C0;">🌍 {{ text.stat_club_total }}:</span> {{ "{:,}".format(fun_stats.club_total|round|int) }} km
         </div>
-
         {% if fun_stats.mvp_year %}
         <div class="stat-bubble purple">
-            <span class="stat-label">👑 {{ text.stat_mvp_year }}:</span> 
-            {{ fun_stats.mvp_year.name }} ({{ "{:,}".format(fun_stats.mvp_year.dist|round|int) }} km)
+            <span style="font-weight:bold; color:#7B1FA2;">👑 {{ text.stat_mvp_year }}:</span> {{ fun_stats.mvp_year.name }} ({{ "{:,}".format(fun_stats.mvp_year.dist|round|int) }} km)
         </div>
         {% endif %}
     </div>
-
 </div>
 
 <div style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
@@ -149,78 +163,55 @@
         </select>
         <select id="yearFilter" class="filter-input" onchange="filterLeaderboard()">
             <option value="">{{ text.filter_all_years }}</option>
-            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+            {% for i in range(1, 7) %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
             <option value="Grad">Grad</option>
         </select>
         <select id="campusFilter" class="filter-input" onchange="filterLeaderboard()">
             <option value="">{{ text.filter_all_campus }}</option>
-            <option value="PYT">{{ text.opt_pyt }}</option>
-            <option value="CNMI">{{ text.opt_cnmi }}</option>
-            <option value="Salaya">{{ text.opt_salaya }}</option>
+            <option value="PYT">{{ text.opt_pyt }}</option><option value="CNMI">{{ text.opt_cnmi }}</option><option value="Salaya">{{ text.opt_salaya }}</option>
         </select>
     </div>
 </div>
 
 <div class="grid" id="leaderboardGrid">
     {% for member in members %}
-    
+    {% set level = get_level(member.get('dist_year', 0)) %}
     <a href="{{ url_for('public_profile', user_id=member.strava_id) }}" class="card-link leader-card" 
-       data-name="{{ member.firstname }} {{ member.lastname }}"
-       data-team="{{ member.team }}"
-       data-year="{{ member.year }}"
-       data-campus="{{ member.campus }}">
-       
+       data-name="{{ member.firstname }} {{ member.lastname }}" data-team="{{ member.team }}" data-year="{{ member.year }}" data-campus="{{ member.campus }}">
         <div class="card" style="position: relative;">
-            
-            {% if loop.index == 1 %}
-                <div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10;">🥇</div>
-            {% elif loop.index == 2 %}
-                <div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10;">🥈</div>
-            {% elif loop.index == 3 %}
-                <div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 10;">🥉</div>
-            {% endif %}
-
-            {% if member.status %}
-            <div style="position: relative; margin-bottom: 20px; padding-left: 10px;">
-                <div class="speech-bubble" style="font-size: 0.8rem; padding: 6px 10px;">
-                    "{{ member.status }}"
-                </div>
-            </div>
-            {% endif %}
+            {% if loop.index == 1 %}<div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; z-index: 10;">🥇</div>
+            {% elif loop.index == 2 %}<div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; z-index: 10;">🥈</div>
+            {% elif loop.index == 3 %}<div style="position: absolute; top: -10px; right: -10px; font-size: 2.5rem; z-index: 10;">🥉</div>{% endif %}
 
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px; padding-bottom:10px; border-bottom: 1px dashed #eee;">
-                <img src="{{ member.profile or url_for('static', filename='orange.png') }}" 
-                     onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';"
-                     class="avatar" loading="lazy">
-                
+                <img src="{{ member.profile or url_for('static', filename='orange.png') }}" class="avatar" loading="lazy">
                 <div>
                     <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
                     <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 3px;">
                         {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
                         {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
+                        
+                        <span class="rank-badge-small" style="background: {{ level.color }}; color: white; border:none;">{{ level.icon }} {{ level.id }}</span>
+                        {% if member.instagram %}
+                        <span style="font-size: 0.6rem; background: #E1306C; color: white; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px;">
+                            <svg viewBox="0 0 24 24" style="width:10px; height:10px; fill:white;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> 
+                            {{ text.ig_verified }}
+                        </span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
             <div style="font-size:0.8rem; font-weight:bold; margin-bottom: 5px;">{{ now_month_name|upper }} MISSION</div>
             <div class="progress-track" style="margin-bottom: 5px; height: 15px;">
-                <div class="progress-bar bar-purple {% if member.display_dist >= 50 %}bar-glimmer{% endif %}" 
-                     style="width: {{ (member.display_dist / 50 * 100)|round|int }}%"></div>
+                <div class="progress-bar bar-purple {% if member.display_dist >= 50 %}bar-glimmer{% endif %}" style="width: {{ (member.display_dist / 50 * 100)|round|int }}%"></div>
             </div>
-            
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="font-weight: bold;">{{ member.display_dist|round(2) }} KM</div>
-                {% if member.shoe %}
-                    <div style="font-size: 0.6rem; background: #f0f0f0; padding: 2px 4px; border-radius: 4px; border: 1px solid #ddd;">👟 {{ member.shoe }}</div>
-                {% endif %}
+                {% if member.shoe %}<div style="font-size: 0.6rem; background: #f0f0f0; padding: 2px 4px; border-radius: 4px; border: 1px solid #ddd;">👟 {{ member.shoe }}</div>{% endif %}
             </div>
         </div>
     </a>
-    {% else %}
-    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-        <p>{{ text.empty_db }}</p>
-    </div>
     {% endfor %}
 </div>
 
@@ -231,9 +222,7 @@
         var distance = countDownDate - now;
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+        document.getElementById("countdown").innerHTML = days + "d " + hours + "h";
     }, 1000);
 
     function filterLeaderboard() {
@@ -242,31 +231,24 @@
         const year = document.getElementById('yearFilter').value;
         const campus = document.getElementById('campusFilter').value;
         const cards = document.querySelectorAll('.leader-card');
-
         cards.forEach(card => {
             const name = card.getAttribute('data-name').toLowerCase();
             const cTeam = card.getAttribute('data-team') || "";
             const cYear = card.getAttribute('data-year') || "";
             const cCampus = card.getAttribute('data-campus') || "";
-
             let visible = true;
             if (search && !name.includes(search)) visible = false;
             if (team && cTeam !== team) visible = false;
             if (year && cYear !== year) visible = false;
             if (campus && cCampus !== campus) visible = false;
-
             card.style.display = visible ? "block" : "none";
         });
     }
 
-    // SUBTLE RAIN SCRIPT (Only runs here, ONCE)
     function createRain() {
         const container = document.body;
-        // [NEW] เพิ่มสัตว์เข้าไปในฝน
         const emojis = ['❤️', '🏃', '{{ random_animal }}', '🌸'];
-        const count = 10; 
-
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < 10; i++) {
             const drop = document.createElement('div');
             drop.classList.add('emoji-rain');
             drop.innerText = emojis[Math.floor(Math.random() * emojis.length)];
@@ -274,7 +256,6 @@
             drop.style.animationDuration = (Math.random() * 2 + 4) + 's';
             drop.style.fontSize = (Math.random() * 15 + 15) + 'px';
             container.appendChild(drop);
-
             setTimeout(() => { drop.remove(); }, 6000);
         }
     }

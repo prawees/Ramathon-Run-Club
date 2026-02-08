@@ -68,6 +68,64 @@
     .stat-bubble.blue .stat-label { color: #1565C0; }
     .stat-bubble.purple .stat-label { color: #7B1FA2; }
 
+    /* [NEW] Interactive Race Track Styles */
+    .track-container {
+        width: 100%;
+        height: 100px;
+        background: #e0e0e0;
+        border: 3px solid var(--ink);
+        border-radius: 50px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
+        background-image: repeating-linear-gradient(90deg, transparent 0, transparent 40px, #ccc 40px, #ccc 50px);
+    }
+    .track-road {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 15px;
+    }
+    .track-runner {
+        position: absolute;
+        bottom: 20px;
+        transition: left 1s ease-in-out;
+        transform: translateX(-50%);
+        cursor: pointer;
+    }
+    .track-runner img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
+    }
+    .track-runner:hover img {
+        transform: scale(1.5) translateY(-10px);
+        z-index: 999;
+        border-color: var(--purple);
+    }
+    .track-goal-line {
+        position: absolute;
+        height: 100%;
+        border-left: 4px dashed var(--gold);
+        top: 0;
+        opacity: 0.7;
+    }
+    .goal-flag {
+        background: var(--gold);
+        color: var(--ink);
+        padding: 2px 5px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        border-radius: 4px;
+        margin-left: 5px;
+        margin-top: 10px;
+    }
+
     @media (max-width: 480px) {
         .info-grid { grid-template-columns: 1fr; max-width: 300px; }
         .fun-stats-container { flex-direction: column; align-items: center; }
@@ -139,6 +197,35 @@
 
 </div>
 
+<div style="max-width: 1200px; margin: 0 auto 30px auto; padding: 0 15px;">
+    <h3 style="font-family: 'Limelight'; color: var(--ink); text-align: center; margin-bottom: 10px;">
+        LIVE RACE TRACK 🏁
+    </h3>
+    
+    <div class="track-container">
+        <div class="track-road">
+            {% set max_dist = members[0].display_dist if members and members[0].display_dist > 50 else 50 %}
+            
+            <div class="track-goal-line" style="left: {{ (50 / max_dist * 100)|round|int }}%;">
+                <div class="goal-flag">🚩 50KM</div>
+            </div>
+
+            {% for m in members %}
+                {% if m.display_dist > 0 %}
+                {% set position_pct = (m.display_dist / max_dist) * 95 %}
+                
+                <div class="track-runner" 
+                     style="left: {{ position_pct }}%; z-index: {{ (m.display_dist * 10)|int }};"
+                     title="{{ m.firstname }}: {{ m.display_dist }}km">
+                    <img src="{{ m.profile or url_for('static', filename='orange.png') }}" 
+                         onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';">
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
 <div style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
     <div class="filter-bar" style="border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;">
         <input type="text" id="searchInput" class="filter-input" placeholder="{{ text.filter_search }}" onkeyup="filterLeaderboard()">
@@ -196,10 +283,23 @@
                 
                 <div>
                     <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
-                    <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 3px;">
+                    
+                    <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center;">
                         {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
                         {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
+                        
+                        {% set m_level = get_level(member.get('dist_year', 0)) %}
+                        <span class="rank-badge-small" style="background: {{ m_level.color }}; color: white; border: 1px solid var(--ink);">
+                            {{ m_level.icon }} {{ m_level.id }}
+                        </span>
+
+                        {% if member.instagram %}
+                        <span style="color: #3897f0; background: white; border-radius: 50%; width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem;" title="IG Verified">
+                            <svg viewBox="0 0 24 24" fill="#3897f0" width="14" height="14"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        </span>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
 

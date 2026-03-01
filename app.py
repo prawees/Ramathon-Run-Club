@@ -178,7 +178,7 @@ def inject_globals():
     now = datetime.datetime.now(tz)
     theme = MONTH_THEMES.get(now.month, MONTH_THEMES[1])
     
-    # [NEW] สุ่มสัตว์และจัดการชื่อเดือน
+    # สุ่มสัตว์และจัดการชื่อเดือน
     random_animal = random.choice(ANIMALS)
     if lang == 'th':
         month_abbr = THAI_MONTHS_ABBR[now.month]
@@ -192,8 +192,8 @@ def inject_globals():
         shirt_active=SHIRT_CAMPAIGN_ACTIVE,
         now_year=now.year, now_month=now.month, 
         now_month_name=now.strftime("%B"),
-        now_month_abbr=date_display, # ส่งชื่อเดือนแบบย่อไป
-        random_animal=random_animal, # ส่งสัตว์ที่สุ่มไป
+        now_month_abbr=date_display, 
+        random_animal=random_animal, 
         theme_color=theme['color'], theme_name=theme['name'],
         campaign_finished=(now > CAMPAIGN_END_DATE)
     )
@@ -218,11 +218,11 @@ def home():
     # Stats Containers
     longest_run_champion = None
     max_single_run = 0
-    total_month_km = 0 # [NEW] สะสมระยะรวมชมรม
+    total_month_km = 0 
 
     for uid, data in db.items():
         monthly_dist = (data.get('monthly_stats') or {}).get(current_month_key, 0)
-        total_month_km += monthly_dist # บวกระยะรวม
+        total_month_km += monthly_dist 
 
         user_max_run = (data.get('longest_runs') or {}).get(current_month_key, 0)
         
@@ -234,29 +234,26 @@ def home():
         member_display['display_dist'] = monthly_dist
         members.append(member_display)
     
-    # [NEW] หา MVP of the Year
+    # หา MVP of the Year
     mvp_year_data = None
     if members:
-        # Sort by Year Distance to find top
         sorted_by_year = sorted(members, key=lambda x: x.get('dist_year', 0), reverse=True)
         top = sorted_by_year[0]
         if top.get('dist_year', 0) > 0:
             mvp_year_data = {'name': top['firstname'], 'dist': top.get('dist_year', 0), 'pic': top['profile']}
 
-    # Main Sort for Leaderboard: Month Descending, then Total Year Descending
+    # Main Sort for Leaderboard: Month Descending, then Total Year Descending (Tie Breaker)
     members.sort(key=lambda x: (x['display_dist'], x.get('dist_year', 0)), reverse=True)
     
     lang = session.get('lang', 'th')
     aqi_data = get_aqi(lang)
 
-    # [NEW] รวมสถิติทั้งหมดไว้ในตัวแปรเดียว เพื่อป้องกันการสับสน
     fun_stats = {
         'longest_run': longest_run_champion,
         'club_total': total_month_km,
         'mvp_year': mvp_year_data
     }
 
-    # เปลี่ยนจาก fun_fact เป็น fun_stats ใน template ด้วย
     return render_template('index.html', members=members, aqi=aqi_data, fun_stats=fun_stats)
 
 @app.route('/profile')
@@ -422,19 +419,27 @@ def finishers_canvas(year, month):
     try:
         db = load_db()
         badge_key = f"{year}-{month:02d}"
+        
+        # 1. Filter: Qualified finishers
         finishers = []
         for u in db.values():
             m_stats = u.get('monthly_stats', {})
+            # Jan 2026 Fallback Calculation
             if year == 2026 and month == 1 and badge_key not in m_stats:
                 feb_dist = m_stats.get('2026-02', 0)
                 total_dist = u.get('dist_year', 0)
                 jan_calc = total_dist - feb_dist
-                if jan_calc > 0: m_stats[badge_key] = jan_calc 
+                if jan_calc > 0:
+                    m_stats[badge_key] = jan_calc 
             
             dist = m_stats.get(badge_key, 0)
-            if dist >= 50: finishers.append(u)
+            if dist >= 50: 
+                finishers.append(u)
 
+        # 2. SORT BY TOTAL XP (Legend Status)
         finishers.sort(key=lambda x: x.get('dist_year', 0), reverse=True)
+        
+        # 3. Prepare data for template
         ranked_finishers = []
         for i, f in enumerate(finishers):
             f_data = f.copy()
@@ -444,7 +449,14 @@ def finishers_canvas(year, month):
             ranked_finishers.append(f_data)
 
         hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
-        return render_template('finishers.html', finishers=ranked_finishers, year=year, month_name=calendar.month_name[month], badge_key=badge_key, hist_theme=hist_theme)
-    except Exception as e: return f"Error: {str(e)}", 500
+        
+        return render_template('finishers.html', 
+                               finishers=ranked_finishers, 
+                               year=year, 
+                               month_name=calendar.month_name[month],
+                               badge_key=badge_key,
+                               hist_theme=hist_theme)
+    except Exception as e:
+        return f"Error generating page: {str(e)}", 500
 
 if __name__ == '__main__': app.run(debug=True)

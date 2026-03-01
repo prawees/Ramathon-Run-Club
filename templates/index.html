@@ -5,19 +5,18 @@
 <style>
     .hero { text-align: center; padding: 60px 20px; border-bottom: 2px dashed var(--ink); margin-bottom: 40px; }
     
-    /* 🌟 NEW: AESTHETIC HERO TEXT 🌟 */
+    /* 🌟 AESTHETIC HERO TEXT 🌟 */
     .hero h1 {
         font-family: 'Limelight', 'Noto Sans Thai', cursive; 
         font-size: 4rem; 
         margin: 0; 
         color: var(--purple); 
-        /* White Outline and Soft Shadow */
-        -webkit-text-stroke: 2px white; 
+        -webkit-text-stroke: 1px white; 
         text-shadow: 4px 4px 0px rgba(0,0,0,0.1); 
         letter-spacing: 1px;
     }
 
-    /* 🌟 NEW: AESTHETIC SLOGAN BOX 🌟 */
+    /* 🌟 AESTHETIC SLOGAN BOX 🌟 */
     .slogan-box { margin: 25px 0 25px 0; }
     .edition-badge {
         font-family: 'Noto Sans Thai', sans-serif; 
@@ -51,7 +50,11 @@
     
     .team-badge { font-size: 0.6rem; font-weight: bold; background: var(--ink); color: white; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; height: 18px; }
     .year-badge { font-size: 0.6rem; font-weight: bold; background: white; border: 1px solid var(--ink); color: var(--ink); padding: 1px 5px; border-radius: 4px; margin-left: 2px; display: inline-flex; align-items: center; height: 18px; }
-    .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-flex; align-items: center; height: 18px; }
+    
+    /* CLASS & IG BADGES */
+    .rank-badge-small { font-size: 0.6rem; border: 1px solid rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-flex; align-items: center; height: 18px; color: white; font-weight: bold; }
+    .ig-badge-small { font-size: 0.6rem; background: #E1306C; color: white; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; font-weight: bold; height: 18px; margin-left: 5px; }
+
     .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
     
     .event-desc { font-family: 'Noto Sans Thai'; font-size: 1rem; color: var(--ink); opacity: 0.8; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6; }
@@ -90,6 +93,7 @@
     .btn-green { background: #00B900; color: white; text-decoration: none; padding: 12px 20px; border-radius: 50px; font-weight: bold; font-family: 'Noto Sans Thai'; display: inline-flex; align-items: center; gap: 10px; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); transition: transform 0.2s; border: 2px solid var(--ink); margin-top: 10px; }
     .btn-green:hover { transform: translateY(-3px); }
 
+    /* Stats Box Styles */
     .fun-stats-container {
         display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;
     }
@@ -106,62 +110,80 @@
     .stat-bubble.blue .stat-label { color: #1565C0; }
     .stat-bubble.purple .stat-label { color: #7B1FA2; }
 
-    /* Interactive Race Track Styles */
+    /* 🌲🏁 FUN INTERACTIVE MINIMAP STYLES (RESTORED GRASS) 🏁🌲 */
     .track-container {
         width: 100%;
-        height: 100px;
-        background: #e0e0e0;
+        height: 180px;
+        background: #8BC34A; /* Grass green background */
         border: 3px solid var(--ink);
-        border-radius: 50px;
+        border-radius: 15px;
         position: relative;
         overflow: hidden;
-        box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
-        background-image: repeating-linear-gradient(90deg, transparent 0, transparent 40px, #ccc 40px, #ccc 50px);
+        box-shadow: 0 8px 0 rgba(0,0,0,0.2);
+        margin-bottom: 40px;
+    }
+    .track-scenery {
+        position: absolute; top: 25px; width: 100%; text-align: center; font-size: 1.8rem; opacity: 0.9; letter-spacing: 25px; white-space: nowrap; overflow: hidden;
     }
     .track-road {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: flex-end;
-        padding-bottom: 15px;
-    }
-    .track-runner {
-        position: absolute;
-        bottom: 20px;
-        transition: left 1s ease-in-out;
-        transform: translateX(-50%);
-        cursor: pointer;
-    }
-    .track-runner img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-        transition: transform 0.2s;
-    }
-    .track-runner:hover img {
-        transform: scale(1.5) translateY(-10px);
-        z-index: 999;
-        border-color: var(--purple);
+        position: absolute; bottom: 25px; left: 0; width: 100%; height: 70px;
+        background: #555; 
+        border-top: 4px solid #fff; 
+        border-bottom: 4px solid #fff;
+        display: flex; align-items: center;
+        background-image: linear-gradient(90deg, transparent 50%, #fff 50%);
+        background-size: 80px 4px;
+        background-repeat: repeat-x;
+        background-position: center;
     }
     .track-goal-line {
-        position: absolute;
-        height: 100%;
-        border-left: 4px dashed var(--gold);
-        top: 0;
-        opacity: 0.7;
+        position: absolute; height: 140%; bottom: 0;
+        border-left: 6px dashed var(--gold);
+        z-index: 0;
     }
     .goal-flag {
-        background: var(--gold);
-        color: var(--ink);
-        padding: 2px 5px;
-        font-size: 0.7rem;
-        font-weight: bold;
-        border-radius: 4px;
-        margin-left: 5px;
-        margin-top: 10px;
+        background: var(--gold); color: var(--ink); padding: 4px 8px; font-size: 0.75rem; font-weight: bold;
+        border-radius: 4px; margin-left: 8px; margin-top: -25px; border: 2px solid var(--ink); display: inline-block;
+    }
+    .track-runner {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        cursor: pointer; transition: left 1s ease-in-out;
+    }
+    .track-runner img {
+        width: 45px; height: 45px; border-radius: 50%;
+        border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: #eee;
+    }
+    .track-runner:hover img { transform: scale(1.4) translateY(-8px); z-index: 999; border-color: var(--purple); }
+    
+    .runner-bubble {
+        visibility: hidden; opacity: 0;
+        position: absolute; bottom: 55px; left: 50%; transform: translateX(-50%) translateY(10px);
+        background: var(--ink); color: white;
+        padding: 6px 12px; border-radius: 8px;
+        font-size: 0.75rem; text-align: center; white-space: nowrap;
+        z-index: 1000; transition: all 0.2s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        border: 2px solid white; pointer-events: none;
+    }
+    .bubble-arrow {
+        position: absolute; bottom: -6px; left: 50%; margin-left: -6px;
+        width: 0; height: 0;
+        border-left: 6px solid transparent; border-right: 6px solid transparent;
+        border-top: 6px solid var(--ink);
+    }
+    .track-runner:hover .runner-bubble {
+        visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0);
+    }
+
+    /* Highlight for Logged-in User */
+    .track-runner.is-me img {
+        border: 3px solid #00FF00; box-shadow: 0 0 15px #00FF00;
+        transform: scale(1.1) translate(-40%, -40%);
+    }
+    .track-runner.is-me .runner-bubble {
+        visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); border-color: #00FF00;
     }
 
     @media (max-width: 480px) {
@@ -236,23 +258,37 @@
 </div>
 
 <div style="max-width: 1200px; margin: 0 auto 40px auto; padding: 0 15px;">
-    <h3 style="font-family: 'Limelight'; color: var(--ink); text-align: center; margin-bottom: 15px; text-transform: uppercase;">
+    <h3 style="font-family: 'Limelight'; color: var(--ink); text-align: center; margin-bottom: 15px; text-transform: uppercase; font-size: 1.5rem;">
         🏁 LIVE CIRCUIT: {{ now_month_name }} 🏁
     </h3>
+    
     <div class="track-container">
+        <div class="track-scenery">🌲 🌲 🍄 🌲 🎪 🌲 🍄 🌲 🌲</div>
+
         <div class="track-road">
             {% set max_dist = members[0].display_dist if members and members[0].display_dist > 50 else 50 %}
             <div class="track-goal-line" style="left: {{ (50 / max_dist * 90)|round|int }}%;">
-                <div class="goal-flag">🏁 GOAL</div>
+                <div class="goal-flag">🏁 GOAL 50KM</div>
             </div>
 
             {% for m in members[:30] %}
                 {% if m.display_dist > 0 %}
                 {% set position_pct = (m.display_dist / max_dist) * 90 %}
+                {% set is_me = (session.get('user_id') == m.strava_id) %}
                 
-                <div class="track-runner" style="left: {{ position_pct }}%; z-index: {{ 100 - loop.index }};" title="{{ m.firstname }} ({{ m.display_dist|round(1) }} KM)">
+                <div class="track-runner {% if is_me %}is-me{% endif %}" 
+                     style="left: {{ position_pct }}%; z-index: {{ 1000 - loop.index }};">
+                    
                     <img src="{{ m.profile or url_for('static', filename='orange.png') }}" 
                          onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';">
+                    
+                    <div class="runner-bubble">
+                        <div style="font-weight:bold; color: {{ '#00FF00' if is_me else 'var(--gold)' }}; font-family: 'Noto Sans Thai';">
+                            {{ "YOU" if is_me else m.firstname }}
+                        </div>
+                        <div style="font-family:'Courier Prime';">{{ m.display_dist|round(1) }} KM</div>
+                        <div class="bubble-arrow"></div>
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -286,6 +322,8 @@
 <div class="grid" id="leaderboardGrid">
     {% for member in members %}
     
+    {% set level = get_level(member.get('dist_year', 0)) %}
+
     <a href="{{ url_for('public_profile', user_id=member.strava_id) }}" class="card-link leader-card" 
        data-name="{{ member.firstname }} {{ member.lastname }}"
        data-team="{{ member.team }}"
@@ -316,18 +354,22 @@
                      class="avatar" loading="lazy">
                 
                 <div>
-                    <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
+                    <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">
+                        {{ member.firstname }}
+                    </div>
                     
-                    <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 3px;">
+                    <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center;">
                         {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
+                        {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
                         
-                        {% set level = get_level(member.get('dist_year', 0)) %}
-                        <span class="rank-badge-small" style="background: {{ level.color }}; color: white; border: none;">{{ level.icon }} {{ level.id }}</span>
+                        <span class="rank-badge-small" style="background: {{ level.color }};">
+                            {{ level.icon }} {{ level.id }}
+                        </span>
                         
                         {% if member.instagram %}
-                        <span style="font-size: 0.6rem; background: #E1306C; color: white; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; margin-left: 5px;">
+                        <span class="ig-badge-small">
                             <svg viewBox="0 0 24 24" style="width:10px; height:10px; fill:white;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> 
-                            IG
+                            {{ text.ig_verified }}
                         </span>
                         {% endif %}
                     </div>
@@ -342,9 +384,10 @@
             
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="font-weight: bold;">{{ member.display_dist|round(2) }} KM</div>
-                {% if member.shoe %}
-                    <div style="font-size: 0.6rem; background: #f0f0f0; padding: 2px 4px; border-radius: 4px; border: 1px solid #ddd;">👟 {{ member.shoe }}</div>
-                {% endif %}
+                
+                <div style="color:#888; font-size:0.75rem; font-family:'Courier Prime'; font-weight:bold;">
+                    XP: {{ member.dist_year|round|int }}
+                </div>
             </div>
         </div>
     </a>
@@ -390,9 +433,10 @@
         });
     }
 
+    // SUBTLE RAIN SCRIPT (Runs only once)
     function createRain() {
         const container = document.body;
-        const emojis = ['❤️', '🏃', '{{ random_animal }}'];
+        const emojis = ['❤️', '🏃', '{{ random_animal }}', '🌸'];
         const count = 10; 
 
         for (let i = 0; i < count; i++) {
@@ -407,6 +451,7 @@
             setTimeout(() => { drop.remove(); }, 6000);
         }
     }
+    
     window.addEventListener('load', createRain);
 </script>
 {% endblock %}

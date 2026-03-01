@@ -4,6 +4,46 @@
 {% block head %}
 <style>
     .hero { text-align: center; padding: 60px 20px; border-bottom: 2px dashed var(--ink); margin-bottom: 40px; }
+    
+    /* 🌟 NEW: AESTHETIC HERO TEXT 🌟 */
+    .hero h1 {
+        font-family: 'Limelight', 'Noto Sans Thai', cursive; 
+        font-size: 4rem; 
+        margin: 0; 
+        color: var(--purple); 
+        /* White Outline and Soft Shadow */
+        -webkit-text-stroke: 2px white; 
+        text-shadow: 4px 4px 0px rgba(0,0,0,0.1); 
+        letter-spacing: 1px;
+    }
+
+    /* 🌟 NEW: AESTHETIC SLOGAN BOX 🌟 */
+    .slogan-box { margin: 25px 0 25px 0; }
+    .edition-badge {
+        font-family: 'Noto Sans Thai', sans-serif; 
+        font-weight: 800; 
+        color: var(--purple); 
+        background: white; 
+        border: 2px solid var(--purple); 
+        letter-spacing: 2px; 
+        font-size: 0.85rem; 
+        text-transform: uppercase; 
+        margin-bottom: 12px; 
+        display: inline-block; 
+        padding: 6px 16px; 
+        border-radius: 30px; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .quote-text {
+        font-family: 'Noto Sans Thai'; 
+        color: var(--purple); 
+        margin: 0; 
+        font-size: 2rem; 
+        font-weight: 800; 
+        text-shadow: 2px 2px 0px white, 4px 4px 10px rgba(0,0,0,0.05); 
+        line-height: 1.4;
+    }
+
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
     .avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--ink); object-fit: cover; filter: sepia(0.2); transition: 0.2s; background-color: #eee; }
     .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
@@ -14,7 +54,6 @@
     .rank-badge-small { font-size: 0.6rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-flex; align-items: center; height: 18px; }
     .countdown-box { background: var(--purple); color: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 15px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
     
-    .slogan-box { margin: 25px 0 15px 0; }
     .event-desc { font-family: 'Noto Sans Thai'; font-size: 1rem; color: var(--ink); opacity: 0.8; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6; }
 
     .info-grid { 
@@ -51,7 +90,6 @@
     .btn-green { background: #00B900; color: white; text-decoration: none; padding: 12px 20px; border-radius: 50px; font-weight: bold; font-family: 'Noto Sans Thai'; display: inline-flex; align-items: center; gap: 10px; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); transition: transform 0.2s; border: 2px solid var(--ink); margin-top: 10px; }
     .btn-green:hover { transform: translateY(-3px); }
 
-    /* [NEW] Stats Box Styles */
     .fun-stats-container {
         display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;
     }
@@ -68,7 +106,7 @@
     .stat-bubble.blue .stat-label { color: #1565C0; }
     .stat-bubble.purple .stat-label { color: #7B1FA2; }
 
-    /* [NEW] Interactive Race Track Styles */
+    /* Interactive Race Track Styles */
     .track-container {
         width: 100%;
         height: 100px;
@@ -137,15 +175,15 @@
 <div class="hero">
     <div style="font-size: 5rem; line-height: 1; margin-bottom: 10px;">{{ random_animal }}💨</div>
 
-    <h1 style="font-family:'Limelight', 'Noto Sans Thai'; font-size: 3.5rem; margin:0; color: var(--purple);">{{ text.title }}</h1>
+    <h1>{{ text.title }}</h1>
     
     <div class="slogan-box">
-        <div style="font-family: 'Noto Sans Thai', sans-serif; font-weight: bold; color: #D81B60; letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; border: 1px solid #D81B60; display: inline-block; padding: 2px 12px; border-radius: 20px;">
-            ✨ {{ now_month_name }} EDITION ✨
+        <div class="edition-badge">
+            ✨ {{ now_month_name }} EDITION {{ now_month_abbr }} ✨
         </div>
 
-        <h2 style="font-family: 'Noto Sans Thai'; color: #D81B60; margin: 0; font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px 0px rgba(255, 182, 193, 0.5);">
-            "รักคนอื่นแล้ว อย่าลืมรักตัวเองนะจ๊ะ" 🌹
+        <h2 class="quote-text">
+            "มีนาแล้วเมื่อไหร่จะมีคนวิ่งข้างๆ" 🥺
         </h2>
     </div>
 
@@ -201,124 +239,26 @@
     <h3 style="font-family: 'Limelight'; color: var(--ink); text-align: center; margin-bottom: 15px; text-transform: uppercase;">
         🏁 LIVE CIRCUIT: {{ now_month_name }} 🏁
     </h3>
-    
     <div class="track-container">
-        <div class="track-scenery">🌲 🌲 🍄 🌲 🎪 🌲 🍄 🌲 🌲</div>
-
         <div class="track-road">
-            <div class="track-line start-line"></div>
-            
             {% set max_dist = members[0].display_dist if members and members[0].display_dist > 50 else 50 %}
-            <div class="track-goal-line" style="left: {{ (50 / max_dist * 100)|round|int }}%;">
+            <div class="track-goal-line" style="left: {{ (50 / max_dist * 90)|round|int }}%;">
                 <div class="goal-flag">🏁 GOAL</div>
             </div>
 
-            {% for m in members %}
+            {% for m in members[:30] %}
                 {% if m.display_dist > 0 %}
-                {% set position_pct = (m.display_dist / max_dist) * 95 %}
-                {% set is_me = (session.get('user_id') == m.strava_id) %}
+                {% set position_pct = (m.display_dist / max_dist) * 90 %}
                 
-                <div class="track-runner {% if is_me %}is-me{% endif %}" 
-                     style="left: {{ position_pct }}%; z-index: {{ 10000 if is_me else (m.display_dist * 10)|int }};">
-                    
+                <div class="track-runner" style="left: {{ position_pct }}%; z-index: {{ 100 - loop.index }};" title="{{ m.firstname }} ({{ m.display_dist|round(1) }} KM)">
                     <img src="{{ m.profile or url_for('static', filename='orange.png') }}" 
                          onerror="this.onerror=null;this.src='{{ url_for('static', filename='orange.png') }}';">
-                    
-                    <div class="runner-bubble">
-                        <div style="font-weight:bold; color: {{ '#00FF00' if is_me else 'var(--gold)' }};">
-                            {{ "YOU" if is_me else m.firstname }}
-                        </div>
-                        <div style="font-family:'Courier Prime';">{{ m.display_dist|round(1) }}km</div>
-                        <div class="bubble-arrow"></div>
-                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
         </div>
     </div>
 </div>
-
-<style>
-    .track-container {
-        width: 100%;
-        height: 200px; /* Increased Height */
-        background: #8BC34A; 
-        border: 3px solid var(--ink);
-        border-radius: 15px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 8px 0 rgba(0,0,0,0.2);
-    }
-    .track-scenery {
-        position: absolute; top: 30px; width: 100%; text-align: center; font-size: 1.5rem; opacity: 0.8; letter-spacing: 20px;
-    }
-    .track-road {
-        position: absolute; bottom: 30px; left: 0; width: 100%; height: 80px; /* Thicker road */
-        background: #555; 
-        border-top: 4px solid #fff; 
-        border-bottom: 4px solid #fff;
-        display: flex; align-items: center;
-        background-image: linear-gradient(90deg, transparent 50%, #fff 50%);
-        background-size: 100px 4px;
-        background-repeat: repeat-x;
-        background-position: center;
-    }
-    .track-line { position: absolute; height: 100%; width: 4px; background: repeating-linear-gradient(0deg, #fff, #fff 10px, #000 10px, #000 20px); opacity: 0.5; }
-    .start-line { left: 2%; }
-    
-    .track-goal-line {
-        position: absolute; height: 140%; bottom: 0;
-        border-left: 4px dashed var(--gold);
-        z-index: 0;
-    }
-    .goal-flag {
-        background: var(--gold); color: var(--ink); padding: 2px 6px; font-size: 0.7rem; font-weight: bold;
-        border-radius: 4px; margin-left: 5px; margin-top: 5px; border: 2px solid var(--ink);
-    }
-
-    .track-runner {
-        position: absolute; top: 50%; transform: translate(-50%, -50%);
-        cursor: pointer; transition: left 1s ease-in-out;
-    }
-    .track-runner img {
-        width: 45px; height: 45px; border-radius: 50%;
-        border: 2px solid white; box-shadow: 0 4px 5px rgba(0,0,0,0.4);
-        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .track-runner:hover img { transform: scale(1.3) translateY(-10px); z-index: 999; border-color: var(--purple); }
-
-    /* Special Style for Logged In User */
-    .track-runner.is-me img {
-        border: 3px solid #00FF00; /* Bright Green Border */
-        box-shadow: 0 0 15px #00FF00; /* Glow Effect */
-        transform: scale(1.1) translate(-50%, -50%); /* Slightly larger by default */
-    }
-    .track-runner.is-me .runner-bubble {
-        visibility: visible; opacity: 1; /* Always show 'You' bubble */
-        transform: translateX(-50%) translateY(0);
-        border-color: #00FF00;
-    }
-
-    .runner-bubble {
-        visibility: hidden; opacity: 0;
-        position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%) translateY(10px);
-        background: var(--ink); color: white;
-        padding: 8px 12px; border-radius: 8px;
-        font-size: 0.75rem; text-align: center; white-space: nowrap;
-        z-index: 1000; transition: all 0.2s ease;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        border: 2px solid white;
-    }
-    .bubble-arrow {
-        position: absolute; bottom: -6px; left: 50%; margin-left: -6px;
-        width: 0; height: 0;
-        border-left: 6px solid transparent; border-right: 6px solid transparent;
-        border-top: 6px solid var(--ink);
-    }
-    .track-runner:hover .runner-bubble {
-        visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0);
-    }
-</style>
 
 <div style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
     <div class="filter-bar" style="border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white;">
@@ -376,25 +316,21 @@
                      class="avatar" loading="lazy">
                 
                 <div>
-                    <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;">
-                        {{ member.firstname }}
+                    <div style="font-family:'Limelight', 'Noto Sans Thai'; font-size:1.2rem; line-height:1; margin-bottom: 5px;">{{ member.firstname }}</div>
+                    
+                    <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 3px;">
+                        {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
+                        
+                        {% set level = get_level(member.get('dist_year', 0)) %}
+                        <span class="rank-badge-small" style="background: {{ level.color }}; color: white; border: none;">{{ level.icon }} {{ level.id }}</span>
+                        
                         {% if member.instagram %}
-                        <span title="IG Verified" style="display: flex; align-items: center;">
-                            <svg viewBox="0 0 24 24" fill="#FFB6C1" width="18" height="18"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        <span style="font-size: 0.6rem; background: #E1306C; color: white; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; margin-left: 5px;">
+                            <svg viewBox="0 0 24 24" style="width:10px; height:10px; fill:white;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> 
+                            IG
                         </span>
                         {% endif %}
                     </div>
-                    
-                    <div style="margin-bottom: 3px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center;">
-                        {% if member.team %}<span class="team-badge">{{ member.team }}</span>{% endif %}
-                        {% if member.year %}<span class="year-badge">{{ member.year }}</span>{% endif %}
-                        
-                        {% set m_level = get_level(member.get('dist_year', 0)) %}
-                        <span class="rank-badge-small" style="background: {{ m_level.color }}; color: white; border: 1px solid var(--ink);">
-                            {{ m_level.icon }} {{ m_level.id }}
-                        </span>
-                    </div>
-
                 </div>
             </div>
 
@@ -405,7 +341,7 @@
             </div>
             
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="font-weight: bold;">{{ member.display_dist|round(1) }} KM</div>
+                <div style="font-weight: bold;">{{ member.display_dist|round(2) }} KM</div>
                 {% if member.shoe %}
                     <div style="font-size: 0.6rem; background: #f0f0f0; padding: 2px 4px; border-radius: 4px; border: 1px solid #ddd;">👟 {{ member.shoe }}</div>
                 {% endif %}
@@ -454,10 +390,8 @@
         });
     }
 
-    // SUBTLE RAIN SCRIPT (Only runs here, ONCE)
     function createRain() {
         const container = document.body;
-        // [NEW] เพิ่มสัตว์เข้าไปในฝน
         const emojis = ['❤️', '🏃', '{{ random_animal }}'];
         const count = 10; 
 

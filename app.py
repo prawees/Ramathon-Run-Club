@@ -6,7 +6,7 @@ import time
 import datetime
 from datetime import timezone, timedelta
 import calendar
-import random
+import random # [ต้องมีบรรทัดนี้สำหรับการสุ่มสัตว์]
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -73,6 +73,7 @@ TRANSLATIONS = {
         'recap_top_label': 'ARCHIVE REPORT: TK13', 'recap_main_title': 'Virtual Ramathon 2024', 'recap_date': 'November 1 - 30, 2024', 'recap_stat_runners': 'Runners Joined', 'recap_stat_km': 'Total KM Ran', 'recap_stat_finishers': 'Finishers', 'recap_roster_title': 'The Roster', 'recap_baby': 'Baby Marathon (30k)', 'recap_super': 'Super Marathon (50k)', 'recap_voices_title': 'Voices from the Track', 'recap_q1': '"Helped me lose 3-4 kg with quality! Gave me so much confidence."', 'recap_q2': '"Better mental health. Body feels stronger and I have more energy."', 'recap_q3': '"A reason to get out of bed and put on running shoes even on lazy days."', 'recap_budget_title': 'Budget Summary (Transparent)', 'recap_grant': 'Grant Received:', 'recap_used': 'Actual Used:', 'recap_returned': 'Returned to Faculty:', 'recap_footer': 'Data sourced from Official Report: TK13 / 9 Jan 2025', 
         'meetup_page_title': 'Ramathon Meetups', 'meetup_quote': '"From Virtual to Reality"', 'meetup_card_title': '🌳 The "Easy Pace" Sundays', 'meetup_card_text': 'Connect with fellow medics, nurses, and staff in a relaxed environment. No PBs, just vibes.', 'meetup_loc_label': 'Locations:', 'meetup_loc_val': 'Suan Chitralada & Benchakitti Park', 'meetup_time_label': 'Time:', 'meetup_time_val': 'Every last Sunday of the month, 06:00 AM', 'meetup_pace_label': 'Pace:', 'meetup_pace_val': 'Zone 2 (Conversation Pace)', 'meetup_next_box': 'Next Session:', 'meetup_next_date': 'February 22, 2026 @ Benchakitti Park', 'meetup_meeting_point': 'Meeting Point: Main Amphitheater', 
         'aqi_good': 'Air is great! Go run! 🏃💨', 'aqi_mod': 'Acceptable. Enjoy run.', 'aqi_sens': 'Sensitive: Reduce run.', 'aqi_bad': 'Bad air! Use treadmill! 😷',
+        # [NEW] คำแปลสำหรับสถิติ
         'stat_longest_run': 'Longest Run',
         'stat_club_total': 'Club Total',
         'stat_mvp_year': 'Year MVP (XP)'
@@ -90,6 +91,7 @@ TRANSLATIONS = {
         'rules_1_title': '๑. พันธกิจ', 'rules_1_text': 'ส่งเสริมสุขภาพและความสามัคคีในหมู่นักศึกษาและบุคลากรรามาธิบดี', 'rules_2_title': '๒. รางวัล', 'rules_2_li1': 'สะสมครบ ๕๐ กม.: รับเสื้อวิ่งประจำเดือน (Club Monthly Shirt)', 'rules_2_li2': 'สะสมครบ ๑๐๐ กม.: ปลดล็อคระดับ Elite ประจำเดือน', 'rules_3_title': '๓. กติกาการส่งผล', 'rules_3_text': 'นับเฉพาะการวิ่ง และต้องตั้งค่าเป็นสาธารณะ (Public)', 
         'recap_top_label': 'รายงานสรุปผล: TK13', 'recap_main_title': 'Virtual Ramathon 2024', 'recap_date': '1 - 30 พฤศจิกายน 2567', 'recap_stat_runners': 'ผู้เข้าร่วม', 'recap_stat_km': 'ระยะทางรวม', 'recap_stat_finishers': 'ผู้พิชิตเป้าหมาย', 'recap_roster_title': 'ทำเนียบนักวิ่ง', 'recap_baby': 'Baby Marathon (30k)', 'recap_super': 'Super Marathon (50k)', 'recap_voices_title': 'เสียงจากสนามวิ่ง', 'recap_q1': '"ช่วยลดน้ำหนักผมลงไป 3-4 กก.แบบมีคุณภาพครับ ส่งผลให้มีความมั่นใจมากขึ้น"', 'recap_q2': '"สุขภาพจิตดีขึ้น ร่างกายแข็งแรงขึ้น มีแรงมากขึ้น"', 'recap_q3': '"ทำให้มีข้ออ้างพาตัวเองไปออกกำลังกายครับ (เริ่มต้นวันด้วยจิตใจที่สดชื่น)"', 'recap_budget_title': 'สรุปงบประมาณ (โปร่งใส)', 'recap_grant': 'งบประมาณที่ได้รับ:', 'recap_used': 'ใช้จ่ายจริง:', 'recap_returned': 'ยอดเงินคืนคณะฯ:', 'recap_footer': 'ข้อมูลจากรายงานโครงการฉบับสมบูรณ์: TK13 / 9 ม.ค. 2568', 
         'meetup_page_title': 'นัดวิ่งรามาธอน', 'meetup_quote': '"จากโลกออนไลน์ สู่สนามจริง"', 'meetup_card_title': '🌳 อาทิตย์วิ่งสบาย (The "Easy Pace" Sundays)', 'meetup_card_text': 'พบปะเพื่อนนักศึกษา แพทย์ พยาบาล และบุคลากรในบรรยากาศสบายๆ ไม่เน้นทำเวลา เน้นมิตรภาพ', 'meetup_loc_label': 'สถานที่:', 'meetup_loc_val': 'สวนจิตรลดา และ สวนเบญจกิติ', 'meetup_time_label': 'เวลา:', 'meetup_time_val': 'ทุกวันอาทิตย์สุดท้ายของเดือน เวลา 06:00 น.', 'meetup_pace_label': 'เพซ (Pace):', 'meetup_pace_val': 'โซน 2 (Conversation Pace วิ่งไปคุยไป)', 'meetup_next_box': 'นัดถัดไป:', 'meetup_next_date': '22 กุมภาพันธ์ 2569 @ สวนเบญจกิติ', 'meetup_meeting_point': 'จุดนัดพบ: อัฒจันทร์ใหญ่ (Amphitheater)', 'aqi_good': 'อากาศดี (วิ่งได้โลด! 🏃💨)', 'aqi_mod': 'ปานกลาง (วิ่งได้ปกติ)', 'aqi_sens': 'เริ่มมีผลกระทบ (กลุ่มเสี่ยงลดการวิ่ง)', 'aqi_bad': 'อากาศแย่! (งดวิ่งกลางแจ้ง 😷)',
+        # [NEW] คำแปลสำหรับสถิติ
         'stat_longest_run': 'วิ่งไกลสุดเดือนนี้',
         'stat_club_total': 'ระยะรวมชมรมเดือนนี้',
         'stat_mvp_year': 'สะสมสูงสุดแห่งปี (MVP)'
@@ -176,6 +178,7 @@ def inject_globals():
     now = datetime.datetime.now(tz)
     theme = MONTH_THEMES.get(now.month, MONTH_THEMES[1])
     
+    # [NEW] สุ่มสัตว์และจัดการชื่อเดือน
     random_animal = random.choice(ANIMALS)
     if lang == 'th':
         month_abbr = THAI_MONTHS_ABBR[now.month]
@@ -189,8 +192,8 @@ def inject_globals():
         shirt_active=SHIRT_CAMPAIGN_ACTIVE,
         now_year=now.year, now_month=now.month, 
         now_month_name=now.strftime("%B"),
-        now_month_abbr=date_display, 
-        random_animal=random_animal, 
+        now_month_abbr=date_display, # ส่งชื่อเดือนแบบย่อไป
+        random_animal=random_animal, # ส่งสัตว์ที่สุ่มไป
         theme_color=theme['color'], theme_name=theme['name'],
         campaign_finished=(now > CAMPAIGN_END_DATE)
     )
@@ -212,13 +215,14 @@ def home():
     
     members = []
     
+    # Stats Containers
     longest_run_champion = None
     max_single_run = 0
-    total_month_km = 0 
+    total_month_km = 0 # [NEW] สะสมระยะรวมชมรม
 
     for uid, data in db.items():
         monthly_dist = (data.get('monthly_stats') or {}).get(current_month_key, 0)
-        total_month_km += monthly_dist 
+        total_month_km += monthly_dist # บวกระยะรวม
 
         user_max_run = (data.get('longest_runs') or {}).get(current_month_key, 0)
         
@@ -230,25 +234,29 @@ def home():
         member_display['display_dist'] = monthly_dist
         members.append(member_display)
     
+    # [NEW] หา MVP of the Year
     mvp_year_data = None
     if members:
+        # Sort by Year Distance to find top
         sorted_by_year = sorted(members, key=lambda x: x.get('dist_year', 0), reverse=True)
         top = sorted_by_year[0]
         if top.get('dist_year', 0) > 0:
             mvp_year_data = {'name': top['firstname'], 'dist': top.get('dist_year', 0), 'pic': top['profile']}
 
-    # Smart Ranking Logic: Monthly Distance first, then Total XP
+    # Main Sort for Leaderboard: Month Descending, then Total Year Descending
     members.sort(key=lambda x: (x['display_dist'], x.get('dist_year', 0)), reverse=True)
     
     lang = session.get('lang', 'th')
     aqi_data = get_aqi(lang)
 
+    # [NEW] รวมสถิติทั้งหมดไว้ในตัวแปรเดียว เพื่อป้องกันการสับสน
     fun_stats = {
         'longest_run': longest_run_champion,
         'club_total': total_month_km,
         'mvp_year': mvp_year_data
     }
 
+    # เปลี่ยนจาก fun_fact เป็น fun_stats ใน template ด้วย
     return render_template('index.html', members=members, aqi=aqi_data, fun_stats=fun_stats)
 
 @app.route('/profile')
@@ -414,40 +422,20 @@ def finishers_canvas(year, month):
     try:
         db = load_db()
         badge_key = f"{year}-{month:02d}"
-        
         finishers = []
         for u in db.values():
             m_stats = u.get('monthly_stats', {})
             if year == 2026 and month == 1 and badge_key not in m_stats:
-                feb_dist = m_stats.get('2026-02', 0)
-                total_dist = u.get('dist_year', 0)
-                jan_calc = total_dist - feb_dist
-                if jan_calc > 0:
-                    m_stats[badge_key] = jan_calc 
-            
-            dist = m_stats.get(badge_key, 0)
-            if dist >= 50: 
-                finishers.append(u)
-
+                jan_calc = u.get('dist_year', 0) - m_stats.get('2026-02', 0)
+                if jan_calc > 0: m_stats[badge_key] = jan_calc 
+            if m_stats.get(badge_key, 0) >= 50: finishers.append(u)
         finishers.sort(key=lambda x: x.get('dist_year', 0), reverse=True)
-        
         ranked_finishers = []
         for i, f in enumerate(finishers):
-            f_data = f.copy()
-            f_data['rank_in_month'] = i + 1
-            f_data['month_dist'] = f.get('monthly_stats', {}).get(badge_key, 0)
-            f_data['total_xp'] = f.get('dist_year', 0)
+            f_data = f.copy(); f_data.update({'rank_in_month': i + 1, 'month_dist': f.get('monthly_stats', {}).get(badge_key, 0), 'total_xp': f.get('dist_year', 0)})
             ranked_finishers.append(f_data)
-
         hist_theme = MONTH_THEMES.get(month, MONTH_THEMES[1])
-        
-        return render_template('finishers.html', 
-                               finishers=ranked_finishers, 
-                               year=year, 
-                               month_name=calendar.month_name[month],
-                               badge_key=badge_key,
-                               hist_theme=hist_theme)
-    except Exception as e:
-        return f"Error generating page: {str(e)}", 500
+        return render_template('finishers.html', finishers=ranked_finishers, year=year, month_name=calendar.month_name[month], badge_key=badge_key, hist_theme=hist_theme)
+    except Exception as e: return f"Error: {str(e)}", 500
 
 if __name__ == '__main__': app.run(debug=True)
